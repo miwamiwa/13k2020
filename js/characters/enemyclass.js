@@ -1,5 +1,6 @@
 let firstEnemyKilled = false;
 let enemyUpdateCounter=0;
+let maxEnemies =3;
 
 function updateEnemies(){
   for(let i=enemies.length-1; i>=0; i--){
@@ -16,10 +17,12 @@ function updateEnemies(){
     firstEnemyKilled = true;
     cantGoDown = false;
     level1.platforms[level1.platforms.length-1].fill = platformFill;
+    let index=saveData.seedIndex.indexOf(currentLevel);
+    favoritesStatus[index] = "Unlocked. Difficulty: "+level1.enemyDifficulty;
   }
-  if(firstEnemyKilled&&currentLevel!='home'){
+  if(firstEnemyKilled&&currentLevel!='home'&&!level1.cleared){
 
-    if(enemies.length<2){
+    if(enemies.length<maxEnemies){
       enemyUpdateCounter++;
 
       if(enemyUpdateCounter%100==0){

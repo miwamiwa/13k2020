@@ -1,5 +1,9 @@
 let displayProcessUI = false;
-let favorites = ["link1","link2","link3","link4"];
+let allLinkNames = ["home","contact","store","gallery","news","events","wormhole","destroy","noob","rekt","acidpool","badfile"];
+let favorites = ["home","contact","store"];
+let favoritesStatus = ["unknown","unknown","unknown"];
+let clearedStates = [false,false,false];
+let nextLink = "";
 
 let pUI = {
   w:200,
@@ -12,19 +16,26 @@ function runProcessUI(){
 
   if(displayProcessUI&&!pUI.last){
 
+    // create process UI
     pUI.x = canvas.w2-pUI.w/2;
     pUI.y = canvas.h2-pUI.h/2;
 
     dialogUI.open=false;
     pUI.el = div(pUI,'white');
-
-    let bsize = {x:pUI.x,y:pUI.y,w:pUI.w,h:pUI.h/2};
+    pUI.el.innerHTML='spend '+dataCost+' data strips towards discovering a new page';
+    let bsize = {x:pUI.x,y:pUI.y+pUI.h/4,w:pUI.w,h:pUI.h/4};
     pUI.dataButton = button(bsize,'yellow','but1','processDataStrips');
-    bsize.y+=pUI.h/2;
+    bsize.y+=pUI.h/4;
+    pUI.el2 = div(bsize,'white');
+    pUI.el2.innerHTML='spend '+htmlCost+' html bits towards clearing an html page';
+    bsize.y+=pUI.h/4;
     pUI.htmlButton = button(bsize,'orange','but2','processHTMLBits');
   }
   else if(!displayProcessUI&&pUI.last){
+
+    // remove process UI
     pUI.el.remove();
+    pUI.el2.remove();
     pUI.dataButton.remove();
     pUI.htmlButton.remove();
   }
@@ -32,42 +43,82 @@ function runProcessUI(){
   pUI.last=displayProcessUI;
 }
 
-let dataCost = 50;
+let dataCost = 50; // cost to uncover url bits
+
 function processDataStrips(){
 console.log("data strps")
-findAndRemoveItem(enemyLootTable[0].name,dataCost);
+let have = findAndRemoveItem(enemyLootTable[0].name,dataCost);
+console.log(have)
+if(have!=-1){
+
+  console.log("have!")
+  if(nextLink=="") pickNextLinkAward();
+
+
+    let pick = Math.floor(Math.random()*revealedLink.length);
+    while(revealedLink[pick]!="_"){
+      pick = Math.floor(Math.random()*revealedLink.length);
+    }
+
+    console.log(pick,nextLink)
+    if(pick<nextLink.length-1)
+    revealedLink = revealedLink.substring(0,pick)+nextLink[pick]+revealedLink.substring(pick+1,revealedLink.length);
+    else revealedLink = revealedLink.substring(0,pick)+nextLink[pick]
+    pUI.dataButton.innerHTML=revealedLink;
+    console.log(revealedLink)
+    revealedChars++;
+    if(revealedChars==revealedLink.length){
+      favorites.push(nextLink);
+      favoritesStatus.push("unknown");
+      clearedStates.push(false);
+      pickNextLinkAward();
+      console.log("done")
+    }
+
 
 }
 
-let htmlCost = 100;
+
+}
+
+let revealedLink = "";
+let revealedChars =0;
+
+
+function pickNextLinkAward(){
+  console.log("reset reward")
+  let pick = randomlink();
+  if( favorites.length<allLinkNames.length-1 ){
+    while(favorites.includes(pick)){
+      pick = randomlink();
+    }
+  }
+  else{
+    let wordL = 4+Math.floor(Math.random()*4);
+    pick="";
+    for(let i=0; i<wordL; i++){
+      pick+= String.fromCharCode(Math.floor(97+Math.random()*26));
+    }
+  }
+
+  nextLink = pick;
+  revealedLink = "";
+  revealedChars =0;
+  for(let i=0; i<nextLink.length; i++){
+    revealedLink+="_";
+  }
+}
+
+function randomlink(){
+  return allLinkNames[Math.floor(Math.random()*allLinkNames.length)];
+}
+
+
+let htmlCost = 500;
 function processHTMLBits(){
 console.log("html bits");
-findAndRemoveItem(enemyLootTable[2].name,htmlCost);
+let have =findAndRemoveItem(enemyLootTable[2].name,htmlCost);
+if(have!=-1){
+  addToInventory(cleaningitem,'1');
 }
-
-function div(box,fill){
-  let result = document.createElement("div");
-  document.body.appendChild(result);
-  result.setAttribute("style",`position:fixed; left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px;background-color:${fill};`);
-  return result;
-}
-
-function button(bounds,fill,id,action){
-  let result = div(bounds,fill);
-  result.id=id;
-  at(result,'onclick',action+"()");
-  at(result,'onmouseenter',`hover("${id}")`);
-  at(result,'onmouseleave',`unhover("${id}","${fill}")`);
-  return result;
-}
-
-function at(target,attribute,value){
-  target.setAttribute(attribute,value);
-}
-
-function hover(id,fill){
-  document.getElementById(id).style.backgroundColor="grey";
-}
-function unhover(id,fill){
-  document.getElementById(id).style.backgroundColor=fill;
 }

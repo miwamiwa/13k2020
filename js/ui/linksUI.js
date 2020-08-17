@@ -9,6 +9,7 @@ let linksUIel;
 let textform;
 let listform;
 
+
 function runLinksUI(){
 
   if(displayLinksUI){
@@ -24,7 +25,7 @@ function runLinksUI(){
 
       let options = "";
       for(let i=0; i<favorites.length; i++){
-        options+=`<option value="${favorites[i]}">status: unknown</option>`
+        options+=`<option value="${favorites[i]}">status: ${favoritesStatus[i]}</option>`
       }
 
       linksUIel.innerHTML = `Choose from favorites:<br><input list="browsers" name="browser" id="browser" onchange='inputListChanged()'>
@@ -78,11 +79,58 @@ function goToLink(){
   fadeIn =0;
   waittime=24;
 
+  getLinkSeed(result);
+  //currentLevel =0;
+  noiseCounter=0
+  createLevel();
+  createPlayer();
+
   setTimeout(function(){
     displayLinksUI = false;
-    currentLevel =0;
-    createLevel();
-    createPlayer();
+
   },linkLoadTime);
 
+}
+
+let difficultyLevels = [];
+// convert level/link name to seed index from the save data array
+function getLinkSeed(name){
+
+  let index = saveData.linkNames.indexOf(name);
+  if(index!=-1) currentLevel = saveData.seedIndex[index];
+  else {
+
+    if(allLinkNames.includes(name)){
+
+
+      if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0){
+        enemyDifficulty = Math.min(enemyDifficulty+1,maxEnemyDifficulty);
+
+      }
+
+      difficultyLevels.push(enemyDifficulty);
+      let favindex= favorites.indexOf(name);
+      let statustext="Locked. Difficulty: "+enemyDifficulty;
+      console.log("favindex",favindex)
+      if(favindex!=-1){
+        favoritesStatus[favindex]=statustext;
+      }
+      else{
+        favorites.push(name);
+        favoritesStatus.push(statustext);
+      }
+      lvlCount++;
+      console.log('difficulty',enemyDifficulty)
+      let newSeedIndex = Math.floor(Math.random()*100);
+      while(saveData.seedIndex.includes(newSeedIndex)){
+        newSeedIndex = Math.floor(Math.random()*100);
+      }
+      saveData.linkNames.push(name);
+      currentLevel =newSeedIndex;
+    }
+    else {
+      currentLevel ='true404';
+    }
+
+  }
 }

@@ -2,8 +2,10 @@ let enemyLootTable = [
   {name:"angry data strip",fill:"grey",quantity:{min:12,r:14},chance:1},
   {name:"gold",fill:"gold",quantity:{min:1,r:5},chance:0.5},
   {name:"html bits",fill:"lightblue",quantity:{min:3,r:52},chance:0.8},
-  {name:"health pot",fill:"tomato",quantity:{min:1,r:3},chance:0.2}
+  {name:"health pot",fill:"tomato",quantity:{min:1,r:3},chance:0.9}
 ];
+
+let cleaningitem = 'level clear-tastik';
 
 let items = [];
 let inventory = [];

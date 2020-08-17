@@ -4,8 +4,11 @@ let killLine = 500;
 
 function start(){
 
+  loadSave();
+  //pickNextLinkAward()
   fadeIn =0;
   createCanvas();
+  setupActionBar();
   createLevel();
   createPlayer();
   setupCamera();

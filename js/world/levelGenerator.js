@@ -4,6 +4,10 @@ let sceneW=0;
 let fadeIn =0;
 let exitdoor;
 let enemies = [];
+let lvlCount=0;
+let enemyDifficulty=1;
+let lvlDiffIncreaseInterval = 3;
+let maxEnemyDifficulty =3;
 // a place to setup some platforms and stuff
 
 function createLevel(){
@@ -21,8 +25,24 @@ function createLevel(){
     ];
 
     level1 = new Level(plats,sceneW,Math.abs(plats[0][1] - plats[plats.length-1][1]));
+
     cantGoDown = false;
     createFriendlyNPCs();
+  }
+  else if(currentLevel=='true404'){
+    sceneW = canvas.w;
+    let plats = [
+      [50,killLine-100,100],
+      [-60,killLine-60,100],
+      [0, killLine, canvas.w]
+    ];
+
+    level1 = new Level(plats,sceneW,Math.abs(plats[0][1] - plats[plats.length-1][1]));
+    let plat=level1.platforms[level1.platforms.length-1];
+    level1.text404 = new DisplayObject( plat.x-10,plat.y-10,300,300 );
+    exitdoor=new MovingObject(plat.x+50,plat.y-50,20,'#a22f');
+    cantGoDown = false;
+    //createFriendlyNPCs();
   }
   else {
     sceneW = 2*canvas.w;
@@ -70,13 +90,26 @@ function createLevel(){
     level1 = new Level(plats,sceneW,Math.abs(plats[0][1] - plats[plats.length-1][1]));
     let lastplat=level1.platforms.length-1;
     plat=level1.platforms[lastplat];
-    plat.fill = 'orange'
+
     level1.text404 = new DisplayObject( plat.x-10,plat.y-10,300,300 );
     exitdoor=new MovingObject(plat.x+50,plat.y-50,20,'#a22f');
-    cantGoDown = true;
 
+    let index = saveData.seedIndex.indexOf(currentLevel);
+    level1.enemyDifficulty = difficultyLevels[index];
+
+    level1.cleared = clearedStates[index];
+
+    // check if top platform is already unlocked
+    if(favoritesStatus[index].substring(0,3)=="Unl"){
+      firstEnemyKilled = true;
+       cantGoDown=false;
+    }
+    else{
+      cantGoDown = true;
+      plat.fill = 'orange'
     enemies.push(new Enemy(plat.x,plat.y-80,lastplat));
     enemies[0].jumpy=false;
+  }
   }
 
 }

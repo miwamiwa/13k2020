@@ -86,7 +86,7 @@ class MovingObject extends DisplayObject {// extends display object class
 
 
     // do something with impact force:
-    if(this.impactForce.y>0) console.log(this.impactForce.y);
+    //if(this.impactForce.y>0) console.log(this.impactForce.y);
     if(this.jumpForce-this.jumpDecel>0) this.jumpForce-=this.jumpDecel;
     else this.jumpForce=0;
     // update player position
