@@ -20,8 +20,12 @@ function getBounds(el){
 function div(box,fill){
   let result = document.createElement("div");
   document.body.appendChild(result);
-  result.setAttribute("style",`position:fixed; left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px;background-color:${fill};`);
+  setStyle(result,box,fill);
   return result;
+}
+
+function setStyle(el,box,fill){
+  el.setAttribute("style",`position:fixed; left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px;background-color:${fill};`);
 }
 
 function button(bounds,fill,id,action){
@@ -42,4 +46,12 @@ function hover(id,fill){
 }
 function unhover(id,fill){
   document.getElementById(id).style.backgroundColor=fill;
+}
+
+function rad(angle){
+  return angle*Math.PI/180;
+}
+
+function l(i){
+  return i.length;
 }

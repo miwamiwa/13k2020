@@ -1,14 +1,15 @@
 let actionBar = {};
+let actionBarFill = 'black';
 function setupActionBar(){
 
   actionBar= {
     x:canvas.x,
-    y:canvas.y+canvas.h,
-    w: canvas.w,
+    y:canvas.y+canvasElh,
+    w: canvasElw,
     h: 50,
   }
 
-    actionBar.el = div(actionBar,'black');
+    actionBar.el = div(actionBar,actionBarFill);
 
     actionBar.w=actionBar.w*0.9;
     actionBar.inventory = div(actionBar,'grey');

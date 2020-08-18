@@ -1,5 +1,5 @@
 window.onload = start;
-
+let currentLevel='start';
 let killLine = 500;
 
 function start(){
@@ -9,41 +9,44 @@ function start(){
   fadeIn =0;
   createCanvas();
   setupActionBar();
+  resizeCanvas();
+
   createLevel();
   createPlayer();
   setupCamera();
-
+  loadModelData();
+  
   setInterval( run, 33 );
 }
 
 function run(){
 
-  let h = currentLevel=='home';
-  cameraFollow(player.x,player.y);
-  level1.displayBackground();
-  if(!h) level1.display404Background();
-  level1.displayPlatforms();
+  if(currentLevel!='start'){
+    let h = currentLevel=='home';
+    cameraFollow(player.x,player.y);
+    level1.displayBackground();
+    if(!h) level1.display404Background();
+    level1.displayPlatforms();
+    if(h){
+      runFriendlyNPCs();
+    }
+    else runExitDoor();
 
-  if(h){
-    runFriendlyNPCs();
+    updateEnemies();
+    updatePlayer();
+    updateProjectiles();
+    runDialog();
+
+    updateItems();
+
+    runFadeIn();
+
+    runProcessUI();
+    runLinksUI();
+
+
   }
-  else runExitDoor();
-
-  updateEnemies();
-  player.limitX();
-  player.display();
-
-  if(player.hitPoints<100) player.hitPoints+=0.1;
-  updateProjectiles();
-  runDialog();
-
-  updateItems();
-
-  runFadeIn();
-
-  runProcessUI();
-  runLinksUI();
-
+  else displayStartUI();
 
 }
 

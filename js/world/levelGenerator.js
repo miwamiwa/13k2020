@@ -1,5 +1,5 @@
 let level1;
-let currentLevel='home';
+
 let sceneW=0;
 let fadeIn =0;
 let exitdoor;

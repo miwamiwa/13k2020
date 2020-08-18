@@ -17,8 +17,8 @@ function runProcessUI(){
   if(displayProcessUI&&!pUI.last){
 
     // create process UI
-    pUI.x = canvas.w2-pUI.w/2;
-    pUI.y = canvas.h2-pUI.h/2;
+    pUI.x = canvasElw/2-pUI.w/2;
+    pUI.y = canvasElh/2-pUI.h/2;
 
     dialogUI.open=false;
     pUI.el = div(pUI,'white');

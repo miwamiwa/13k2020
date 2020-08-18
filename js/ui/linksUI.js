@@ -17,8 +17,8 @@ function runLinksUI(){
       lastdisplayState =true;
       dialogUI.open=false;
 
-      linksUI.x = canvas.w2-linksUI.w/2 + canvas.x;
-      linksUI.y = canvas.h2-linksUI.h/2 + canvas.y;
+      linksUI.x = canvasElw/2-linksUI.w/2 + canvas.x;
+      linksUI.y = canvasElh/2-linksUI.h/2 + canvas.y;
 
       linksUIel = document.createElement('div');
       linksUIel.setAttribute("style",`padding:10px;position:fixed;left:${linksUI.x}px;top:${linksUI.y}px;width:${linksUI.w}px;height:${linksUI.h}px;background-color:white;font-size:14px;`);

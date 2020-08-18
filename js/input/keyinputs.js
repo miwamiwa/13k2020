@@ -5,10 +5,14 @@ function keypress(){
   switch(event.keyCode){
     case 65: //a
       player.movingLeft=true;
+      player.movingRight=false;
+      player.facing='left';
     break;
 
     case 68: //d
       player.movingRight=true;
+      player.movingLeft=false;
+      player.facing='right';
     break;
 
     case 32: //space
@@ -25,7 +29,15 @@ function keypress(){
     break;
 
     case 49: //1
-      if(currentLevel=='home'&&computer.interactible&&!displayProcessUI) displayLinksUI = true;
+    if(currentLevel=='start'){
+      console.log("yo")
+      currentLevel='home';
+
+      createLevel();
+      createPlayer();
+
+    }
+    else  if(currentLevel=='home'&&computer.interactible&&!displayProcessUI) displayLinksUI = true;
       else displayLinksUI = false;
     break;
 

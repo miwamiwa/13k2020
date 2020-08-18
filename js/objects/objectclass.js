@@ -25,7 +25,8 @@ class DisplayObject{
   }
 
   shoot(targetx,targety,speed){
-
+    if(targetx<this.screenPos.x) this.facing='left';
+    else this.facing='right';
     projectiles.push(new Projectile(this.x,this.y,4,"black",speed,targetx,targety));
   }
 }
