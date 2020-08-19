@@ -18,7 +18,7 @@ function mousePressed(){
     clearTimeout(shootStopTimeout);
     shootStopTimeout = setTimeout(function(){
       resetPlayerAnimation();
-    },500);
+    },400);
 }
 
 

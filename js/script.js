@@ -15,7 +15,8 @@ function start(){
   createPlayer();
   setupCamera();
   loadModelData();
-  
+
+  startSound();
   setInterval( run, 33 );
 }
 

@@ -37,8 +37,8 @@ function updateEnemies(){
 class Enemy extends MovingObject {
 
   constructor(x,y,p){
-    let fill = '#cc3f';
-    let size = 30;
+    let fill = '#cc30';
+    let size = 40;
 
     super(x,y,size,fill);
     this.currentPlatform=p;
@@ -57,6 +57,14 @@ class Enemy extends MovingObject {
     this.dashInterval = 60;
     this.nextDash=0;
     this.dashCount=15;
+    this.facing='left';
+    this.lastRoamingState=false;
+    this.attackAnimOverTimeout;
+    this.model = new CoolPath(0,0,
+      ":=:=Febqfmnnqlsht`y^o`i*;<:HGsgn_j`a`cmkj*<<:JBW@v]j^ld*=<:JBW@vmnklg*>::JFGI^^^_`_*?=:TPwororsrxwvws*@=:OUrrwtvw*@<:STzxzzvyozrzrx*A=:OProwowsvwrxrs*B=:STwtrrrx*B<:STzxzzvyozrzrx*<<:NAPDRATCV@*;;:H@mhfifefbiakc*;=:ECfgfchcjbkghf",
+      "CK1iiagtbctdEB0I@0IC0FF0lc_lf`he^QN0tucQR0QN0tueQR0",
+      "*still*Z]]]]Y]]]]*****\\I*XI*YIaQ***walk*F]]]]`Qh]]*****\\@*c@*W@*N@**attack*Fa]]]]RdXa*c<e>**S<]>*`<]>*W<^>*N<S>*d<_>*X<d>*o<j>*dash*R`]]]]PeQs*`F*^L*TL\\N*jL\\N*c@\\FWL^N*a@PF^L*k@fF*S@QFOL*c@sF^L",
+      ["rgba(142,203,0,0.0)","rgba(255,232,200,1.0)","rgba(177,91,0,1.0)","rgba(247,141,0,1.0)"]);
   }
 
   update(){
@@ -75,8 +83,12 @@ class Enemy extends MovingObject {
         if(hit){
           //console.log("player hit!");
           player.hitPoints -= this.attackPower;
+
         }
+
+        this.animate(2);
         this.nextAttack = this.attackCounter+this.attackInterval;
+        this.attackAnimOverTimeout=setTimeout(function(enemy){if(enemy.roaming)enemy.animate(1); else enemy.animate(0);},400,this);
       }
     }
 
@@ -89,16 +101,21 @@ class Enemy extends MovingObject {
     // moving left-right
     if(this.roaming){
 
+
       // dash
       if(player.currentPlatform==this.currentPlatform&&this.nextDash<this.attackCounter&&d.d<120){
       //  console.log("dash!")
         this.nextDash = this.attackCounter+this.dashInterval;
         this.target = player.x - 30 + Math.random()*60;
         this.dashCount=0;
+        clearTimeout(this.attackAnimOverTimeout);
+        this.animate(3);
       }
+      else if(!this.lastRoamingState) this.animate(1);
 
       if(this.dashCount<15){
         this.dashCount++;
+        if(this.dashCount==15) this.animate(1);
         this.lrMaxSpeed=5;
       }
       else this.lrMaxSpeed=2;
@@ -128,7 +145,7 @@ class Enemy extends MovingObject {
           console.log("going down ")
         }
       }
-
+      this.animate(0);
         setTimeout(function(target){
           target.roaming = true;
           target.newTarget();
@@ -136,7 +153,21 @@ class Enemy extends MovingObject {
         },this.roamPauseLength, this)
       }
     }
+  
 
+    if(this.screenPos!=false){
+      this.model.x=this.screenPos.x+20;
+      this.model.y=this.screenPos.y+20;
+      this.model.update(ctx,(this.facing=='left'));
+    }
+
+
+    this.lastRoamingState = this.roaming;
+  }
+
+  animate(index){
+    clearTimeout(this.attackAnimOverTimeout);
+    this.model.selectAnimation(index);
   }
 
   newTarget(){
