@@ -42,6 +42,15 @@ function updatePlayer(){
 
   playerModel.update(ctx,(player.facing=='left'));
   if(player.hitPoints<100) player.hitPoints+=0.1;
+
+  if(player.impactForce>36){
+    playDamageFX();
+
+    playerModel.selectAnimation(1);
+    setTimeout(function(){
+      resetPlayerAnimation();
+    },400)
+  }
 }
 
 function resetPlayerAnimation(){

@@ -22,14 +22,15 @@ function runDialog(){
     }
 
     ctx.fillStyle='white';
-    ctx.fillRect(dialogUI.x,dialogUI.y,100,37);
+    ctx.fillRect(dialogUI.x,dialogUI.y,180,42);
     ctx.fillStyle='black';
-    ctx.fillText(dialogUI.displayedText[0],dialogUI.x+5,dialogUI.y+15)
-    ctx.fillText(dialogUI.displayedText[1],dialogUI.x+5,dialogUI.y+26)
+    ctx.font='20px Georgia'
+    ctx.fillText(dialogUI.displayedText[0],dialogUI.x+5,dialogUI.y+18)
+    ctx.fillText(dialogUI.displayedText[1],dialogUI.x+5,dialogUI.y+36)
   }
 
   // if no one is interactible, close dialog ui (add any other interactible things here)
-  if(!aboutguy.interactible&&!computer.interactible) dialogUI.open=false;
+  if(!aboutguy.interactible) dialogUI.open=false;
   if(!computer.interactible){
     displayLinksUI = false;
     displayProcessUI = false;
@@ -43,11 +44,23 @@ function continueDialog(){
     dialogUI.open = false;
     dialogDone = false;
 
-    if(aboutguy.interactible) aboutguyDialogProgression = (aboutguyDialogProgression+1)%2;
-    else computerDialogProgression =0;
+    switch(aboutguyDialogProgression){
+      case 0:
+      // add stuff to favorites
+      for(let i=1; i<3; i++){
+        favorites.push(allLinkNames[i]);
+        favoritesStatus.push("unknown");
+      }
+      updateFavorites();
+
+      break;
+
+    
+    }
+    if(aboutguy.interactible&&aboutguyDialogProgression<aboutguydialogs.length-1) aboutguyDialogProgression ++;
   }
   else
-  cutDialog();
+    cutDialog();
 }
 
 
@@ -67,8 +80,13 @@ function makeLine(){
 
   let result="";
   let stop=false;
-  while(!stop&&result.length+dialogUI.line[0].length<maxCharsPerLine){
-    result+=dialogUI.line[0]+" ";
+  let broke=false;
+  while(!stop&&!broke&&result.length+dialogUI.line[0].length<maxCharsPerLine){
+
+
+    if(dialogUI.line[0]=='#') broke=true;
+    else result+=dialogUI.line[0]+" ";
+
     dialogUI.line.shift();
     if(dialogUI.line.length==0){
       stop=true;

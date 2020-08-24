@@ -1,8 +1,9 @@
 let displayProcessUI = false;
 let allLinkNames = ["home","contact","store","gallery","news","events","wormhole","destroy","noob","rekt","acidpool","badfile"];
-let favorites = ["home","contact","store"];
-let favoritesStatus = ["unknown","unknown","unknown"];
+let favorites = ["home"];
+let favoritesStatus = ["safe"];
 let clearedStates = [false,false,false];
+let completions = [0,0,0];
 let nextLink = "";
 
 let pUI = {
@@ -43,7 +44,7 @@ function runProcessUI(){
   pUI.last=displayProcessUI;
 }
 
-let dataCost = 50; // cost to uncover url bits
+let dataCost = 10; // cost to uncover url bits
 
 function processDataStrips(){
 console.log("data strps")
@@ -64,14 +65,16 @@ if(have!=-1){
     if(pick<nextLink.length-1)
     revealedLink = revealedLink.substring(0,pick)+nextLink[pick]+revealedLink.substring(pick+1,revealedLink.length);
     else revealedLink = revealedLink.substring(0,pick)+nextLink[pick]
-    pUI.dataButton.innerHTML=revealedLink;
+    //pUI.dataButton.innerHTML=revealedLink;
     console.log(revealedLink)
     revealedChars++;
     if(revealedChars==revealedLink.length){
       favorites.push(nextLink);
       favoritesStatus.push("unknown");
+      completions.push(0);
       clearedStates.push(false);
-      pickNextLinkAward();
+
+      updateFavorites();
       console.log("done")
     }
 

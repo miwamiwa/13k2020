@@ -59,6 +59,8 @@ class Projectile extends MovingObject{
 
         if(damage!=false){
           input[i].hitPoints -= damage;
+
+          playBlaster(200,6,);
           let d2 = damage/2;
           input[i].impactForce.x+=Math.min(Math.max(input[i].x-this.x,-d2),d2);
         }

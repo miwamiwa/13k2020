@@ -8,6 +8,8 @@ function start(){
   //pickNextLinkAward()
   fadeIn =0;
   createCanvas();
+  createLinksUI();
+
   setupActionBar();
   resizeCanvas();
 
@@ -43,8 +45,8 @@ function run(){
     runFadeIn();
 
     runProcessUI();
-    runLinksUI();
 
+    if(!h) level1.displayCompletion();
 
   }
   else displayStartUI();

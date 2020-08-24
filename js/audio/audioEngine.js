@@ -10,7 +10,7 @@ function startSound(){
 
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   context = new AudioContext();
-//  startBeatMachine();
+  startBeatMachine();
 /*
   // start drums
   setInterval( playHardHat , 300);

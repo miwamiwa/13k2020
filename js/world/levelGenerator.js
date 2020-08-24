@@ -96,45 +96,106 @@ function createLevel(){
 
     let index = saveData.seedIndex.indexOf(currentLevel);
     level1.enemyDifficulty = difficultyLevels[index];
-
+    level1.arrayindex=index;
+    level1.completion=completions[index];
     level1.cleared = clearedStates[index];
 
     // check if top platform is already unlocked
     if(favoritesStatus[index].substring(0,3)=="Unl"){
       firstEnemyKilled = true;
-       cantGoDown=false;
+      cantGoDown=false;
     }
     else{
       cantGoDown = true;
       plat.fill = 'orange'
-    enemies.push(new Enemy(plat.x,plat.y-80,lastplat));
-    enemies[0].jumpy=false;
-  }
+      enemies.push(new Enemy(plat.x,plat.y-80,lastplat));
+      enemies[0].jumpy=false;
+    }
   }
 
 }
 
+
 class Level{
   constructor(plist,w,h){
+    if(currentLevel!='home'){
+      fetch('js/characters/enemyclass.js')
+      .then(response => response.text())
+      .then(text => this.bgText=text);
+    }
+    else {
+      fetch('index.html')
+      .then(response => response.text())
+      .then(text => this.bgText=text);
+    }
 
+    this.completion=0;
+    this.uncorruptedBG = [];
+    this.uncorrupting=false;
     this.platforms = [];
     for(let i=0; i<plist.length; i++){
       this.platforms.push(new Platform(plist[i][0],plist[i][1],plist[i][2]));
     }
     this.bgFill='#ddff';
 
-  let offset = w/4;
+    let offset = w/4;
     this.walls=[
       new DisplayObject( - w+offset, 0, w/2, 2000 ),
       new DisplayObject( w/2+offset, 0, w/2, 2000 ),
       new DisplayObject( 0, killLine+500, 2000, 1000 )
     ]
+
+    this.bgTextObj = new DisplayObject(w/2,this.platforms[0].y+h,w*2,h*4);
   }
 
   displayBackground(){
     ctx.fillStyle=this.bgFill;
     ctx.fillRect(0,0,canvas.w,canvas.h);
+    this.bgTextObj.updateOnScreenPosition();
+    if(this.bgText!=undefined&&this.bgTextObj.screenPos!=false){
 
+      //console.log("yo")
+
+      ctx.font='30px Arial';
+
+      if(this.uncorrupting){
+        let index=Math.floor(Math.random()*6000);
+        let range =Math.floor(Math.random()*20);
+        for(let i=0; i<range; i++){
+          if(!this.uncorruptedBG.includes(index+i)) this.uncorruptedBG.push(index+i);
+        }
+      }
+
+
+      let counter=0;
+      let r = -1+Math.floor(Math.random()*3);
+      for(let i=0; i<50; i++){
+
+        let alphaval = 'f';
+        if(i<10) alphaval=i;
+        let x=this.bgTextObj.screenPos.x;
+
+        let txtcontent=this.bgText.substring(i*120,(i+1)*120);
+        for(let j=0; j<120; j++){
+          if(currentLevel=='home'||this.uncorruptedBG.includes(counter)){
+            //console.log("yoo")
+            ctx.strokeStyle='#bbb'+alphaval;
+            ctx.lineWidth = 2;
+          }
+          else {
+            ctx.strokeStyle='#bdb'+alphaval;
+            ctx.lineWidth = 12+r;//+Math.floor(Math.random()*2);
+          }
+
+          ctx.strokeText(txtcontent[j],(x),(this.bgTextObj.screenPos.y+i*50)/2);
+          counter++;
+          x+=ctx.measureText(txtcontent[j]).width*1.2;
+        }
+
+      }
+      ctx.lineWidth = 1;
+
+    }
 
 
   }
@@ -160,11 +221,20 @@ class Level{
       w.updateOnScreenPosition();
 
       let p = w.screenPos;
-    //  console.log("wall!",w.x,w.y,w.w,w.h)
+      //  console.log("wall!",w.x,w.y,w.w,w.h)
       if(p!=false)
-        ctx.fillRect(p.x,p.y,w.w,w.h);
+      ctx.fillRect(p.x,p.y,w.w,w.h);
     }
 
 
+  }
+
+  displayCompletion(){
+    ctx.font="40px bold";
+
+    ctx.fillStyle='black';
+    ctx.fillText(this.completion+"% complete", 10,30 );
+    ctx.fillStyle='white';
+    ctx.fillText(this.completion+"% complete", 12,32 );
   }
 }

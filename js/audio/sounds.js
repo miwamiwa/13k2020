@@ -9,10 +9,10 @@ function playSnare(){
 
 function playHats(){
   playSound(preloadSound(
-    400,
-    new Envelope(0.05,0.01,0.5,0.01),
-    1,noisey
-  ),3,'highpass',2400,4);
+    4000,
+    new Envelope(0.01,0.01,0.1,0.3),
+    60,noisey
+  ),12,'highpass',1400,12);
 }
 
 function playWobbleBass(freq){
@@ -29,7 +29,7 @@ function playNoiseySynth(freq){
     freq,
     new Envelope(0.01,0.11,0.3,1.45),
     50,constSine4
-  ),9,'lowpass',1500,8);
+  ),6,'lowpass',1500,8);
   sine4counter++;
   if(sine4counter%12==0) sine4fact = 1 - sine4fact;
 }
@@ -39,7 +39,7 @@ function playHardHat(){
     8,
     new Envelope(0.01,0.01,0.11,0.13),
     1,constSine3
-  ),8,'lowshelf',840,8);
+  ),8,'lowshelf',1240,12);
 }
 function playKick(){
   playSound(preloadSound(
@@ -51,12 +51,12 @@ function playKick(){
 
 // factor:
 // compact bassy hits <1500, trappy pitched long hits 6000-20000
-function playBlaster(factor){
+function playBlaster(factor,vol){
   playSound(preloadSound(
     factor,
-    new Envelope(0.01,0.11,0.3,0.35),
+    new Envelope(0.01,0.11,0.3,0.25),
     100,constSineB2
-  ),8,'highpass',1080,8);
+  ),vol,'highpass',1080,8);
 }
 
 function playDamageFX(){

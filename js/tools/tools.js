@@ -20,7 +20,7 @@ function getBounds(el){
 function div(box,fill){
   let result = document.createElement("div");
   document.body.appendChild(result);
-  setStyle(result,box,fill);
+  if(box!=undefined) setStyle(result,box,fill);
   return result;
 }
 

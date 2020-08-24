@@ -12,13 +12,11 @@ function createCanvas(){
   canvas.canvas.setAttribute("height",canvas.h);
 
 
-  document.body.appendChild(canvas.canvas);
+
   //canvas.canvas.setAttribute("style",``);
   ctx = canvas.canvas.getContext("2d");
 
-  let bounds = canvas.canvas.getBoundingClientRect();
-  canvas.x = Math.round(bounds.x);
-  canvas.y = Math.round(bounds.y);
+  
 }
 
 window.onresize=resizeCanvas;

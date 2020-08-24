@@ -10,85 +10,91 @@ let textform;
 let listform;
 
 
-function runLinksUI(){
-
-  if(displayLinksUI){
-    if(!lastdisplayState){
-      lastdisplayState =true;
-      dialogUI.open=false;
-
-      linksUI.x = canvasElw/2-linksUI.w/2 + canvas.x;
-      linksUI.y = canvasElh/2-linksUI.h/2 + canvas.y;
-
-      linksUIel = document.createElement('div');
-      linksUIel.setAttribute("style",`padding:10px;position:fixed;left:${linksUI.x}px;top:${linksUI.y}px;width:${linksUI.w}px;height:${linksUI.h}px;background-color:white;font-size:14px;`);
-
-      let options = "";
-      for(let i=0; i<favorites.length; i++){
-        options+=`<option value="${favorites[i]}">status: ${favoritesStatus[i]}</option>`
-      }
-
-      linksUIel.innerHTML = `Choose from favorites:<br><input list="browsers" name="browser" id="browser" onchange='inputListChanged()'>
-      <datalist id="browsers">
-      ${options}
-      </datalist></input>
-      <br>Or type url name:<br>
-      <input type="text" id="fname" name="fname" value="custom url" onkeydown='formKeyDown()' onclick='formclick()'>
-      <div style='font-size:12px;position:absolute; right:26px;top:10px;'><br>select a list<br>item, or type<br>url name and <br>press enter</div>
-      `;
-      document.body.appendChild(linksUIel);
-
-      textform=document.getElementById("fname");
-      listform=document.getElementById("browser");
-    }
+function createLinksUI(){
 
 
-  }
-  else{
-    if(lastdisplayState) linksUIel.remove();
-    lastdisplayState = false;
+  linksUIel = div();
+  linksUIel.style.width=canvas.w+'px';
+  linksUIel.style.backgroundColor='grey'
 
-  }
+  updateFavorites();
+
+  // append canvas below the address bar
+  document.body.appendChild(canvas.canvas);
+  let bounds = canvas.canvas.getBoundingClientRect();
+  canvas.x = Math.round(bounds.x);
+  canvas.y = Math.round(bounds.y);
+
+
+
 }
 
-function formclick(){
-  textform.value="";
+let tFormSelected = false;
+
+// updatefavorites();
+//
+// populate the Select element that contains the favorites list
+function updateFavorites(){
+  let options = "";
+  for(let i=0; i<favorites.length; i++){
+    options+=`<option>${favorites[i]} status: ${favoritesStatus[i]}</option>`
+  }
+
+  let fav = `favorites:<select id="favorites"> ${options} </select>`
+
+  linksUIel.innerHTML = ` <span onclick=''> < </span> <span onclick=''> > </span>
+  www.coolshoes.com/<input type='text' id='tinput' onkeydown='formKeyDown()'></input>
+  ${fav} <span onclick='inputListChanged()'>go</span> `;
+
+  textform=document.getElementById("tinput");
+  listform=document.getElementById("favorites");
+  textform.onfocus=function(){tFormSelected=true;};
+  textform.onblur=function(){tFormSelected=false;};
 }
+
 
 function formKeyDown(){
 
   if(event.keyCode==13){
     textform.value = textform.value.trim();
     goToLink();
+    textform.blur();
   }
 }
 
 function inputListChanged(){
 
-  textform.value=listform.value;
+  textform.value=listform.value.substring(0,listform.value.indexOf(" "));
   goToLink();
 }
 
 function goToLink(){
 
-  let tinput = textform.value;
-  let linput = listform.value;
-  let result = linput;
-  if(tinput!=linput) result = tinput;
-  linksUIel.innerHTML = "loading "+result+"!";
-  fadeIn =0;
-  waittime=24;
+  //let tinput = textform.value;
+  //  let linput =
+  let result  = listform.value.substring(0,listform.value.indexOf(" "));
+  if(textform.value!=listform.value) result = textform.value;
+    console.log('result',result);
+  if(result=='home') loadHomeLevel();
+  else if (result=='continue') getSavedGameAndStart();
+  else {
+    //linksUIel.innerHTML = "loading "+result+"!";
+    console.log("load dat")
+    fadeIn =0;
+    waittime=24;
 
-  getLinkSeed(result);
-  //currentLevel =0;
-  noiseCounter=0
-  createLevel();
-  createPlayer();
+    getLinkSeed(result);
+    //currentLevel =0;
+    noiseCounter=0
+    createLevel();
+    createPlayer();
 
-  setTimeout(function(){
-    displayLinksUI = false;
+    setTimeout(function(){
+      displayLinksUI = false;
 
-  },linkLoadTime);
+    },linkLoadTime);
+  }
+
 
 }
 
@@ -111,7 +117,7 @@ function getLinkSeed(name){
       difficultyLevels.push(enemyDifficulty);
       let favindex= favorites.indexOf(name);
       let statustext="Locked. Difficulty: "+enemyDifficulty;
-      console.log("favindex",favindex)
+      //  console.log("favindex",favindex)
       if(favindex!=-1){
         favoritesStatus[favindex]=statustext;
       }
@@ -120,7 +126,7 @@ function getLinkSeed(name){
         favoritesStatus.push(statustext);
       }
       lvlCount++;
-      console.log('difficulty',enemyDifficulty)
+      //  console.log('difficulty',enemyDifficulty)
       let newSeedIndex = Math.floor(Math.random()*100);
       while(saveData.seedIndex.includes(newSeedIndex)){
         newSeedIndex = Math.floor(Math.random()*100);

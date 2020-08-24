@@ -19,7 +19,7 @@ class MovingObject extends DisplayObject {// extends display object class
     this.lrSpeed=0;
     this.impactForce={x:0,y:0};
     this.hitPoints = 100;
-    
+
   }
 
   display(){

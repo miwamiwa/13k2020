@@ -9,6 +9,15 @@ function updateEnemies(){
       // ENEMY KILLED
       generateLoot(enemies[i]);
       enemies.splice(i,1);
+      level1.completion+=5;
+      if(level1.completion>=100){
+        level1.completion=100;
+
+      }
+      else setTimeout(function(){level1.uncorrupting=false;},2000);
+
+      completions[level1.arrayindex]=level1.completion;
+      level1.uncorrupting=true;
 
     }
   }
@@ -22,7 +31,7 @@ function updateEnemies(){
   }
   if(firstEnemyKilled&&currentLevel!='home'&&!level1.cleared){
 
-    if(enemies.length<maxEnemies){
+    if(enemies.length<maxEnemies && level1.completion<100){
       enemyUpdateCounter++;
 
       if(enemyUpdateCounter%100==0){
@@ -83,6 +92,12 @@ class Enemy extends MovingObject {
         if(hit){
           //console.log("player hit!");
           player.hitPoints -= this.attackPower;
+          playDamageFX();
+
+          playerModel.selectAnimation(1);
+          setTimeout(function(){
+            resetPlayerAnimation();
+          },400)
 
         }
 
@@ -153,7 +168,7 @@ class Enemy extends MovingObject {
         },this.roamPauseLength, this)
       }
     }
-  
+
 
     if(this.screenPos!=false){
       this.model.x=this.screenPos.x+20;

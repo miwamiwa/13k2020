@@ -19,6 +19,8 @@ function mousePressed(){
     shootStopTimeout = setTimeout(function(){
       resetPlayerAnimation();
     },400);
+
+    playBlaster(1800,3);
 }
 
 
