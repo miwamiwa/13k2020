@@ -11,7 +11,7 @@ let charStartVal = 128; // start index for charcode assignments
 // or retrieves already stored random strings
 
 function setupRandomSeed(index){
-
+//  console.log(index)
   if(!saveData.seedIndex.includes(index)){
 
     let result="";

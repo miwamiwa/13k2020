@@ -1,26 +1,27 @@
-
+let snarerelease=0.3;
 function playSnare(){
   playSound(preloadSound(
-    40,
-    new Envelope(0.03,0.01,0.3,0.11),
-    1,noisey2
-  ),20,'highpass',1200,4);
+    10,
+    new Envelope(0.02,0.01,0.3,snarerelease),
+    4,noisey2
+  ),5,'highpass',2200,4);
 }
 
 function playHats(){
   playSound(preloadSound(
-    4000,
-    new Envelope(0.01,0.01,0.1,0.3),
-    60,noisey
-  ),12,'highpass',1400,12);
+    400,
+    new Envelope(0.01,0.01,0.1,0.2),
+    40,noisey
+  ),14,'highpass',1400,12);
 }
 
+let wubfactor=560;
 function playWobbleBass(freq){
   playSound(preloadSound(
     freq,
-    new Envelope(0.01,0.11,0.3,1.81),
+    new Envelope(0.05,0.51,0.2,0.51),
     60,constSine2
-  ),12,'highshelf',60,8);
+  ),5,'lowshelf',wubfactor,10); // adjust filter freq value 200-1000 to get nice dub fx
 }
 
 function playNoiseySynth(freq){
@@ -29,7 +30,7 @@ function playNoiseySynth(freq){
     freq,
     new Envelope(0.01,0.11,0.3,1.45),
     50,constSine4
-  ),6,'lowpass',1500,8);
+  ),8,'lowpass',1500,8);
   sine4counter++;
   if(sine4counter%12==0) sine4fact = 1 - sine4fact;
 }
@@ -39,14 +40,14 @@ function playHardHat(){
     8,
     new Envelope(0.01,0.01,0.11,0.13),
     1,constSine3
-  ),8,'lowshelf',1240,12);
+  ),6,'lowshelf',2240,12);
 }
-function playKick(){
+function playKick(fact){
   playSound(preloadSound(
-    160, // compact bassy hits <1500, trappy pitched long hits 6000-20000
-    new Envelope(0.01,0.11,0.3,0.45),
+    fact, // compact bassy hits <1500, trappy pitched long hits 6000-20000
+    new Envelope(0.01,0.11,0.3,0.35),
     500,constSineB
-  ),28,'lowpass',180,12);
+  ),18,'lowpass',180,12);
 }
 
 // factor:
@@ -57,6 +58,14 @@ function playBlaster(factor,vol){
     new Envelope(0.01,0.11,0.3,0.25),
     100,constSineB2
   ),vol,'highpass',1080,8);
+}
+
+function playSine(factor){
+  playSound(preloadSound(
+    factor,
+    new Envelope(0.01,0.11,0.3,0.35),
+    1,constSine
+  ),1.0,'notch',280,28);
 }
 
 function playDamageFX(){

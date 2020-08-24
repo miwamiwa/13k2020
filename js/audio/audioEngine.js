@@ -10,7 +10,7 @@ function startSound(){
 
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   context = new AudioContext();
-  startBeatMachine();
+ startBeatMachine();
 /*
   // start drums
   setInterval( playHardHat , 300);
@@ -39,13 +39,13 @@ function noisey(i,dividor){
 }
 
 function noisey2(i,dividor){
-  return Math.random()*0.02+constrain(Math.round(Math.sin(i / dividor)),0,0.130);
+  return Math.random()*constrain(Math.round(Math.sin(i / (i+dividor))),0,0.130);
 }
 function constSine(i,dividor){
-  return constrain(Math.round(Math.sin(i / dividor)),0,0.10);
+  return constrain(Math.sin(i / dividor),-0.2,0.2);
 }
 function constSine2(i,dividor){
-  return constrain(0.3*(Math.sin(i / dividor)+Math.sin(i / (10+dividor))),0,0.10);
+  return constrain(0.5*(Math.sin(i / dividor)+Math.sin(i / (20+dividor))),0,0.10);
 }
 
 

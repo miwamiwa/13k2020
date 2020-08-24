@@ -13,9 +13,9 @@ function start(){
   setupActionBar();
   resizeCanvas();
 
-  createLevel();
-  createPlayer();
-  setupCamera();
+  //createLevel();
+  //createPlayer();
+  //setupCamera();
   loadModelData();
 
   startSound();

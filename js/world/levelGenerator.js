@@ -8,6 +8,7 @@ let lvlCount=0;
 let enemyDifficulty=1;
 let lvlDiffIncreaseInterval = 3;
 let maxEnemyDifficulty =3;
+let platInterval = 65;
 // a place to setup some platforms and stuff
 
 function createLevel(){
@@ -53,7 +54,7 @@ function createLevel(){
     let y = killLine;
     let minPlatW = 50;
     let maxExtraPlatW = 150;
-    let platInterval = 65;
+
     let maxPlatDist = 60;
 
 
@@ -215,7 +216,7 @@ class Level{
       this.platforms[i].display();
     }
 
-    ctx.fillStyle = "yellow"
+    ctx.fillStyle = "black"
     for(let i=0; i<this.walls.length; i++){
       let w = this.walls[i];
       w.updateOnScreenPosition();

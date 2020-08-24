@@ -7,14 +7,16 @@ function createPlayer(){
   else pos.x-= 130;
   player=new MovingObject(pos.x,pos.y-100,40,'#2a20');
   player.facing='left';
-
+  setupCamera();
 
 }
 
 let  playerMoving;
 let lastPlayerMovingState=false;
 let playerJumping=false;
+
 function updatePlayer(){
+
   player.limitX();
   player.display();
   playerModel.x=player.screenPos.x+20;
@@ -51,9 +53,22 @@ function updatePlayer(){
       resetPlayerAnimation();
     },400)
   }
+
+ aBar.health.innerHTML='health: '+Math.floor( player.hitPoints );
 }
 
 function resetPlayerAnimation(){
   if(playerMoving) playerModel.fullRig.selectAnimation(0);
   else playerModel.fullRig.selectAnimation(3);
+}
+
+function damagePlayer(damage){
+  //console.log("player hit!");
+  player.hitPoints -= damage;
+  playDamageFX();
+
+  playerModel.selectAnimation(1);
+  setTimeout(function(){
+    resetPlayerAnimation();
+  },400)
 }

@@ -1,9 +1,7 @@
 let enemyLootTable = [
-  {name:"angry data strip",fill:"grey",quantity:{min:12,r:14},chance:1},
-  {name:"gold",fill:"gold",quantity:{min:1,r:5},chance:0.5},
-  {name:"html bits",fill:"lightblue",quantity:{min:3,r:52},chance:0.8},
-  {name:"health pot",fill:"tomato",quantity:{min:1,r:3},chance:0.9}
+  {name:"data strip",fill:"grey",quantity:{min:12,r:14},chance:1}
 ];
+
 
 let cleaningitem = 'level clear-tastik';
 
@@ -12,27 +10,25 @@ let inventory = [];
 
 function generateLoot(target){
 
-  let r = Math.random();
-  for(let i=0; i<enemyLootTable.length; i++){
-    if(r<enemyLootTable[i].chance){
-      let e = enemyLootTable[i];
-      let r2 = Math.floor(e.quantity.min+Math.random()*e.quantity.r);
-      items.push(new Item(target.x,target.y-50,10,e.fill,e.name,r2));
-    //  console.log(items[items.length-1])
-      let index=items.length-1;
-      items[index].impactForce.x = Math.floor(6 + Math.random()*12);
-      if(Math.random()>0.5) items[index].impactForce.x*=-1;
-      items[index].initJumpForce=11;
-      items[index].jump();
-    }
+  let quantity = 5+randInt(15);
+  for(let i=0; i<quantity; i++){
+
+    items.push(new Item(target.x,target.y-50,10,'grey','data strip',1));
+    let j=items[items.length-1];
+    j.impactForce.x = 6+randInt(12);
+    if(Math.random()>0.5) j.impactForce.x*=-1;
+    j.initJumpForce=11;
+    j.jump();
   }
 }
 
+
+
 function updateItems(){
-//  console.log("sup boyx")
-  for(let i=0; i<items.length; i++){
+
+  for(let i=items.length-1; i>=0; i--){
     items[i].update();
-  //  console.log("updat4e it")
+    if(items[i].looted) items.splice(i,1);
   }
 }
 
@@ -57,7 +53,8 @@ class Item extends MovingObject {
         // ITEM PICKED UP !
         this.looted = true;
 
-        addToInventory(this.name,this.quantity);
+        addLoot();
+
       }
       else if(d.d<this.lootableRange){
         // ITEM MOVES TOWARDS PLAYER
@@ -75,11 +72,7 @@ class Item extends MovingObject {
 
 
       this.display();
-      if(this.screenPos!=false){
-        ctx.fillStyle='#000b';
-        ctx.font='8px bold';
-        ctx.fillText(this.quantity,this.screenPos.x+15,this.screenPos.y-15)
-      }
+
       //console.log("updat4!")
     }
 

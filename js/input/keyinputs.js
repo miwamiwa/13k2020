@@ -3,17 +3,12 @@ let cantGoDown = false;
 function keypress(){
 
   switch(event.keyCode){
-    case 65: //a
-      player.movingLeft=true;
-      player.movingRight=false;
-      player.facing='left';
-    break;
 
-    case 68: //d
-      player.movingRight=true;
-      player.movingLeft=false;
-      player.facing='right';
-    break;
+     //a
+    case 65: player.goLeft(); break;
+
+    //d
+    case 68: player.goRight(); break;
 
     case 32: //space
     if(player.fallSpeed<8) player.jump();

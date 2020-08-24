@@ -22,6 +22,18 @@ class MovingObject extends DisplayObject {// extends display object class
 
   }
 
+  goLeft(){
+    this.movingRight = false;
+    this.movingLeft = true;
+    this.facing="left";
+  }
+
+  goRight(){
+    this.movingRight = true;
+    this.movingLeft = false;
+    this.facing="right";
+  }
+
   display(){
 
     this.moveLeftRight();

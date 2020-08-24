@@ -1,4 +1,11 @@
 let inventoryDisplayed = false;
+let carriedDataStrips =0;
+
+
+function addLoot(){
+  carriedDataStrips++;
+  aBar.inventory.innerHTML='data strips: '+carriedDataStrips;
+}
 
 function addToInventory(name,quantity){
 
@@ -34,16 +41,20 @@ function haveItem(name,quantity){
 
 function findAndRemoveItem(name,quantity){
   let result = haveItem(name,quantity);
-  console.log(result,name)
+  //console.log(result,name)
   if(result!=-1) removeItem(name,quantity);
-  console.log(result);
+//  console.log(result);
 
-  updateInventoryDisplay();
+//  updateInventoryDisplay();
+
+
   return result;
 }
 
 let slotSize=40;
 let slotmargin=5;
+
+
 function updateInventoryDisplay(){
 
   let items = document.getElementsByClassName("invitem");
@@ -52,7 +63,7 @@ function updateInventoryDisplay(){
   }
   let bounds = {
     x:canvas.x+slotmargin,
-    y:actionBar.y+slotmargin,
+    y:aBar.y+slotmargin,
     w:slotSize,
     h:slotSize
   }

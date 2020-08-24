@@ -30,23 +30,3 @@ class DisplayObject{
     projectiles.push(new Projectile(this.x,this.y,4,"black",speed,targetx,targety));
   }
 }
-
-function checkCollision(bounds1,bounds2){
-  return (
-    ( bounds1.right>=bounds2.left && bounds1.right<=bounds2.right )
-    || ( bounds1.left>=bounds2.left && bounds1.left<=bounds2.right )
-    || ( bounds1.left<=bounds2.left && bounds1.right>=bounds2.right )
-  )
-  &&(
-    ( bounds1.bottom>=bounds2.top && bounds1.bottom<=bounds2.bottom)
-    || ( bounds1.top>=bounds2.top && bounds1.top<=bounds2.bottom )
-    || ( bounds1.top<=bounds2.top && bounds1.bottom>=bounds2.bottom )
-  )
-}
-
-function getScreenPos(input){
-  return {
-    x: canvas.w2 + input.x-camera.target.x - input.w2,
-    y: canvas.h2 + input.y-camera.target.y - input.h2
-  }
-}

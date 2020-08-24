@@ -65,6 +65,7 @@ function formKeyDown(){
 function inputListChanged(){
 
   textform.value=listform.value.substring(0,listform.value.indexOf(" "));
+//  console.log("inputlistchanged()")
   goToLink();
 }
 
@@ -72,6 +73,7 @@ function goToLink(){
 
   //let tinput = textform.value;
   //  let linput =
+
   let result  = listform.value.substring(0,listform.value.indexOf(" "));
   if(textform.value!=listform.value) result = textform.value;
     console.log('result',result);
@@ -84,6 +86,7 @@ function goToLink(){
     waittime=24;
 
     getLinkSeed(result);
+    console.log(currentLevel)
     //currentLevel =0;
     noiseCounter=0
     createLevel();
@@ -103,16 +106,24 @@ let difficultyLevels = [];
 function getLinkSeed(name){
 
   let index = saveData.linkNames.indexOf(name);
-  if(index!=-1) currentLevel = saveData.seedIndex[index];
+
+  console.log("linknames index: ",index)
+
+  // if level has already been visited
+  if(index!=-1){
+    currentLevel = saveData.seedIndex[index];
+    console.log(saveData.seedIndex)
+  }
+
+  // otherwise if it's the first visit
   else {
 
+    // if this is a level (not a true 404)
     if(allLinkNames.includes(name)){
 
-
-      if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0){
+      // increase difficulty every 3 levels
+      if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0)
         enemyDifficulty = Math.min(enemyDifficulty+1,maxEnemyDifficulty);
-
-      }
 
       difficultyLevels.push(enemyDifficulty);
       let favindex= favorites.indexOf(name);
@@ -131,7 +142,10 @@ function getLinkSeed(name){
       while(saveData.seedIndex.includes(newSeedIndex)){
         newSeedIndex = Math.floor(Math.random()*100);
       }
+
+
       saveData.linkNames.push(name);
+      console.log("pushed",name)
       currentLevel =newSeedIndex;
     }
     else {

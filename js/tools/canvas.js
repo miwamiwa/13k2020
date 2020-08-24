@@ -16,25 +16,11 @@ function createCanvas(){
   //canvas.canvas.setAttribute("style",``);
   ctx = canvas.canvas.getContext("2d");
 
-  
+
 }
 
 window.onresize=resizeCanvas;
 function resizeCanvas(){
 
 
-  let pos= {
-    x:canvas.x,
-    y:canvas.y+canvas.h,
-    w: canvas.w,
-    h: 50,
-  }
-  setStyle( actionBar.el,pos,actionBarFill );
-
-  pos.w=pos.w*0.9;
-  setStyle( actionBar.inventory,pos,'grey');
-
-  pos.x+=pos.w;
-  pos.w=pos.w*0.1/0.9;
-  setStyle( actionBar.right,pos,'blue');
 }

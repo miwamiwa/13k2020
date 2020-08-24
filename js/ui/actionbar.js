@@ -1,21 +1,33 @@
-let actionBar = {};
-let actionBarFill = 'black';
+let aBar = {};
+let aBarFill = 'black';
+
 function setupActionBar(){
 
-  actionBar= {
+  aBar= {
     x:canvas.x,
     y:canvas.y+canvasElh,
-    w: canvasElw,
+    w: canvas.w,
     h: 50,
   }
 
-    actionBar.el = div(actionBar,actionBarFill);
+    aBar.el = div(aBar,aBarFill);
 
-    actionBar.w=actionBar.w*0.9;
-    actionBar.inventory = div(actionBar,'grey');
+    aBar.w*=0.2;
+    aBar.health = div(aBar,'grey');
 
-    actionBar.x+=actionBar.w;
-    actionBar.w=actionBar.w*0.1/0.9;
-    actionBar.right = div(actionBar,'blue');
+    aBar.x+=aBar.w;
+    aBar.inventory = div(aBar,'grey');
 
+    aBar.x+=aBar.w;
+    aBar.w*=2;
+    aBar.research = div(aBar,'grey');
+
+    aBar.x+=aBar.w;
+    aBar.w/=2;
+    aBar.save = div(aBar,'grey');
+
+}
+
+function aBarEl(){
+  return div(aBar,'grey');
 }
