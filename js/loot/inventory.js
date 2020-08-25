@@ -3,9 +3,46 @@ let carriedDataStrips =0;
 
 
 function addLoot(){
+
   carriedDataStrips++;
-  aBar.inventory.innerHTML='data strips: '+carriedDataStrips;
+  updateInv(carriedDataStrips);
+
+
+  if(carriedDataStrips>dataCost){
+
+    carriedDataStrips-=dataCost
+    let t = carriedDataStrips;
+
+    setTimeout(function(input){
+
+      processDataStrips();
+      updateInv(input);
+
+
+    },300,t);
+
+  }
+
+
 }
+
+function updateInv(input){
+  let t = "";
+  if(revealedLink!="") t=". Next url: "+revealedLink;
+  aBar.inventory.innerHTML='data strips: '+input+' / '+dataCost+t;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 function addToInventory(name,quantity){
 

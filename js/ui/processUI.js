@@ -47,21 +47,17 @@ function runProcessUI(){
 let dataCost = 10; // cost to uncover url bits
 
 function processDataStrips(){
-console.log("data strps")
-let have = findAndRemoveItem(enemyLootTable[0].name,dataCost);
-console.log(have)
-if(have!=-1){
 
-  console.log("have!")
+  console.log("start process ")
   if(nextLink=="") pickNextLinkAward();
-
+  console.log("we got here")
 
     let pick = Math.floor(Math.random()*revealedLink.length);
     while(revealedLink[pick]!="_"){
       pick = Math.floor(Math.random()*revealedLink.length);
     }
 
-    console.log(pick,nextLink)
+  //  console.log(pick,nextLink)
     if(pick<nextLink.length-1)
     revealedLink = revealedLink.substring(0,pick)+nextLink[pick]+revealedLink.substring(pick+1,revealedLink.length);
     else revealedLink = revealedLink.substring(0,pick)+nextLink[pick]
@@ -76,10 +72,11 @@ if(have!=-1){
 
       updateFavorites();
       console.log("done")
+      nextLink="";
     }
 
 
-}
+
 
 
 }
@@ -89,7 +86,7 @@ let revealedChars =0;
 
 
 function pickNextLinkAward(){
-  console.log("reset reward")
+  console.log("pick next link")
   let pick = randomlink();
   if( favorites.length<allLinkNames.length-1 ){
     while(favorites.includes(pick)){

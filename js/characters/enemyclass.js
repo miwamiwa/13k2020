@@ -264,13 +264,13 @@ class Enemy extends MovingObject {
 
             if(x!=-1){
               let diff = level1.platforms[i].y - p.y;
-              if(p.y<pp.y && diff>0 && diff < 150){
+              if(this.y<player.y && diff>0 && diff < 150){
                 console.log('moving down')
                 tarfound=true;
                 this.target = x+randInt(r);
                 this.goalReachedAction='down'
               }
-              else if(p.y>pp.y && diff<0 && diff > -100){
+              else if(this.y>player.y && diff<0 && diff > -100){
                 tarfound=true;
                 this.target = x+randInt(r);
                 this.goalReachedAction='up';
