@@ -78,3 +78,19 @@ let reach=(obj,tar,vel)=>{
   else if(obj.y-vel>tar.y) obj.y-=vel;
   else obj.y=tar.y;
 }
+
+// return the last element in an array
+let last=(arr)=> arr[arr.length-1];
+
+
+
+
+let isLevel=(name)=>{
+  let s=saveData.levels;
+  for(let i=0; i<s.length; i++){
+    if(s[i].name==name) return i;
+  }
+  return -1;
+}
+
+let pointTo=(id)=>document.getElementById(id);

@@ -46,16 +46,15 @@ function continueDialog(){
 
     switch(aboutguyDialogProgression){
       case 0:
-      // add stuff to favorites
       for(let i=1; i<3; i++){
-        favorites.push(allLinkNames[i]);
-        favoritesStatus.push("unknown");
+        newLevel(allLinkNames[i]);
       }
+
       updateFavorites();
 
       break;
 
-    
+
     }
     if(aboutguy.interactible&&aboutguyDialogProgression<aboutguydialogs.length-1) aboutguyDialogProgression ++;
   }

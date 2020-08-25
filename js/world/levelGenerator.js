@@ -13,6 +13,7 @@ let platInterval = 65;
 
 function createLevel(){
 
+  noiseCounter=0
   enemies = [];
   items = [];
   firstEnemyKilled = false;
@@ -95,14 +96,14 @@ function createLevel(){
     level1.text404 = new DisplayObject( plat.x-10,plat.y-10,300,300 );
     exitdoor=new MovingObject(plat.x+50,plat.y-50,20,'#a22f');
 
-    let index = saveData.seedIndex.indexOf(currentLevel);
-    level1.enemyDifficulty = difficultyLevels[index];
-    level1.arrayindex=index;
-    level1.completion=completions[index];
-    level1.cleared = clearedStates[index];
+  //  let index = saveData.seedIndex.indexOf(currentLevel);
+    level1.enemyDifficulty = levelData.difficulty; //difficultyLevels[index];
+    //level1.arrayindex=index;
+    //level1.completion= levelData.completion; //completions[index];
+    level1.cleared = levelData.cleared;//clearedStates[index];
 
     // check if top platform is already unlocked
-    if(favoritesStatus[index].substring(0,3)=="Unl"){
+    if(levelData.unlocked){
       firstEnemyKilled = true;
       cantGoDown=false;
     }
@@ -130,7 +131,7 @@ class Level{
       .then(text => this.bgText=text);
     }
 
-    this.completion=0;
+    //this.completion=0;
     this.uncorruptedBG = [];
     this.uncorrupting=false;
     this.platforms = [];
@@ -234,8 +235,8 @@ class Level{
     ctx.font="40px bold";
 
     ctx.fillStyle='black';
-    ctx.fillText(this.completion+"% complete", 10,30 );
+    ctx.fillText( levelData.completion+"% complete", 10,30 );
     ctx.fillStyle='white';
-    ctx.fillText(this.completion+"% complete", 12,32 );
+    ctx.fillText( levelData.completion+"% complete", 12,32 );
   }
 }

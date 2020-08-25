@@ -13,12 +13,12 @@ function start(){
   setupActionBar();
   resizeCanvas();
 
-  //createLevel();
-  //createPlayer();
-  //setupCamera();
+  // buffer models
   loadModelData();
-
+  
   startSound();
+
+  // start main loop
   setInterval( run, 33 );
 }
 

@@ -3,7 +3,7 @@ let allLinkNames = ["home","contact","store","gallery","news","events","wormhole
 let favorites = ["home"];
 let favoritesStatus = ["safe"];
 let clearedStates = [false,false,false];
-let completions = [0,0,0];
+//let completions = [0,0,0];
 let nextLink = "";
 
 
@@ -29,10 +29,8 @@ function processDataStrips(){
     console.log(revealedLink)
     revealedChars++;
     if(revealedChars==revealedLink.length){
-      favorites.push(nextLink);
-      favoritesStatus.push("unknown");
-      completions.push(0);
-      clearedStates.push(false);
+
+      newLevel(nextLink);
 
       updateFavorites();
       console.log("done")

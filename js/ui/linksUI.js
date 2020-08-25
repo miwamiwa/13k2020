@@ -35,9 +35,12 @@ let tFormSelected = false;
 //
 // populate the Select element that contains the favorites list
 function updateFavorites(){
-  let options = "";
-  for(let i=0; i<favorites.length; i++){
-    options+=`<option>${favorites[i]} <br>status: ${favoritesStatus[i]}</option>`
+
+  let options = `<option> home </option>`;
+
+  for(let i=0; i<saveData.levels.length; i++){
+    let j=saveData.levels[i];
+    options+=`<option>${j.name} difficulty: ${j.difficulty}</option>`
   }
 
   let fav = `favorites:<select id="favorites"> ${options} </select>`
@@ -46,11 +49,13 @@ function updateFavorites(){
   www.coolshoes.com/<input type='text' id='tinput' onkeydown='formKeyDown()'></input>
   ${fav} <span onclick='inputListChanged()'>go</span> `;
 
-  textform=document.getElementById("tinput");
-  listform=document.getElementById("favorites");
+  textform=pointTo("tinput");
+  listform=pointTo("favorites");
   textform.onfocus=function(){tFormSelected=true;};
   textform.onblur=function(){tFormSelected=false;};
 }
+
+
 
 
 function formKeyDown(){
@@ -69,88 +74,104 @@ function inputListChanged(){
   goToLink();
 }
 
-function goToLink(){
+let levelData;
 
-  //let tinput = textform.value;
-  //  let linput =
+function setupLevel(){
 
-  let result  = listform.value.substring(0,listform.value.indexOf(" "));
-  if(textform.value!=listform.value) result = textform.value;
-    console.log('result',result);
-  if(result=='home') loadHomeLevel();
-  else if (result=='continue') getSavedGameAndStart();
-  else {
-    //linksUIel.innerHTML = "loading "+result+"!";
-    console.log("load dat")
-    fadeIn =0;
-    waittime=24;
 
-    getLinkSeed(result);
-    console.log(currentLevel)
-    //currentLevel =0;
-    noiseCounter=0
-    createLevel();
-    createPlayer();
+  let islevel=isLevel(currentLevel);
 
-    setTimeout(function(){
-      displayLinksUI = false;
-
-    },linkLoadTime);
+  // if level already exists
+  if(islevel!=-1){
+    console.log("level already exists",islevel)
+    // point to level data
+    levelData = saveData.levels[islevel];
   }
 
+  // if level doesn't exist
+  else {
+
+    // increment enemy difficulty
+
+
+
+    // setup new level data.
+    newLevel(dif);
+
+    // point to level data
+    levelData=last(saveData.levels);
+  }
+
+  console.log("new level data: ",levelData)
+}
+let dif=0;
+function newLevel(name){
+
+  if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0)
+    dif = Math.min(enemyDifficulty+1,maxEnemyDifficulty);
+  lvlCount++;
+
+  if(name==undefined) name=currentlevel;
+  saveData.levels.push({
+    name:name,
+    seedData:setupRandomSeed(),
+    completion:0,
+    difficulty:dif,
+    unlocked:false,
+    cleared:false
+  });
+}
+
+function saveLevelData(){
+
+  console.log('save level data')
+  if(currentLevel!='home'&&currentLevel!='start'){
+    let i = isLevel(currentLevel);
+
+    console.log("is level result "+ i)
+    saveData.levels[i].completion = levelData.completion;
+    saveData.levels[i].unlocked = levelData.unlocked;
+    saveData.levels[i].cleared = levelData.cleared;
+  }
 
 }
 
-let difficultyLevels = [];
-// convert level/link name to seed index from the save data array
-function getLinkSeed(name){
+function goToLink(){
+  console.log("goToLink()");
 
-  let index = saveData.linkNames.indexOf(name);
-
-  console.log("linknames index: ",index)
-
-  // if level has already been visited
-  if(index!=-1){
-    currentLevel = saveData.seedIndex[index];
-    console.log(saveData.seedIndex)
+  // get target url:
+  if(levelData!=undefined) saveLevelData();
+  // default target link is select list value
+  if(listform.value!='home'){
+    currentLevel  = listform.value.substring(0,listform.value.indexOf(" "));
+    if(textform.value!=listform.value) currentLevel = textform.value;
   }
+  else currentLevel='home';
+  // if text form input is different, then chose text form instead.
 
-  // otherwise if it's the first visit
+  console.log('new current level: ', currentLevel);
+
+  // if target is a start screen command
+  if(currentLevel=='home') loadHomeLevel();
+  else if (currentLevel=='continue') getSavedGameAndStart();
+
+  // if target isn't home screen
   else {
 
-    // if this is a level (not a true 404)
-    if(allLinkNames.includes(name)){
+    console.log("load a level")
+    // reset fade-in
+    fadeIn =0;
+    waittime=24;
 
-      // increase difficulty every 3 levels
-      if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0)
-        enemyDifficulty = Math.min(enemyDifficulty+1,maxEnemyDifficulty);
+    //getLinkSeed(result);
+  //  console.log(currentLevel)
+    //currentLevel =0;
+    setupLevel();
 
-      difficultyLevels.push(enemyDifficulty);
-      let favindex= favorites.indexOf(name);
-      let statustext="Locked. Difficulty: "+enemyDifficulty;
-      //  console.log("favindex",favindex)
-      if(favindex!=-1){
-        favoritesStatus[favindex]=statustext;
-      }
-      else{
-        favorites.push(name);
-        favoritesStatus.push(statustext);
-      }
-      lvlCount++;
-      //  console.log('difficulty',enemyDifficulty)
-      let newSeedIndex = Math.floor(Math.random()*100);
-      while(saveData.seedIndex.includes(newSeedIndex)){
-        newSeedIndex = Math.floor(Math.random()*100);
-      }
-
-
-      saveData.linkNames.push(name);
-      console.log("pushed",name)
-      currentLevel =newSeedIndex;
-    }
-    else {
-      currentLevel ='true404';
-    }
+    createLevel();
+    createPlayer();
 
   }
+
+
 }

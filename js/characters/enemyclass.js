@@ -20,14 +20,14 @@ function updateEnemies(){
         enemies.splice(i,1);
 
         // update level completion
-        level1.completion=Math.min(level1.completion+5,100);
-        completions[level1.arrayindex]=level1.completion;
+        levelData.completion=Math.min(levelData.completion+5,100);
+        //completions[level1.arrayindex]=levelData.completion;
 
         // start cleasing background
         level1.uncorrupting=true;
         // if level isn't complete yet, set timeout to stop cleansing
         // ( if level is complete, cleasing continues until done )
-        if(level1.completion<100)
+        if(levelData.completion<100)
           setTimeout(function(){level1.uncorrupting=false;},2000);
       }
     }
@@ -41,12 +41,15 @@ function updateEnemies(){
 
       // update top platform, enable going down
       cantGoDown = false;
-      level1.platforms[level1.platforms.length-1].fill = platformFill;
+      let p = last(level1.platforms);
+      p.fill = platformFill;
 
       // start level phase 2
       firstEnemyKilled = true;
-      let index=saveData.seedIndex.indexOf(currentLevel);
-      favoritesStatus[index] = "Unlocked. Difficulty: "+level1.enemyDifficulty;
+    //  favoritesStatus[ favIndex() ] =
+    //    "Unlocked. Difficulty: "+level1.enemyDifficulty;
+
+      levelData.unlocked=true;
     }
 
 
@@ -54,13 +57,13 @@ function updateEnemies(){
     // while level isn't cleared
     if(firstEnemyKilled&&!level1.cleared){
       // if level isn't complete and there are less than the max number of enemies
-      if(enemies.length<maxEnemies && level1.completion<100){
+      if(enemies.length<maxEnemies && levelData.completion<100){
 
         // spawn new enemy every 100 frames
         enemyUpdateCounter++;
         if(enemyUpdateCounter%100==0){
           // pick a random platform
-          let pick=Math.floor(Math.random()*level1.platforms.length);
+          let pick= randInt(l(level1.platforms));
           let plat = level1.platforms[pick];
           // spawn enemy
           enemies.push(new Enemy(plat.x,plat.y-80,pick));
