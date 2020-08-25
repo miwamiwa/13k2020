@@ -6,43 +6,7 @@ let clearedStates = [false,false,false];
 let completions = [0,0,0];
 let nextLink = "";
 
-let pUI = {
-  w:200,
-  h:200,
-  last:false,
-  el:0
-}
 
-function runProcessUI(){
-
-  if(displayProcessUI&&!pUI.last){
-
-    // create process UI
-    pUI.x = canvasElw/2-pUI.w/2;
-    pUI.y = canvasElh/2-pUI.h/2;
-
-    dialogUI.open=false;
-    pUI.el = div(pUI,'white');
-    pUI.el.innerHTML='spend '+dataCost+' data strips towards discovering a new page';
-    let bsize = {x:pUI.x,y:pUI.y+pUI.h/4,w:pUI.w,h:pUI.h/4};
-    pUI.dataButton = button(bsize,'yellow','but1','processDataStrips');
-    bsize.y+=pUI.h/4;
-    pUI.el2 = div(bsize,'white');
-    pUI.el2.innerHTML='spend '+htmlCost+' html bits towards clearing an html page';
-    bsize.y+=pUI.h/4;
-    pUI.htmlButton = button(bsize,'orange','but2','processHTMLBits');
-  }
-  else if(!displayProcessUI&&pUI.last){
-
-    // remove process UI
-    pUI.el.remove();
-    pUI.el2.remove();
-    pUI.dataButton.remove();
-    pUI.htmlButton.remove();
-  }
-
-  pUI.last=displayProcessUI;
-}
 
 let dataCost = 10; // cost to uncover url bits
 
@@ -111,14 +75,4 @@ function pickNextLinkAward(){
 
 function randomlink(){
   return allLinkNames[Math.floor(Math.random()*allLinkNames.length)];
-}
-
-
-let htmlCost = 500;
-function processHTMLBits(){
-console.log("html bits");
-let have =findAndRemoveItem(enemyLootTable[2].name,htmlCost);
-if(have!=-1){
-  addToInventory(cleaningitem,'1');
-}
 }

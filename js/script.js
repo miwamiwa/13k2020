@@ -44,7 +44,7 @@ function run(){
 
     runFadeIn();
 
-    runProcessUI();
+    //runProcessUI();
 
     if(!h) level1.displayCompletion();
 

@@ -7,7 +7,7 @@ let camera = {};
 // setup canvas since that is the "camera"
 // initialize camera target position
 
-function setupCamera(){
+let setupCamera=()=>{
 
   camera.target = {x:player.x,y:player.y};
   camera.w = canvas.w2;
@@ -15,16 +15,15 @@ function setupCamera(){
   camera.speed = 24;
 }
 
-function cameraFollow(x,y){
+// camerafollow()
+//
+// set viewport target
+
+let cameraFollow=(x,y)=>{
 
   y-=50;
-  if(camera.target.x+camera.speed<x) camera.target.x+=camera.speed;
-  else if(camera.target.x-camera.speed>x) camera.target.x-=camera.speed;
-  else camera.target.x=x;
-
-  if(camera.target.y+camera.speed<y) camera.target.y+=camera.speed;
-  else if(camera.target.y-camera.speed>y) camera.target.y-=camera.speed;
-  else camera.target.y=y;
+  // move towards target
+  reach(camera.target,{x:x,y:y},camera.speed);
 
   camera.left = camera.target.x-camera.w;
   camera.right = camera.target.x+camera.w;

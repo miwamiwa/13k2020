@@ -1,3 +1,34 @@
+let sine4counter=0;
+let sine4fact=0.2;
+
+
+let constSineB=(i,dividor)=>
+constrain(Math.round(Math.sin(i / (dividor+i/100))),0,0.10);
+
+let constSineB2=(i,dividor)=>
+constrain(Math.round(Math.sin(i / (dividor+i/1000))),0,0.10);
+
+let noisey=(i,dividor)=>
+Math.random()*0.02;
+
+let noisey2=(i,dividor)=> Math.
+random()*constrain(Math.round(Math.sin(i / (i+dividor))),0,0.130);
+
+let constSine=(i,dividor)=>
+constrain(Math.sin(i / dividor),-0.2,0.2);
+
+let constSine2=(i,dividor)=>
+constrain(0.5*(Math.sin(i / dividor)+Math.sin(i / (20+dividor))),0,0.10);
+
+let constSine3=(i,dividor)=>
+constrain(0.2*Math.random()*(Math.sin(i / dividor)+Math.sin(i / (100+dividor))),0,0.10);
+
+let constSine4=(i,dividor)=>
+constrain(Math.random()*sine4fact+0.3*(Math.sin(i / dividor)+0.3*Math.sin(i / (2+dividor))),0,0.10);
+
+
+
+
 let snarerelease=0.3;
 function playSnare(){
   playSound(preloadSound(

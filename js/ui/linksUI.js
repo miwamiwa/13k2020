@@ -37,7 +37,7 @@ let tFormSelected = false;
 function updateFavorites(){
   let options = "";
   for(let i=0; i<favorites.length; i++){
-    options+=`<option>${favorites[i]} status: ${favoritesStatus[i]}</option>`
+    options+=`<option>${favorites[i]} <br>status: ${favoritesStatus[i]}</option>`
   }
 
   let fav = `favorites:<select id="favorites"> ${options} </select>`
