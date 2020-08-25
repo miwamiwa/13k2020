@@ -2,7 +2,6 @@ let level1;
 
 let sceneW=0;
 let fadeIn =0;
-let exitdoor;
 let enemies = [];
 let lvlCount=0;
 let enemyDifficulty=1;
@@ -42,7 +41,6 @@ function createLevel(){
     level1 = new Level(plats,sceneW,Math.abs(plats[0][1] - plats[plats.length-1][1]));
     let plat=level1.platforms[level1.platforms.length-1];
     level1.text404 = new DisplayObject( plat.x-10,plat.y-10,300,300 );
-    exitdoor=new MovingObject(plat.x+50,plat.y-50,20,'#a22f');
     cantGoDown = false;
     //createFriendlyNPCs();
   }
@@ -94,7 +92,6 @@ function createLevel(){
     plat=level1.platforms[lastplat];
 
     level1.text404 = new DisplayObject( plat.x-10,plat.y-10,300,300 );
-    exitdoor=new MovingObject(plat.x+50,plat.y-50,20,'#a22f');
 
   //  let index = saveData.seedIndex.indexOf(currentLevel);
     level1.enemyDifficulty = levelData.difficulty; //difficultyLevels[index];
@@ -115,6 +112,7 @@ function createLevel(){
     }
   }
 
+  updateFavorites();
 }
 
 
@@ -153,7 +151,7 @@ class Level{
   displayBackground(){
     ctx.fillStyle=this.bgFill;
     ctx.fillRect(0,0,canvas.w,canvas.h);
-    this.bgTextObj.updateOnScreenPosition();
+    this.bgTextObj.position();
     if(this.bgText!=undefined&&this.bgTextObj.screenPos!=false){
 
       //console.log("yo")
@@ -203,7 +201,7 @@ class Level{
   }
 
   display404Background(){
-    this.text404.updateOnScreenPosition();
+    this.text404.position();
     ctx.font='100px Georgia';
     ctx.fillStyle='black';
     ctx.fillText("404",this.text404.screenPos.x,this.text404.screenPos.y);
@@ -220,7 +218,7 @@ class Level{
     ctx.fillStyle = "black"
     for(let i=0; i<this.walls.length; i++){
       let w = this.walls[i];
-      w.updateOnScreenPosition();
+      w.position();
 
       let p = w.screenPos;
       //  console.log("wall!",w.x,w.y,w.w,w.h)

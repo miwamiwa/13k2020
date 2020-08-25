@@ -15,7 +15,7 @@ function start(){
 
   // buffer models
   loadModelData();
-  
+
   startSound();
 
   // start main loop
@@ -33,7 +33,6 @@ function run(){
     if(h){
       runFriendlyNPCs();
     }
-    else runExitDoor();
 
     updateEnemies();
     updatePlayer();
@@ -50,12 +49,5 @@ function run(){
 
   }
   else displayStartUI();
-
-}
-
-
-function runExitDoor(){
-  exitdoor.display();
-  enableInteraction(exitdoor,"press E to return home",exitDoorRange);
 
 }

@@ -1,5 +1,5 @@
 
-let carriedDataStrips =0;
+let datastrip =0;
 
 // addloot()
 //
@@ -8,14 +8,14 @@ let carriedDataStrips =0;
 let addLoot=()=>{
 
   // add data strip
-  carriedDataStrips++;
-  updateInv(carriedDataStrips);
+  datastrip++;
+  updateInv(datastrip);
 
   // if we have enough data strips, trigger research
-  if(carriedDataStrips>dataCost){
-    carriedDataStrips-=dataCost
+  if(datastrip>dataCost){
+    datastrip-=dataCost
     processDataStrips();
-    updateInv(carriedDataStrips);
+    updateInv(datastrip);
   }
 }
 

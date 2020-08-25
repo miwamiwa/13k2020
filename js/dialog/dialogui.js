@@ -8,7 +8,6 @@ let dialogUI = {
 };
 
 let aboutguyDialogProgression =0;
-let computerDialogProgression =0;
 
 
 function runDialog(){
@@ -31,10 +30,6 @@ function runDialog(){
 
   // if no one is interactible, close dialog ui (add any other interactible things here)
   if(!aboutguy.interactible) dialogUI.open=false;
-  if(!computer.interactible){
-    displayLinksUI = false;
-    displayProcessUI = false;
-  }
 
 }
 
@@ -46,7 +41,7 @@ function continueDialog(){
 
     switch(aboutguyDialogProgression){
       case 0:
-      for(let i=1; i<3; i++){
+      for(let i=0; i<2; i++){
         newLevel(allLinkNames[i]);
       }
 

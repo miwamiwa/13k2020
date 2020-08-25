@@ -46,16 +46,6 @@ let setStyle=(el,box,fill)=>
   el.setAttribute("style",`position:fixed; left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px;background-color:${fill};`);
 
 
-let button=(bounds,fill,id,action)=>{
-  let result = div(bounds,fill);
-  result.id=id;
-  at(result,'onclick',action+"()");
-  at(result,'onmouseenter',`hover("${id}")`);
-  at(result,'onmouseleave',`unhover("${id}","${fill}")`);
-  return result;
-}
-
-
 let rad=(angle)=>angle*Math.PI/180;
 
 let l=(i)=> i.length;
@@ -83,8 +73,9 @@ let reach=(obj,tar,vel)=>{
 let last=(arr)=> arr[arr.length-1];
 
 
-
-
+//islevel()
+//
+// checks if this level is already part of save data
 let isLevel=(name)=>{
   let s=saveData.levels;
   for(let i=0; i<s.length; i++){

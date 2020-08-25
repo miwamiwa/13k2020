@@ -29,31 +29,7 @@ function createLinksUI(){
 
 }
 
-let tFormSelected = false;
 
-// updatefavorites();
-//
-// populate the Select element that contains the favorites list
-function updateFavorites(){
-
-  let options = `<option> home </option>`;
-
-  for(let i=0; i<saveData.levels.length; i++){
-    let j=saveData.levels[i];
-    options+=`<option>${j.name} difficulty: ${j.difficulty}</option>`
-  }
-
-  let fav = `favorites:<select id="favorites"> ${options} </select>`
-
-  linksUIel.innerHTML = ` <span onclick=''> < </span> <span onclick=''> > </span>
-  www.coolshoes.com/<input type='text' id='tinput' onkeydown='formKeyDown()'></input>
-  ${fav} <span onclick='inputListChanged()'>go</span> `;
-
-  textform=pointTo("tinput");
-  listform=pointTo("favorites");
-  textform.onfocus=function(){tFormSelected=true;};
-  textform.onblur=function(){tFormSelected=false;};
-}
 
 
 
@@ -70,7 +46,6 @@ function formKeyDown(){
 function inputListChanged(){
 
   textform.value=listform.value.substring(0,listform.value.indexOf(" "));
-//  console.log("inputlistchanged()")
   goToLink();
 }
 
@@ -91,19 +66,21 @@ function setupLevel(){
   // if level doesn't exist
   else {
 
-    // increment enemy difficulty
-
-
-
+    console.log("add this level")
     // setup new level data.
     newLevel(dif);
-
-    // point to level data
+    // point to this level to load it next
     levelData=last(saveData.levels);
   }
 
   console.log("new level data: ",levelData)
 }
+
+
+// newlevel()
+//
+// adds a new level to the game without starting it
+
 let dif=0;
 function newLevel(name){
 
@@ -122,6 +99,10 @@ function newLevel(name){
   });
 }
 
+// saveleveldata()
+//
+// save current level progression
+
 function saveLevelData(){
 
   console.log('save level data')
@@ -133,45 +114,58 @@ function saveLevelData(){
     saveData.levels[i].unlocked = levelData.unlocked;
     saveData.levels[i].cleared = levelData.cleared;
   }
-
 }
 
+// gotolink()
+//
+// called when you press go or hit enter in the text box
+
 function goToLink(){
-  console.log("goToLink()");
 
-  // get target url:
-  if(levelData!=undefined) saveLevelData();
-  // default target link is select list value
-  if(listform.value!='home'){
-    currentLevel  = listform.value.substring(0,listform.value.indexOf(" "));
-    if(textform.value!=listform.value) currentLevel = textform.value;
+  if(currentLevel=='start'){
+    if(textform.value=="home"){
+      loadHomeLevel();
+      return
+    }
+    if(textform.value=="new"){
+      newGameSave();
+      loadHomeLevel();
+      return
+    }
   }
-  else currentLevel='home';
-  // if text form input is different, then chose text form instead.
+  else 
 
-  console.log('new current level: ', currentLevel);
+  if(saveData.levels.length!=0){
+    console.log("gooo")
+    // get target url:
+    if(levelData!=undefined) saveLevelData();
 
-  // if target is a start screen command
-  if(currentLevel=='home') loadHomeLevel();
-  else if (currentLevel=='continue') getSavedGameAndStart();
+    if(listform.value!='home')
+      // default target link is select form value
+      currentLevel  = listform.value.substring(0,listform.value.indexOf(" "));
+      else currentLevel='home';
+      // if text form input is different, then chose text form instead.
+      if(textform.value!=listform.value&&textform.value!="") currentLevel = textform.value;
 
-  // if target isn't home screen
-  else {
 
-    console.log("load a level")
-    // reset fade-in
-    fadeIn =0;
-    waittime=24;
+    // if target is a start screen command
+    if(currentLevel=='home') loadHomeLevel();
+    else if (currentLevel=='continue') getSavedGameAndStart();
 
-    //getLinkSeed(result);
-  //  console.log(currentLevel)
-    //currentLevel =0;
-    setupLevel();
+    // if target isn't home screen
+    else {
+      // setup and start level
 
-    createLevel();
-    createPlayer();
+      fade(24);
+      setupLevel();
+      createLevel();
+      createPlayer();
+    }
 
   }
+
+
+
 
 
 }

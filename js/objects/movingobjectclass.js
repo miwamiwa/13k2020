@@ -38,7 +38,7 @@ class MovingObject extends DisplayObject {// extends display object class
 
     this.moveLeftRight();
     this.applyPhysics();
-    this.updateOnScreenPosition();
+    this.position();
     if(this.screenPos!=false){
 
       ctx.fillStyle=this.fill;

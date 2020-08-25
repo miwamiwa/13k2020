@@ -1,70 +1,47 @@
 let cantGoDown = false;
 
 function keypress(){
+  if(!tFormSelected){
+    switch(event.keyCode){
 
-  switch(event.keyCode){
+       //a
+      case 65: player.goLeft(); break;
 
-     //a
-    case 65: player.goLeft(); break;
+      //d
+      case 68: player.goRight(); break;
 
-    //d
-    case 68: player.goRight(); break;
+      case 32: //space
+      if(player.fallSpeed<8) player.jump();
+      break;
 
-    case 32: //space
-    if(player.fallSpeed<8) player.jump();
-    break;
+      case 83: //s
+        if(player.y<killLine&&!cantGoDown) player.y++;
+      break;
 
-    case 83: //s
-      if(player.y<killLine&&!cantGoDown) player.y++;
-    break;
+      case 69: //e
+        // action button
+        actionButton();
+      break;
 
-    case 69: //e
-      // action button
-      actionButton();
-    break;
-
-    case 49: //1
-    if(currentLevel=='start'){
-      console.log("yo")
-      currentLevel='home';
-
-      createLevel();
-      createPlayer();
-
+      case 27: //escape
+      dialogUI.open=false;
+      break;
     }
-    else  if(currentLevel=='home'&&computer.interactible&&!displayProcessUI) displayLinksUI = true;
-      else displayLinksUI = false;
-    break;
-
-    case 50: //2
-      if(currentLevel=='home'&&computer.interactible&&!displayLinksUI) displayProcessUI = true;
-      else displayProcessUI = false;
-    break;
-
-    case 82: // r
-
-    break;
-
-    case 27: //escape
-    displayProcessUI = false;
-    displayLinksUI = false;
-    dialogUI.open=false;
-    inventoryDisplayed=!inventoryDisplayed;
-    break;
   }
 }
 
 
 function keyrelease(){
+  if(!tFormSelected){
+    switch(event.keyCode){
+      case 65: //a
+        player.movingLeft=false;
+      break;
 
-  switch(event.keyCode){
-    case 65: //a
-      player.movingLeft=false;
-    break;
-
-    case 68: //d
-      player.movingRight=false;
-    break;
-
+      case 68: //d
+        player.movingRight=false;
+      break;
+    }
   }
+
 }

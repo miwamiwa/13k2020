@@ -11,7 +11,7 @@ class Platform extends DisplayObject { // extends display object class
 
   display(){
 
-    this.updateOnScreenPosition();
+    this.position();
     if(this.screenPos!=false){
 
       ctx.fillStyle=this.fill;

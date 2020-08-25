@@ -1,12 +1,9 @@
 let aboutguy;
-let computer;
 
 function createFriendlyNPCs(){
 
   let pos = level1.platforms[level1.platforms.length-1];
   aboutguy=new MovingObject(pos.x+150,pos.y-30,20,'#22af');
-  computer=new MovingObject(pos.x-150,pos.y-30,20,'#447f');
-
 }
 
 
@@ -14,10 +11,6 @@ function runFriendlyNPCs(){
 
   aboutguy.display();
   enableInteraction(aboutguy,"press E",50);
-
-  computer.display();
-  enableInteraction(computer,"press E, 1 or 2",50);
-
 }
 
 

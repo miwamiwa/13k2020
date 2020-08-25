@@ -10,7 +10,7 @@ class DisplayObject{
     this.h2=this.h/2;
   }
 
-  updateOnScreenPosition(){
+  position(){
 
     let bounds = getBounds(this);
 

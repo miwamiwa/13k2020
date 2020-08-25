@@ -1,19 +1,14 @@
-let enemyLootTable = [
-  {name:"data strip",fill:"grey",quantity:{min:12,r:14},chance:1}
-];
-
-
-let cleaningitem = 'level clear-tastik';
-
 let items = [];
-let inventory = [];
 
-function generateLoot(target){
+let generateLoot=(target)=>{
 
-  let quantity = 5+randInt(15);
-  for(let i=0; i<quantity; i++){
+  let res = 5+randInt(15);
 
-    items.push(new Item(target.x,target.y-50,10,'grey','data strip',1));
+  for(let i=0; i<res; i++){
+
+    items.push(new Item(target.x,target.y-50,10,'grey'));
+
+    // apply force to item
     let j=items[items.length-1];
     j.impactForce.x = 6+randInt(12);
     if(Math.random()>0.5) j.impactForce.x*=-1;
@@ -24,9 +19,10 @@ function generateLoot(target){
 
 
 
-function updateItems(){
+let updateItems=()=>{
 
   for(let i=items.length-1; i>=0; i--){
+//    console.log("hey")
     items[i].update();
     if(items[i].looted) items.splice(i,1);
   }
@@ -34,47 +30,35 @@ function updateItems(){
 
 class Item extends MovingObject {
 
-  constructor(x,y,size,fill,name,quantity){
+  constructor(x,y,size,fill){
     super(x,y,size,fill);
-    this.name=name;
     this.looted = false;
-    this.lootableRange = 80;
-    this.pickupRange = 10;
-    this.lootSpeed=1;
-    this.quantity = quantity;
-  //  console.log("load loot!")
+    this.v=1;
   }
 
   update(){
-//console.log("yo")
+
     if(!this.looted){
       let d = distance(this.x,this.y,player.x,player.y);
-      if(d.d<this.pickupRange){
-        // ITEM PICKED UP !
+
+      // item picked up
+      if(d.d<10){ // set pickup range here
         this.looted = true;
-
         addLoot();
-
       }
-      else if(d.d<this.lootableRange){
-        // ITEM MOVES TOWARDS PLAYER
-        this.lootSpeed++;
-        let ratio = this.lootSpeed/d.d;
-        this.speedVect = {
-          y: ratio*d.opp,
-          x: ratio*d.adj
-        }
-        this.x+=this.speedVect.x;
-        this.y+=this.speedVect.y;
+
+      // item in player range
+      else if(d.d<80){ // set pull range here
+        this.v++;
+        let r = this.v/d.d;
+
+        this.x+=r*d.adj;
+        this.y+=r*d.opp;
         this.fallSpeed=0;
       }
-      else if(this.lootSpeed>1) this.lootSpeed--;
-
+      else if(this.v>1) this.v--;
 
       this.display();
-
-      //console.log("updat4!")
     }
-
   }
 }

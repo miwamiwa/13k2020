@@ -1,7 +1,8 @@
 let saveData = null;
 function loadSave(){
 
-  saveData=localStorage.getItem(saveDataHeader);
+//localStorage.removeItem(saveDataHeader);
+  saveData=JSON.parse(localStorage.getItem(saveDataHeader));
 
   // if there is no save data, setup a save data object
   if(saveData==null){
@@ -20,3 +21,5 @@ function newGameSave(){
     levels:[],
   }
 }
+
+window.onbeforeunload=saveGame;

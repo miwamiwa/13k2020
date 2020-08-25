@@ -5,7 +5,7 @@ class Projectile extends MovingObject{
     this.destroyed = false;
 
     this.y-=20;
-    this.updateOnScreenPosition();
+    this.position();
 
     let p = this.screenPos;
     let d = distance(p.x,p.y,targetx,targety);
@@ -27,7 +27,7 @@ class Projectile extends MovingObject{
       this.x+=this.speedVect.x;
       this.y+=this.speedVect.y;
 
-      this.updateOnScreenPosition();
+      this.position();
       if(this.screenPos!=false){
 
         this.checkForCollisions(level1.platforms,false);

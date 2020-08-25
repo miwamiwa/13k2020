@@ -7,7 +7,7 @@ function setupActionBar(){
     x:canvas.x,
     y:canvas.y+canvasElh,
     w: canvas.w,
-    h: 50,
+    h: 20,
   }
 
     aBar.el = div(aBar,aBarFill);

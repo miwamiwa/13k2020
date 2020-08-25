@@ -1,4 +1,3 @@
-let exitDoorRange=30;
 
 // actionbutton()
 //
@@ -8,8 +7,6 @@ function actionButton(){
   if(currentLevel=='home'){
     let a = aboutguy.interactible;
 
-
-    if(!displayLinksUI&&!displayProcessUI){
       if(a){
         if(!dialogUI.open){
 
@@ -46,24 +43,9 @@ function actionButton(){
         }
         else continueDialog();
       }
-    }
-    // if either links or process ui are open
-    else {
-      if(displayLinksUI){
-
-      }
-      else if(displayProcessUI){
-
-      }
-    }
-
 
   }
-  else {
-    if(exitdoor.interactible){
-      loadHomeLevel();
-    }
-  }
+
 }
 
 
@@ -71,8 +53,7 @@ function loadHomeLevel(){
   currentLevel='home';
   createLevel();
   createPlayer();
-  fadeIn=0;
-  waittime=8;
+  fade(8);
   console.log("load home level")
 }
 
