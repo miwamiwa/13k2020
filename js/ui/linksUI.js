@@ -1,41 +1,29 @@
-let displayLinksUI = false;
-let lastdisplayState = false;
-let linksUI = {
-  w:260,
-  h:80
-};
-let linkLoadTime=800;
-let linksUIel;
+let addbar;
 let textform;
 let listform;
+let levelData;
 
+let addressbar=()=>{
 
-function createLinksUI(){
-
-
-  linksUIel = div();
-  linksUIel.style.width=canvas.w+'px';
-  linksUIel.style.backgroundColor='grey'
+  addbar = div();
+  addbar.style.width=canvas.w+'px';
+  addbar.style.backgroundColor='grey'
 
   updateFavorites();
 
-  // append canvas below the address bar
-  document.body.appendChild(canvas.canvas);
-  let bounds = canvas.canvas.getBoundingClientRect();
-  canvas.x = Math.round(bounds.x);
-  canvas.y = Math.round(bounds.y);
-
-
+  document.body.appendChild(canvas.c);
+  let b = canvas.c.getBoundingClientRect();
+  canvas.x = Math.round(b.x);
+  canvas.y = Math.round(b.y);
 
 }
 
+// formkeydown()
+//
+// called on keydown in the text input form
 
-
-
-
-
-function formKeyDown(){
-
+let formKeyDown=()=>{
+  // if ENTER is pressed
   if(event.keyCode==13){
     textform.value = textform.value.trim();
     goToLink();
@@ -43,37 +31,36 @@ function formKeyDown(){
   }
 }
 
-function inputListChanged(){
+// inpulistchanged()
+//
+// called when item from the select list is chosen
 
-  textform.value=listform.value.substring(0,listform.value.indexOf(" "));
+let inputListChanged=()=>{
+  let v = listform.value;
+  textform.value=v.substring(0,v.indexOf(" "));
   goToLink();
 }
 
-let levelData;
+// setuplevel()
+//
+// called when a level is loaded.
+// check if level is part of save data. make a new level if not.
 
-function setupLevel(){
-
+let setupLevel=()=>{
 
   let islevel=isLevel(currentLevel);
 
-  // if level already exists
-  if(islevel!=-1){
-    console.log("level already exists",islevel)
-    // point to level data
-    levelData = saveData.levels[islevel];
-  }
+  // if level already exists, point current level to save data
+  if(islevel!=-1) levelData = saveData.levels[islevel];
 
   // if level doesn't exist
   else {
 
-    console.log("add this level")
     // setup new level data.
     newLevel(dif);
     // point to this level to load it next
     levelData=last(saveData.levels);
   }
-
-  console.log("new level data: ",levelData)
 }
 
 
@@ -85,7 +72,7 @@ let dif=0;
 function newLevel(name){
 
   if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0)
-    dif = Math.min(enemyDifficulty+1,maxEnemyDifficulty);
+  dif = Math.min(enemyDifficulty+1,maxEnemyDifficulty);
   lvlCount++;
 
   if(name==undefined) name=currentlevel;
@@ -122,50 +109,52 @@ function saveLevelData(){
 
 function goToLink(){
 
+  let v = listform.value;
+  let tv = textform.value;
+
   if(currentLevel=='start'){
-    if(textform.value=="home"){
+    if(tv=="home"){
       loadHomeLevel();
       return
     }
-    if(textform.value=="new"){
+    if(tv=="new"){
       newGameSave();
       loadHomeLevel();
       return
     }
   }
-  else 
+  else
 
   if(saveData.levels.length!=0){
-    console.log("gooo")
-    // get target url:
+
+    // save current level
     if(levelData!=undefined) saveLevelData();
-
-    if(listform.value!='home')
-      // default target link is select form value
-      currentLevel  = listform.value.substring(0,listform.value.indexOf(" "));
-      else currentLevel='home';
-      // if text form input is different, then chose text form instead.
-      if(textform.value!=listform.value&&textform.value!="") currentLevel = textform.value;
-
-
+    // default target link is select form value
+    if(v!='home') currentLevel  = v.substring(0,v.indexOf(" "));
+    else currentLevel='home';
+    // if text form input is different, then chose text form instead.
+    if(tv!=v&&tv!="") currentLevel = tv;
+    // if user guessed the current research link, get new research link
+    if(currentLevel==nextLink) pickNextLinkAward();
     // if target is a start screen command
     if(currentLevel=='home') loadHomeLevel();
-    else if (currentLevel=='continue') getSavedGameAndStart();
 
     // if target isn't home screen
     else {
       // setup and start level
-
       fade(24);
       setupLevel();
       createLevel();
       createPlayer();
     }
-
   }
+}
 
 
 
-
-
+let loadHomeLevel=()=>{
+  currentLevel='home';
+  createLevel();
+  createPlayer();
+  fade(8);
 }

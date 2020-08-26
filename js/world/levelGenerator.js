@@ -8,88 +8,89 @@ let enemyDifficulty=1;
 let lvlDiffIncreaseInterval = 3;
 let maxEnemyDifficulty =3;
 let platInterval = 65;
+let maxExtraPlatW = 150;
+let minPlatW = 50;
 // a place to setup some platforms and stuff
 
-function createLevel(){
+let basicLevel=()=>{
+  level1=new Level( [
+    [50,killLine-100,100],
+    [-60,killLine-60,100],
+    [0, killLine, canvas.w]
+  ], sceneW, 100);
+}
 
+let randPlat=(x)=> Math.min( minPlatW + random()*maxExtraPlatW , (sceneW-x)/2 );
+
+// createlevel()
+//
+// create level object design platforms
+
+let createLevel=()=>{
+
+  // reset level variables
   noiseCounter=0
   enemies = [];
   items = [];
+
   firstEnemyKilled = false;
+  sceneW = canvas.w;
+  cantGoDown = false;
 
   if(currentLevel=='home'){
-    sceneW = canvas.w;
-    let plats = [
-      [50,killLine-100,100],
-      [-60,killLine-60,100],
-      [0, killLine, canvas.w]
-    ];
 
-    level1 = new Level(plats,sceneW,Math.abs(plats[0][1] - plats[plats.length-1][1]));
-
-    cantGoDown = false;
+    basicLevel();
     createFriendlyNPCs();
   }
   else if(currentLevel=='true404'){
-    sceneW = canvas.w;
-    let plats = [
-      [50,killLine-100,100],
-      [-60,killLine-60,100],
-      [0, killLine, canvas.w]
-    ];
 
-    level1 = new Level(plats,sceneW,Math.abs(plats[0][1] - plats[plats.length-1][1]));
-    let plat=level1.platforms[level1.platforms.length-1];
-    level1.text404 = new DisplayObject( plat.x-10,plat.y-10,300,300 );
-    cantGoDown = false;
-    //createFriendlyNPCs();
+    basicLevel();
+    let p=last(level1.platforms);
+    level1.text404 = new DisplayObject( p.x-10, p.y-10,300,300 );
+
   }
   else {
+
     sceneW = 2*canvas.w;
-    let sceneW2 = sceneW/2;
-    let plats = [[0,killLine,sceneW]];
-    let maxExtraPlatCount=8;
-    let platCount = 5+Math.floor(random()*maxExtraPlatCount);
+    let plats = [[0,killLine,sceneW]]; // starting platform (bottom)
+    let platCount = 5+flo(random()*8); // number of platforms
+
+    // first platform config
     let y = killLine;
-    let minPlatW = 50;
-    let maxExtraPlatW = 150;
+    let x = (-sceneW/2+random()*sceneW)*0.6;
+    let w = randPlat(x);
 
-    let maxPlatDist = 60;
-
-
-    let x = (-sceneW2+random()*sceneW)*0.6;
-    let w = Math.min( minPlatW + random()*maxExtraPlatW , sceneW-x );
+    // create platforms :
 
     for(let i=0; i<platCount-1; i++){
 
+      // alternate platform max width
       if(i%4==2) maxExtraPlatW = 300;
       else maxExtraPlatW = 40;
+      // increment platform height
       y-= platInterval;
 
-
+      // create platform
       plats.push([x,y,w]);
 
-
-      let middlemargin=50;
-
-      let xdir = Math.floor( random()*3 )-1;
-      if(x<0-middlemargin||x>0+middlemargin){
-        xdir = Math.abs(sceneW2-x)/(sceneW2-x);
+      // pick which x-direction to offset next platform
+      let xdir = flo( random()*3 )-1;
+      if(x<-50||x>50){
+        let x2=sceneW/2-x;
+        xdir = Math.abs(x2)/x2;
       }
-
-      x += xdir*Math.floor( random() * maxPlatDist );
-      w = Math.min( minPlatW + random()*maxExtraPlatW , (sceneW-x)/2 );
-
+      // setup next platform coords
+      x += xdir*flo( random() * 60 );
+      w = randPlat(x);
     }
 
-    //plats[plats.length-1] = [0, killLine, canvas.w*2];
 
-    let plat = plats[plats.length-1];
+    let plat = last(plats);
     plat[0] = sceneW/8;
     plat[2] = sceneW*1.2;
     level1 = new Level(plats,sceneW,Math.abs(plats[0][1] - plats[plats.length-1][1]));
-    let lastplat=level1.platforms.length-1;
-    plat=level1.platforms[lastplat];
+
+    plat=last(level1.platforms);
 
     level1.text404 = new DisplayObject( plat.x-10,plat.y-10,300,300 );
 
@@ -107,7 +108,7 @@ function createLevel(){
     else{
       cantGoDown = true;
       plat.fill = 'orange'
-      enemies.push(new Enemy(plat.x,plat.y-80,lastplat));
+      enemies.push(new Enemy(plat.x,plat.y-80,level1.platforms.length-1));
       enemies[0].jumpy=false;
     }
   }
@@ -116,125 +117,113 @@ function createLevel(){
 }
 
 
-class Level{
-  constructor(plist,w,h){
-    if(currentLevel!='home'){
-      fetch('js/characters/enemyclass.js')
-      .then(response => response.text())
-      .then(text => this.bgText=text);
-    }
-    else {
-      fetch('index.html')
-      .then(response => response.text())
-      .then(text => this.bgText=text);
-    }
+let linestyle=(c,a,w)=>{
+  ctx.strokeStyle=c+a;
+  ctx.lineWidth = w;
+}
 
-    //this.completion=0;
-    this.uncorruptedBG = [];
+class Level{
+
+  constructor(plist,w,h){
+    let bgurl='index.html';
+    if(currentLevel!='home')
+      bgurl='js/characters/enemyclass.js';
+
+      fetch(bgurl)
+      .then(response => response.text())
+      .then(text => this.bgText=text);
+
+    this.unbg = [];
     this.uncorrupting=false;
     this.platforms = [];
-    for(let i=0; i<plist.length; i++){
-      this.platforms.push(new Platform(plist[i][0],plist[i][1],plist[i][2]));
-    }
     this.bgFill='#ddff';
 
-    let offset = w/4;
-    this.walls=[
-      new DisplayObject( - w+offset, 0, w/2, 2000 ),
-      new DisplayObject( w/2+offset, 0, w/2, 2000 ),
-      new DisplayObject( 0, killLine+500, 2000, 1000 )
-    ]
+    for(let i=0; i<plist.length; i++)
+      this.platforms.push(new Platform(plist[i][0],plist[i][1],plist[i][2]));
 
-    this.bgTextObj = new DisplayObject(w/2,this.platforms[0].y+h,w*2,h*4);
+    this.walls=[
+      new DisplayObject( - 0.75*w, 0, w/2, 2000 ),
+      new DisplayObject( w*0.75, 0, w/2, 2000 ),
+      new DisplayObject( 0, killLine+500, 2000, 1000 )
+    ];
+
+    this.bgTxt = new DisplayObject(w/2,this.platforms[0].y+h,w*2,h*4);
   }
 
+
   displayBackground(){
-    ctx.fillStyle=this.bgFill;
-    ctx.fillRect(0,0,canvas.w,canvas.h);
-    this.bgTextObj.position();
-    if(this.bgText!=undefined&&this.bgTextObj.screenPos!=false){
 
-      //console.log("yo")
+    cFill(this.bgFill);
+    cRect(0,0,canvas.w,canvas.h);
+    this.bgTxt.position();
 
-      ctx.font='30px Arial';
+    if(this.bgTxt.screenPos!=false){
+      cFont('30px Arial');
 
+      // if uncorrupting is active, add indices to uncorrupted bg array
       if(this.uncorrupting){
-        let index=Math.floor(Math.random()*6000);
-        let range =Math.floor(Math.random()*20);
-        for(let i=0; i<range; i++){
-          if(!this.uncorruptedBG.includes(index+i)) this.uncorruptedBG.push(index+i);
-        }
+        let index=randInt(6000);
+        let r=randInt(20);
+        for(let i=0; i<r; i++)
+          if(!this.unbg.includes(index+i)) this.unbg.push(index+i);
       }
 
-
       let counter=0;
-      let r = -1+Math.floor(Math.random()*3);
+      let r = -1+randInt(3);
+
       for(let i=0; i<50; i++){
 
         let alphaval = 'f';
         if(i<10) alphaval=i;
-        let x=this.bgTextObj.screenPos.x;
-
+        let x=this.bgTxt.screenPos.x;
         let txtcontent=this.bgText.substring(i*120,(i+1)*120);
-        for(let j=0; j<120; j++){
-          if(currentLevel=='home'||this.uncorruptedBG.includes(counter)){
-            //console.log("yoo")
-            ctx.strokeStyle='#bbb'+alphaval;
-            ctx.lineWidth = 2;
-          }
-          else {
-            ctx.strokeStyle='#bdb'+alphaval;
-            ctx.lineWidth = 12+r;//+Math.floor(Math.random()*2);
-          }
 
-          ctx.strokeText(txtcontent[j],(x),(this.bgTextObj.screenPos.y+i*50)/2);
+        for(let j=0; j<120; j++){
+          // if uncorrupted
+          if(currentLevel=='home'||this.unbg.includes(counter))
+            lineStyle('#bbb',alphaval,2);
+            // if corrupted
+          else lineStyle('#bdb',alphaval,12+r)
+
+          ctx.strokeText(txtcontent[j],(x),(this.bgTxt.screenPos.y+i*50)/2);
           counter++;
           x+=ctx.measureText(txtcontent[j]).width*1.2;
         }
-
       }
       ctx.lineWidth = 1;
-
     }
-
-
   }
 
   display404Background(){
     this.text404.position();
-    ctx.font='100px Georgia';
-    ctx.fillStyle='black';
-    ctx.fillText("404",this.text404.screenPos.x,this.text404.screenPos.y);
-    ctx.font='30px Georgia';
-    ctx.fillText("return to last page...",this.text404.screenPos.x,this.text404.screenPos.y+50);
+    cFont('100px Georgia');
+    cFill('black');
+    cText("404",this.text404.screenPos.x,this.text404.screenPos.y);
+    cFont('30px Georgia');
+    cText("return to last page...",this.text404.screenPos.x,this.text404.screenPos.y+50);
   }
 
   displayPlatforms(){
 
-    for(let i=0; i<this.platforms.length; i++){
+    for(let i=0; i<this.platforms.length; i++)
       this.platforms[i].display();
-    }
 
-    ctx.fillStyle = "black"
+    cFill('black');
     for(let i=0; i<this.walls.length; i++){
       let w = this.walls[i];
       w.position();
-
       let p = w.screenPos;
-      //  console.log("wall!",w.x,w.y,w.w,w.h)
       if(p!=false)
-      ctx.fillRect(p.x,p.y,w.w,w.h);
+       ctx.fillRect(p.x,p.y,w.w,w.h);
     }
-
-
   }
 
   displayCompletion(){
-    ctx.font="40px bold";
-
-    ctx.fillStyle='black';
-    ctx.fillText( levelData.completion+"% complete", 10,30 );
-    ctx.fillStyle='white';
-    ctx.fillText( levelData.completion+"% complete", 12,32 );
+    let t = levelData.completion+"% complete";
+    cFont("40px bold");
+    cFill('black');
+    cText( t, 10,30 );
+    cFill('white');
+    cText( t, 12,32 );
   }
 }

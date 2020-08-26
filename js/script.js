@@ -8,7 +8,7 @@ function start(){
   //pickNextLinkAward()
   fadeIn =0;
   createCanvas();
-  createLinksUI();
+  addressbar();
 
   setupActionBar();
   resizeCanvas();

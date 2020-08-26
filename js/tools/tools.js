@@ -35,15 +35,15 @@ let getBounds=(el)=> {
 }
 
 
-let div=(box,fill)=>{
+let div=(box,color)=>{
   let result = document.createElement("div");
   document.body.appendChild(result);
-  if(box!=undefined) setStyle(result,box,fill);
+  if(box!=undefined) setStyle(result,box,color);
   return result;
 }
 
-let setStyle=(el,box,fill)=>
-  el.setAttribute("style",`position:fixed; left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px;background-color:${fill};`);
+let setStyle=(el,box,color)=>
+  el.setAttribute("style",`position:fixed; left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px;background-color:${color};`);
 
 
 let rad=(angle)=>angle*Math.PI/180;
@@ -85,3 +85,17 @@ let isLevel=(name)=>{
 }
 
 let pointTo=(id)=>document.getElementById(id);
+
+
+let cFill=(input)=> {
+  ctx.fillStyle=input;
+}
+let cText=(input,x,y)=> {
+  ctx.fillText(input,x,y);
+}
+let cFont=(input)=> {
+  ctx.font=input;
+}
+let cRect=(x,y,w,h)=> {
+  ctx.fillRect(x,y,w,h);
+}

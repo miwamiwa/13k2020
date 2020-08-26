@@ -7,14 +7,14 @@ function createCanvas(){
   canvas.w2=canvas.w/2;
   canvas.h2=canvas.h/2;
 
-  canvas.canvas = document.createElement("canvas");
-  canvas.canvas.setAttribute("width",canvas.w);
-  canvas.canvas.setAttribute("height",canvas.h);
+  canvas.c = document.createElement("canvas");
+  canvas.c.setAttribute("width",canvas.w);
+  canvas.c.setAttribute("height",canvas.h);
 
 
 
-  //canvas.canvas.setAttribute("style",``);
-  ctx = canvas.canvas.getContext("2d");
+  //canvas.c.setAttribute("style",``);
+  ctx = canvas.c.getContext("2d");
 
 
 }

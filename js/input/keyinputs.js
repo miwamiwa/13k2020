@@ -24,7 +24,7 @@ function keypress(){
       break;
 
       case 27: //escape
-      dialogUI.open=false;
+      dUI.open=false;
       break;
     }
   }

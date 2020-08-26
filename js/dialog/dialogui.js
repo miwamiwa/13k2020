@@ -1,4 +1,4 @@
-let dialogUI = {
+let dUI = {
   open: false,
   t: 0,
   counter:0,
@@ -7,85 +7,101 @@ let dialogUI = {
   displayedText:""
 };
 
-let aboutguyDialogProgression =0;
+let dialogNum =0;
+let dialogDone = false;
+let maxCharsPerLine = 20;
 
 
-function runDialog(){
+// rundialog()
+//
+//
 
-  if(dialogUI.open){
+let runDialog=()=>{
 
-    if(dialogUI.t!=0){
-      let p = getScreenPos({x:dialogUI.t.x,y:dialogUI.t.y,w2:50,h2:50});
-      dialogUI.x = p.x;
-      dialogUI.y = p.y - 70;
+  if(dUI.open){
+
+    if(dUI.t!=0){
+      let p = getScreenPos({x:dUI.t.x,y:dUI.t.y,w2:50,h2:50});
+      dUI.x = p.x;
+      dUI.y = p.y - 70;
     }
 
-    ctx.fillStyle='white';
-    ctx.fillRect(dialogUI.x,dialogUI.y,180,42);
-    ctx.fillStyle='black';
-    ctx.font='20px Georgia'
-    ctx.fillText(dialogUI.displayedText[0],dialogUI.x+5,dialogUI.y+18)
-    ctx.fillText(dialogUI.displayedText[1],dialogUI.x+5,dialogUI.y+36)
+    cFill('white');
+    cRect(dUI.x,dUI.y,190,42);
+    cFill('black');
+    cFont('16px Courier New')
+    cText(dUI.displayedText[0],dUI.x+5,dUI.y+18)
+    cText(dUI.displayedText[1],dUI.x+5,dUI.y+36)
   }
 
   // if no one is interactible, close dialog ui (add any other interactible things here)
-  if(!aboutguy.interactible) dialogUI.open=false;
+  if(!aboutguy.interactible) dUI.open=false;
 
 }
 
-function continueDialog(){
 
+// continuedialog()
+//
+//
+
+
+let continueDialog=()=>{
+
+  // dialog over actions
   if(dialogDone){
-    dialogUI.open = false;
+
+    dUI.open = false;
     dialogDone = false;
 
-    switch(aboutguyDialogProgression){
+    // trigger action.. so far there is only one.. should this be an if()?
+    switch(dialogNum){
       case 0:
-      for(let i=0; i<2; i++){
+      for(let i=0; i<2; i++)
         newLevel(allLinkNames[i]);
-      }
-
       updateFavorites();
-
       break;
-
-
     }
-    if(aboutguy.interactible&&aboutguyDialogProgression<aboutguydialogs.length-1) aboutguyDialogProgression ++;
+
+
+    if(aboutguy.interactible&&dialogNum<texts.length-1) dialogNum ++;
   }
   else
     cutDialog();
 }
 
 
-let dialogDone = false;
-let maxCharsPerLine = 20;
+// cutdialog()
+//
+//
 
-function cutDialog(){
+let cutDialog=()=>{
 
   let line1 = makeLine();
   let line2 = {t:""};
   if(!line1.stop) line2 = makeLine();
 
-  dialogUI.displayedText=[line1.t,line2.t];
+  dUI.displayedText=[line1.t,line2.t];
 }
 
-function makeLine(){
+
+// makeline()
+//
+//
+
+let makeLine=()=>{
 
   let result="";
   let stop=false;
   let broke=false;
-  while(!stop&&!broke&&result.length+dialogUI.line[0].length<maxCharsPerLine){
+  while(!stop&&!broke&&result.length+dUI.line[0].length<maxCharsPerLine){
 
+    if(dUI.line[0]=='#') broke=true;
+    else result+=dUI.line[0]+" ";
 
-    if(dialogUI.line[0]=='#') broke=true;
-    else result+=dialogUI.line[0]+" ";
-
-    dialogUI.line.shift();
-    if(dialogUI.line.length==0){
+    dUI.line.shift();
+    if(dUI.line.length==0){
       stop=true;
       dialogDone = true;
-
     }
   }
   return {t:result,stop:stop};

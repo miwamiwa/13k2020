@@ -14,30 +14,8 @@ let processDataStrips=()=>{
 
   // if next link isn't defined,
   // pick next link award :
-  if(nextLink==""){
+  if(nextLink=="") pickNextLinkAward();
 
-    // pick a url that hasn't been used yet
-    let pick = randomlink();
-    if( saveData.levels.length<allLinkNames.length )
-      while(isLevel( pick )!=-1)
-        pick = randomlink();
-
-    // or if no more urls are available make up a random word
-    else{
-      let wordL = 4+randInt(4);
-      pick="";
-      for(let i=0; i<wordL; i++)
-        pick+= String.fromCharCode(97+randInt(26));
-    }
-
-    // setup new mystery url
-    nextLink = pick;
-    revealedLink = "";
-    revealedChars =0;
-    for(let i=0; i<nextLink.length; i++){
-      revealedLink+="_";
-    }
-  }
 
 
   // reveal url:
@@ -78,3 +56,34 @@ let rSub=(i,j)=> revealedLink.substring(i,j);
 // returns a random link from the list of all links heck yeah
 
 let randomlink=()=> allLinkNames[randInt(allLinkNames.length)];
+
+
+// picknextlinkaward()
+//
+// setup the next url to research
+
+let pickNextLinkAward=()=>{
+
+  // pick a url that hasn't been used yet
+  let pick = randomlink();
+  if( saveData.levels.length<allLinkNames.length )
+    while(isLevel( pick )!=-1)
+      pick = randomlink();
+
+  // or if no more urls are available make up a random word
+  else{
+    let wordL = 4+randInt(4);
+    pick="";
+
+    for(let i=0; i<wordL; i++)
+      pick+= String.fromCharCode(97+randInt(26));
+  }
+
+  // setup new mystery url
+  nextLink = pick;
+  revealedLink = "";
+  revealedChars =0;
+  for(let i=0; i<nextLink.length; i++){
+    revealedLink+="_";
+  }
+}

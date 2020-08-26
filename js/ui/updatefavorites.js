@@ -17,7 +17,7 @@ let updateFavorites=()=>{
   let fav = `favorites:<select id="favorites" onchange=inputListChanged()> ${options} </select>`
 
   // setup address bar
-  linksUIel.innerHTML = ` <span onclick='back()'> < </span> <span onclick='forward()'> > </span>
+  addbar.innerHTML = ` <span onclick='back()'> < </span> <span onclick='forward()'> > </span>
   www.coolshoes.com/<input type='text' id='tinput' onkeydown='formKeyDown()'></input>
   <span onclick='goToLink()'>go</span>
   ${fav}  `;
