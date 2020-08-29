@@ -19,6 +19,7 @@ class MovingObject extends DisplayObject {// extends display object class
     this.lrSpeed=0;
     this.impactForce={x:0,y:0};
     this.hitPoints = 100;
+    this.jetpacks=false;
 
   }
 
@@ -37,6 +38,7 @@ class MovingObject extends DisplayObject {// extends display object class
   display(){
 
     this.moveLeftRight();
+
     this.applyPhysics();
     this.position();
     if(this.screenPos!=false){
@@ -51,15 +53,9 @@ class MovingObject extends DisplayObject {// extends display object class
   }
 
   displayHealthBar(){
-
-    let w = 30;
-    let h = 10;
-    let y = this.screenPos.y-25;
-    let x = this.screenPos.x;
-    ctx.fillStyle = "white";
-    ctx.fillRect(x,y,w,h);
-    ctx.fillStyle = "red";
-    ctx.fillRect(x,y,w*this.hitPoints/100,h);
+    progressBar(
+      this.screenPos.x,this.screenPos.y-25,30,10,
+      this.hitPoints,'red','white' );
   }
 
   jump(){
@@ -103,6 +99,7 @@ class MovingObject extends DisplayObject {// extends display object class
     if(this.jumpForce-this.jumpDecel>0) this.jumpForce-=this.jumpDecel;
     else this.jumpForce=0;
     // update player position
+    if(this.jetpacks) this.fallSpeed=0;
     this.y+= this.fallSpeed - this.jumpForce;
   }
 
@@ -126,6 +123,7 @@ class MovingObject extends DisplayObject {// extends display object class
 
     }
 
+    //this.fallDist = this.currentPlatform.y-this.y;
     // update falling speed
     if(this.y+this.h/2+this.fallSpeed<nearestPlatform){
       this.fallSpeed+=this.fallAcc;
@@ -133,7 +131,7 @@ class MovingObject extends DisplayObject {// extends display object class
     else{
       this.y=nearestPlatform-this.h/2;
       this.impactForce.y = this.fallSpeed;
-      if(this.impactForce.y>36) this.hitPoints -= this.impactForce.y/2;
+    //  if(this.impactForce.y>36) this.hitPoints -= this.impactForce.y/2;
       this.fallSpeed = 0;
 
     //  console.log("bang")

@@ -15,6 +15,13 @@ let getScreenPos=(input)=> {
     }
 }
 
+let progressBar=(x,y,w,h,val,c,c2)=>{
+  cFill(c2)
+  cRect(x,y,w,h);
+  cFill(c)
+  cRect(x,y,w*val/100,h);
+}
+
 let distance=(x1,y1,x2,y2)=>{
   let adj=x2-x1;
   let opp=y2-y1;

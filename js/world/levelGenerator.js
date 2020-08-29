@@ -22,6 +22,54 @@ let basicLevel=()=>{
 
 let randPlat=(x)=> Math.min( minPlatW + random()*maxExtraPlatW , (sceneW-x)/2 );
 
+
+
+let continueLevel=(spawn)=>{
+
+  killLine+= 500;
+  let plats = [[0,killLine,sceneW]]
+  let stairs = flo(3+random()*3);
+  let stairCount = flo(1+random()*3);
+  let x = -canvas.w+random()*sceneW
+
+  for(let j=0; j< stairCount; j++){
+    let y = killLine;
+
+
+    for(let i=0; i<stairs; i++){
+      //console.log("push!")
+      y-= 60;
+      let w = 50;
+      console.log(i,stairs)
+      if(i==stairs-1){
+        w = 150;
+        enemies.push(new Enemy(x,y-80,0,0,'spawner'));
+      }
+      plats.push([x,y,w+random()*50])
+      x+= -40+random()*80;
+    }
+    if(j==0){
+      if(Math.abs(x)<300) x-= 600;
+      else x*=-1;
+    }
+    else x = -1*x + 400;
+  }
+
+  for(let i=0; i<plats.length; i++){
+
+    level1.platforms.push(new Platform(plats[i][0],plats[i][1],plats[i][2]))
+  }
+
+  level1.sections++;
+  levelData.sections++;
+
+  level1.newWalls(sceneW);
+}
+
+
+
+
+
 // createlevel()
 //
 // create level object design platforms
@@ -29,6 +77,7 @@ let randPlat=(x)=> Math.min( minPlatW + random()*maxExtraPlatW , (sceneW-x)/2 );
 let createLevel=()=>{
 
   // reset level variables
+  dUI.open=false;
   noiseCounter=0
   enemies = [];
   items = [];
@@ -36,7 +85,6 @@ let createLevel=()=>{
 
   firstEnemyKilled = false;
   sceneW = canvas.w;
-  cantGoDown = false;
 
   if(currentLevel=='home'){
 
@@ -53,78 +101,31 @@ let createLevel=()=>{
   else {
 
     sceneW = 2*canvas.w;
-    let plats = [[0,killLine,sceneW]]; // starting platform (bottom)
-    let platCount = 0; // number of platforms
-    let spawnPoints = [0];
 
-    for(let j=0; j<3; j++){
-
-      let lastPlatCount=platCount;
-      platCount+=3+flo(random()*8);
-      spawnPoints.push(lastPlatCount+2+ flo(random()*(platCount-lastPlatCount-2)));
-    // first platform config
-    let y = killLine;
-    let x = (-sceneW/2+random()*sceneW)*0.6;
-    let w = randPlat(x);
-
-    // create platforms :
-
-    for(let i=0; i<platCount-1; i++){
-
-      // alternate platform max width
-      if(i%4==2) maxExtraPlatW = 300;
-      else maxExtraPlatW = 40;
-      // increment platform height
-      y-= platInterval;
-
-      // create platform
-      plats.push([x,y,w]);
-
-      // pick which x-direction to offset next platform
-      let xdir = flo( random()*3 )-1;
-      if(x<-50||x>50){
-        let x2=sceneW/2-x;
-        xdir = Math.abs(x2)/x2;
-      }
-      // setup next platform coords
-      x += xdir*flo( random() * 60 );
-      w = randPlat(x);
-    }
-  }
-
-  plat = last(plats);
-  plat[0] = sceneW/8;
-  plat[2] = sceneW*1.2;
-  //let h = ;
-
-    level1 = new Level(plats,sceneW, Math.abs(plats[0][1] - plat[1]) );
-    plat = last(level1.platforms)
-    level1.text404 = new DisplayObject( plat.x-10,plat.y-10,300,300 );
+    level1 = new Level([[0,killLine,sceneW]],sceneW, 400 );
+    let p = last(level1.platforms)
+    level1.text404 = new DisplayObject( p.x-10,p.y-10,300,300 );
     level1.enemyDifficulty = levelData.difficulty; //difficultyLevels[index];
     level1.cleared = levelData.cleared;//clearedStates[index];
-    level1.spawnPoints = spawnPoints;
+    console.log("sections",levelData.sections)
+    level1.sections = levelData.sections;
 
-    // check if top platform is already unlocked
-    if(levelData.unlocked){
-      firstEnemyKilled = true;
-      cantGoDown=false;
+    if(levelData.sections==0)
+      enemies.push(new Enemy(p.x,p.y-80,0,0,'spawner'));
 
-      for(let i=0; i<levelData.spawners.length; i++){
-            let p = level1.platforms[level1.spawnPoints[i]];
-        if(levelData.spawners[i])
-          enemies.push(new Enemy(p.x,p.y-80,level1.spawnPoints[i],i,'spawner'));
+      else {
+        for(let k=0; k<levelData.sections; k++){
+          console.log("heh")
+        if(k==levelData.sections-1) continueLevel(true);
+        else continueLevel(false)
+        levelData.sections--;
       }
+    }
 
-    }
-    else{
-      cantGoDown = true;
-      plat.fill = 'orange'
-      enemies.push(new Enemy(plat.x,plat.y-80,level1.platforms.length-1,-1,'flyer'));
-      enemies[0].jumpy=false;
-    }
-  }
 
   updateFavorites();
+}
+
 }
 
 
@@ -152,11 +153,7 @@ class Level{
     for(let i=0; i<plist.length; i++)
       this.platforms.push(new Platform(plist[i][0],plist[i][1],plist[i][2]));
 
-    this.walls=[
-      new DisplayObject( - 0.75*w, 0, w/2, 2000 ),
-      new DisplayObject( w*0.75, 0, w/2, 2000 ),
-      new DisplayObject( 0, killLine+500, 2000, 1000 )
-    ];
+    this.newWalls(sceneW);
 
     this.bgTxt = new DisplayObject(w/2,this.platforms[0].y+h,w*2,h*4);
 
@@ -164,6 +161,14 @@ class Level{
     this.nextThunder=100;
     this.txtCounter=0;
     this.drops = [];
+  }
+
+  newWalls(w){
+    this.walls=[
+      new DisplayObject( - 0.75*w, 0, w/2, 2000 ),
+      new DisplayObject( w*0.75, 0, w/2, 2000 ),
+      new DisplayObject( 0, killLine+500, 2000, 1000 )
+    ];
   }
 
   displayBackground(){

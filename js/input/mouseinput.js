@@ -3,7 +3,7 @@ let mouseX =0;
 let mouseY =0;
 let cantShoot=false;
 
-const playerShotCooldown =200; //ms
+const playerShotCooldown =100; //ms
 
 // mousepressed()
 //
@@ -17,7 +17,9 @@ let mousePressed=()=>{
   mouseY = event.clientY-canvas.y;
 
   // shoot
-  if(currentLevel!='start'&&!cantShoot){
+  if(currentLevel!='start'&&!cantShoot&&player.gunPower>=shotcost){
+
+    player.gunPower-=shotcost;
     // trigger sfx
     playBlaster(1800,3);
     // create projectile

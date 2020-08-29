@@ -48,6 +48,8 @@ function run(){
 
     if(!h) level1.displayCompletion();
 
+    progressBar( 10, canvas.h-40, 100, 30, player.gunPower, "orange","grey" );
+    progressBar( canvas.w-110, canvas.h-40, 100, 30, player.jetFuel, "blue","grey" );
   }
   else displayStartUI();
 

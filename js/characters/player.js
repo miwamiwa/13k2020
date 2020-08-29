@@ -6,7 +6,10 @@ function createPlayer(){
   if(currentLevel=='home') pos=level1.platforms[0]
   else pos.x-= 130;
   player=new MovingObject(pos.x,pos.y-100,40,'#2a20');
+  //player.initJumpForce=40;
   player.facing='left';
+  player.jetFuel=100;
+  player.gunPower=100;
   setupCamera();
   player.display();
 }
@@ -14,10 +17,31 @@ function createPlayer(){
 let  playerMoving;
 let lastPlayerMovingState=false;
 let playerJumping=false;
+let fuelcost=7;
+let shotcost=38;
 
 function updatePlayer(){
 
   player.limitX();
+
+  // add jetpack force
+  if(player.jetpacks&&player.jumpForce<10){
+    if(player.jetFuel>=fuelcost){
+      player.jetFuel-= fuelcost;
+      player.jumpForce=10;
+    }
+    else{
+      cantjetpack=true;
+      setTimeout(function(){cantjetpack=false;},500);
+      player.jetpacks=false;
+    //  player.jumpForce=0;
+    }
+  }
+
+
+  // damp jetpack force
+  else if(player.jumpForce>0) player.jumpForce-=2;
+  else player.jumpForce=0;
   player.display();
   playerModel.x=player.screenPos.x+20;
   playerModel.y=player.screenPos.y+10;
@@ -45,14 +69,7 @@ function updatePlayer(){
   playerModel.update(ctx,(player.facing=='left'));
   if(player.hitPoints<100) player.hitPoints+=0.1;
 
-  if(player.impactForce>36){
-    playDamageFX();
 
-    playerModel.selectAnimation(1);
-    setTimeout(function(){
-      resetPlayerAnimation();
-    },400)
-  }
 
  aBar.health.innerHTML='health: '+Math.floor( player.hitPoints );
 
@@ -60,6 +77,9 @@ function updatePlayer(){
    loadHomeLevel();
    fade(60,'ouchies');
  }
+
+ player.gunPower = Math.min( player.gunPower+4, 100 );
+ player.jetFuel = Math.min( player.jetFuel+4, 100 );
 }
 
 function resetPlayerAnimation(){

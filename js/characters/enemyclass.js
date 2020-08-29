@@ -20,11 +20,14 @@ function updateEnemies(){
         // generate loot at enemy position and remove enemy
         generateLoot(enemies[i]);
 
-        enemies.splice(i,1);
+
 
         if(enemies[i].type=='spawner'){
-          levelData.spawners[enemies[i].sIndex]=false;
-          levelData.completion=Math.min(levelData.completion+5,100);
+          let nomorespawners = true;
+          for(let j=0; j<enemies.length;j++){
+            if(enemies[j].type=='spawner'&&j!=i) nomorespawners = false;
+          }
+          if(nomorespawners) continueLevel(true);
         }
         else {
 
@@ -35,6 +38,8 @@ function updateEnemies(){
               enemies[j].enemyCount--;
           }
         }
+
+        enemies.splice(i,1);
         // update level completion
 
         //completions[level1.arrayindex]=levelData.completion;
@@ -49,49 +54,6 @@ function updateEnemies(){
     }
 
 
-    // SPAWN ENEMIES:
-
-    // phase 1,
-    // when first enemy is killed, but also when all enemies are killed arfterwards as long as level is not cleared
-    if(enemies.length==0&&!levelData.completion<100){
-
-      // update top platform, enable going down
-      cantGoDown = false;
-      let p = last(level1.platforms);
-      p.fill = platformFill;
-
-      // start level phase 2
-      firstEnemyKilled = true;
-      levelData.unlocked=true;
-
-      for(let i=0; i<level1.spawnPoints.length; i++){
-
-        let p = level1.platforms[level1.spawnPoints[i]];
-        if(levelData.spawners[i])
-          enemies.push(new Enemy(p.x,p.y-80,level1.spawnPoints[i],i,'spawner'));
-      }
-    }
-    /*
-
-    // phase 2,
-    // while level isn't cleared
-    if(firstEnemyKilled&&!level1.cleared){
-    // if level isn't complete and there are less than the max number of enemies
-    if(enemies.length<maxEnemies && levelData.completion<100){
-
-    // spawn new enemy every 100 frames
-    enemyUpdateCounter++;
-    if(enemyUpdateCounter%100==0){
-    // pick a random platform
-    let pick= randInt(l(level1.platforms));
-    let plat = level1.platforms[pick];
-    // spawn enemy
-    enemies.push(new Enemy(plat.x,plat.y-80,pick));
-  }
-}
-}
-
-*/
 }
 }
 
@@ -142,23 +104,27 @@ class Enemy extends MovingObject {
     this.flightVel=4;
     this.flightDir=1;
     if(Math.random()>.5) this.flightDir=-1;
+    this.nextSpawn=0;
   }
 
   updateSpawner(){
     this.display();
+   this.spawnCounter++;
 
-    if(this.screenPos!=false){
-      if(this.enemyCount<4&&this.spawnCounter%this.spawnInterval==0){
-        let pick = Math.random();
-        let choice='fighter'
-        if(pick>0.66) choice='flyer';
-        else if(pick>0.33) choice='shooter';
+  }
 
-        this.enemyCount++;
-        enemies.push(new Enemy(this.x,this.y-80,this.currentPlatform,this.sIndex,choice));
-      }
+  spawnMore(){
 
-      this.spawnCounter++;
+    this.nextSpawn--;
+    if(this.enemyCount<4&&this.spawnCounter>=this.nextSpawn){
+      let pick = Math.random();
+      let choice='fighter'
+      if(pick>0.66) choice='flyer';
+      else if(pick>0.33) choice='shooter';
+
+      this.enemyCount++;
+      this.nextSpawn=this.spawnCounter+50;
+      enemies.push(new Enemy(this.x,this.y-80,this.currentPlatform,this.sIndex,choice));
     }
   }
 
@@ -382,8 +348,8 @@ class Enemy extends MovingObject {
     let pp = level1.platforms[player.currentPlatform];
 
     // if enemy and player platforms are at same height
-    if(p.y==pp.y)
-    this.target = (p.x-p.w2 + Math.random()*p.w)*0.4;
+    if(player.y==this.y)
+      this.target = (p.x-p.w2 + Math.random()*p.w)*0.4;
 
     else{
       // if this platform is lower

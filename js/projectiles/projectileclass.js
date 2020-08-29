@@ -75,7 +75,10 @@ class Projectile extends MovingObject{
         if(damage!=false){
 
           let d2 = damage/2;
-          if(input[i].type=='spawner') damage = 5;
+          if(input[i].type=='spawner'){
+            damage = 5;
+            input[i].spawnMore();
+          }
           else input[i].impactForce.x+=Math.min(Math.max(input[i].x-this.x,-d2),d2);
 
           playBlaster(200,6,);
