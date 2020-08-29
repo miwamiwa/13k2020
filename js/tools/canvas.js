@@ -2,8 +2,8 @@ let canvasElw;
 let canvasElh;
 
 function createCanvas(){
-  canvas.w = 600;
-  canvas.h = 400;
+  canvas.w = 800;
+  canvas.h = 600;
   canvas.w2=canvas.w/2;
   canvas.h2=canvas.h/2;
 
@@ -18,9 +18,10 @@ function createCanvas(){
 
 
 }
-
+/*
 window.onresize=resizeCanvas;
 function resizeCanvas(){
 
 
 }
+*/

@@ -8,7 +8,7 @@ function createPlayer(){
   player=new MovingObject(pos.x,pos.y-100,40,'#2a20');
   player.facing='left';
   setupCamera();
-
+  player.display();
 }
 
 let  playerMoving;
@@ -55,6 +55,11 @@ function updatePlayer(){
   }
 
  aBar.health.innerHTML='health: '+Math.floor( player.hitPoints );
+
+ if(player.hitPoints<=0){
+   loadHomeLevel();
+   fade(60,'ouchies');
+ }
 }
 
 function resetPlayerAnimation(){

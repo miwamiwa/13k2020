@@ -60,13 +60,23 @@ let flo=(i)=> Math.floor(i);
 // move an object obj{x,y} towards target tar{x,y} at speed vel
 
 let reach=(obj,tar,vel)=>{
+  let xReached=false;
+  let yReached=false;
   if(obj.x+vel<tar.x) obj.x+=vel;
   else if(obj.x-vel>tar.x) obj.x-=vel;
-  else obj.x=tar.x;
+  else{
+    obj.x=tar.x;
+    xReached=true;
+  }
 
   if(obj.y+vel<tar.y) obj.y+=vel;
   else if(obj.y-vel>tar.y) obj.y-=vel;
-  else obj.y=tar.y;
+  else{
+    obj.y=tar.y;
+    yReached=true;
+  }
+  if(xReached&&yReached) return true;
+  return false;
 }
 
 // return the last element in an array

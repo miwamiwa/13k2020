@@ -1,7 +1,8 @@
 class Projectile extends MovingObject{
 
-  constructor(x,y,size,fill, speed,targetx,targety){
+  constructor(x,y,size,fill, speed,targetx,targety,hitsplayer){
     super(x,y,size,fill);
+    this.hitsplayer=hitsplayer;
     this.destroyed = false;
 
     this.y-=20;
@@ -26,16 +27,30 @@ class Projectile extends MovingObject{
 
       this.x+=this.speedVect.x;
       this.y+=this.speedVect.y;
-
+      ctx.fillStyle='#4a8f';
       this.position();
+      this.size=10;
       if(this.screenPos!=false){
 
-        this.checkForCollisions(level1.platforms,false);
-        this.checkForCollisions(enemies,10);
+
+          if(!this.hitsplayer){
+            this.checkForCollisions(level1.platforms,false);
+            this.checkForCollisions(enemies,25);
+            ctx.fillStyle=this.fill;
+            this.size=3;
+          }
+
+          else
+            if(checkCollision(getBounds(this),getBounds(player))){
+              this.stopProjectile();
+              playDamageFX();
+              damagePlayer(enemyShooterDamage);
+            }
+
         this.checkWallCollisions();
 
-        ctx.fillStyle=this.fill;
-        ctx.fillRect(this.screenPos.x,this.screenPos.y,this.w,this.h);
+
+        ctx.fillRect(this.screenPos.x,this.screenPos.y,this.size,this.size);
       }
     }
     else this.display();
@@ -58,11 +73,13 @@ class Projectile extends MovingObject{
         this.stopProjectile();
 
         if(damage!=false){
-          input[i].hitPoints -= damage;
+
+          let d2 = damage/2;
+          if(input[i].type=='spawner') damage = 5;
+          else input[i].impactForce.x+=Math.min(Math.max(input[i].x-this.x,-d2),d2);
 
           playBlaster(200,6,);
-          let d2 = damage/2;
-          input[i].impactForce.x+=Math.min(Math.max(input[i].x-this.x,-d2),d2);
+          input[i].hitPoints -= damage;
         }
       }
     }

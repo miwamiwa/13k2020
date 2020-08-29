@@ -21,7 +21,7 @@ let mousePressed=()=>{
     // trigger sfx
     playBlaster(1800,3);
     // create projectile
-    player.shoot(mouseX,mouseY,15);
+    player.shoot(mouseX,mouseY,15,false);
     // trigger player animation
     playerModel.selectAnimation(4);
 

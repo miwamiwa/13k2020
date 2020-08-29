@@ -2,6 +2,7 @@ window.onload = start;
 let currentLevel='start';
 let killLine = 500;
 
+
 function start(){
 
   loadSave();
@@ -11,7 +12,6 @@ function start(){
   addressbar();
 
   setupActionBar();
-  resizeCanvas();
 
   // buffer models
   loadModelData();
@@ -33,6 +33,7 @@ function run(){
     if(h){
       runFriendlyNPCs();
     }
+
 
     updateEnemies();
     updatePlayer();

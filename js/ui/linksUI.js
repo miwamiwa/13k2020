@@ -82,7 +82,8 @@ function newLevel(name){
     completion:0,
     difficulty:dif,
     unlocked:false,
-    cleared:false
+    cleared:false,
+    spawners:[true,true,true,true]
   });
 }
 

@@ -24,9 +24,10 @@ class DisplayObject{
     this.x = Math.min(Math.max(this.x,-sceneW/2),sceneW/2);
   }
 
-  shoot(targetx,targety,speed){
+  shoot(targetx,targety,speed,hitsplayer){
+
     if(targetx<this.screenPos.x) this.facing='left';
     else this.facing='right';
-    projectiles.push(new Projectile(this.x,this.y,4,"black",speed,targetx,targety));
+    projectiles.push(new Projectile(this.x,this.y,4,"black",speed,targetx,targety,hitsplayer));
   }
 }
