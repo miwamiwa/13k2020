@@ -1,8 +1,5 @@
 let saveDataHeader='sams404gameforjs13kof2020';
 
 
-function saveGame(){
-
-
+let saveGame=()=>
   localStorage.setItem(saveDataHeader, JSON.stringify(saveData));
-}

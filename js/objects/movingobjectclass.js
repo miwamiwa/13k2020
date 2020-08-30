@@ -1,3 +1,5 @@
+const friction=2;
+
 class MovingObject extends DisplayObject {// extends display object class
   constructor(x,y,size,fill){
     super(x,y,size,size);
@@ -7,7 +9,6 @@ class MovingObject extends DisplayObject {// extends display object class
     this.fallAcc=2; // fall acceleration
     this.lrMaxSpeed=10; // max horizontal speed
     this.lrAcc=1; // horizontal acceleration
-    this.lrFriction=2; // deceleration while not moving
     this.initJumpForce=25;
     // variables
     this.movingLeft=false;
@@ -40,16 +41,11 @@ class MovingObject extends DisplayObject {// extends display object class
     this.moveLeftRight();
 
     this.applyPhysics();
-    this.position();
-    if(this.screenPos!=false){
-
-      ctx.fillStyle=this.fill;
-      ctx.fillRect(this.screenPos.x,this.screenPos.y,this.w,this.h);
-
-      if(this.hitPoints<100){
+    let p=this.position();
+    if(this.hitPoints<100)
         this.displayHealthBar();
-      }
-    }
+
+    return p;
   }
 
   displayHealthBar(){
@@ -74,11 +70,12 @@ class MovingObject extends DisplayObject {// extends display object class
         this.lrSpeed = Math.min( this.lrSpeed, this.lrMaxSpeed );
       }
       else {
-        if(this.lrSpeed+this.lrFriction<0) this.lrSpeed+=this.lrFriction;
-        else if(this.lrSpeed-this.lrFriction>0) this.lrSpeed -= this.lrFriction;
+        if(this.lrSpeed+friction<0) this.lrSpeed+=friction;
+        else if(this.lrSpeed-friction>0) this.lrSpeed -= friction;
         else this.lrSpeed=0;
       }
 
+      // handle knockback
       if(this.impactForce.x>0) this.impactForce.x--;
       else if(this.impactForce.x<0) this.impactForce.x++;
 
@@ -93,9 +90,6 @@ class MovingObject extends DisplayObject {// extends display object class
     // check if falling
     this.updateFallSpeed();
 
-
-    // do something with impact force:
-    //if(this.impactForce.y>0) console.log(this.impactForce.y);
     if(this.jumpForce-this.jumpDecel>0) this.jumpForce-=this.jumpDecel;
     else this.jumpForce=0;
     // update player position
@@ -107,7 +101,7 @@ class MovingObject extends DisplayObject {// extends display object class
 
     let p=level1.platforms;
     let nearestPlatform =killLine;
-    //console.log("chck "+this.speedVect)
+
     for(let i=0; i<p.length; i++){
       if(
         // if platform overlaps on x axis
@@ -120,10 +114,8 @@ class MovingObject extends DisplayObject {// extends display object class
         nearestPlatform = p[i].y;
         this.currentPlatform =i;
       }
-
     }
 
-    //this.fallDist = this.currentPlatform.y-this.y;
     // update falling speed
     if(this.y+this.h/2+this.fallSpeed<nearestPlatform){
       this.fallSpeed+=this.fallAcc;
@@ -131,10 +123,7 @@ class MovingObject extends DisplayObject {// extends display object class
     else{
       this.y=nearestPlatform-this.h/2;
       this.impactForce.y = this.fallSpeed;
-    //  if(this.impactForce.y>36) this.hitPoints -= this.impactForce.y/2;
       this.fallSpeed = 0;
-
-    //  console.log("bang")
     }
   }
 }

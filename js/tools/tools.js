@@ -107,12 +107,16 @@ let pointTo=(id)=>document.getElementById(id);
 let cFill=(input)=> {
   ctx.fillStyle=input;
 }
-let cText=(input,x,y)=> {
+let cText=(input,x,y,c,f)=> {
+  if(c) cFill(c);
+  if(f) cFont(f);
   ctx.fillText(input,x,y);
+
 }
 let cFont=(input)=> {
-  ctx.font=input;
+  ctx.font=input+'px Courier New';
 }
-let cRect=(x,y,w,h)=> {
+let cRect=(x,y,w,h,c)=> {
+  if(c) cFill(c);
   ctx.fillRect(x,y,w,h);
 }

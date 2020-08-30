@@ -1,9 +1,4 @@
-window.onload = start;
-let currentLevel='start';
-let killLine = 500;
-
-
-function start(){
+let start=()=>{
 
   loadSave();
   //pickNextLinkAward()
@@ -22,7 +17,14 @@ function start(){
   setInterval( run, 33 );
 }
 
-function run(){
+
+window.onload = start;
+let currentLevel='start';
+
+
+
+
+let run=()=>{
 
   if(currentLevel!='start'){
     let h = currentLevel=='home';
@@ -33,21 +35,12 @@ function run(){
     if(h){
       runFriendlyNPCs();
     }
-
-
     updateEnemies();
     updatePlayer();
     updateProjectiles();
     runDialog();
-
     updateItems();
-
     runFadeIn();
-
-    //runProcessUI();
-
-    if(!h) level1.displayCompletion();
-
     progressBar( 10, canvas.h-40, 100, 30, player.gunPower, "orange","grey" );
     progressBar( canvas.w-110, canvas.h-40, 100, 30, player.jetFuel, "blue","grey" );
   }

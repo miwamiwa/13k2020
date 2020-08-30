@@ -1,7 +1,7 @@
 let canvasElw;
 let canvasElh;
 
-function createCanvas(){
+let createCanvas=()=>{
   canvas.w = 800;
   canvas.h = 600;
   canvas.w2=canvas.w/2;

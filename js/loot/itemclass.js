@@ -58,7 +58,8 @@ class Item extends MovingObject {
       }
       else if(this.v>1) this.v--;
 
-      this.display();
+      let p=this.display();
+      if(p!=false) cRect(p.x,p.y,20,20,'grey');
     }
   }
 }

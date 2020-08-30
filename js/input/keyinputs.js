@@ -2,7 +2,7 @@ let cantGoDown = false;
 let cantjetpack=false;
 
 
-function keypress(){
+let keypress=()=>{
   if(!tFormSelected){
     switch(event.keyCode){
 
@@ -36,7 +36,7 @@ function keypress(){
 }
 
 
-function keyrelease(){
+let keyrelease=()=>{
   if(!tFormSelected){
     switch(event.keyCode){
       case 65: //a

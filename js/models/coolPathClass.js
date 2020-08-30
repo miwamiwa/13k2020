@@ -20,7 +20,7 @@ class CoolPath{
       if(this.rig[i].isRoot) this.fullRig = new RigShape(i,this.scale,this.model,this.rig,this.animations,this.colors);
     }
     this.selectAnimation(1);
-    this.timeCounter=0;
+    this.counter=0;
 
 
   }
@@ -38,8 +38,8 @@ class CoolPath{
     this.fullRig.display(ctx);
     ctx.resetTransform();
 
-    this.timeCounter++;
-    if(this.timeCounter>this.animations[this.pose].animLength) this.timeCounter=0;
+    this.counter++;
+    if(this.counter>this.animations[this.pose].animLength) this.counter=0;
   }
 
 }
@@ -52,12 +52,12 @@ class RigShape{
     this.colors=c;
     this.rig = r;
     this.animations=a;
-    this.shapeIndex=index;
+    this.sIndex=index;
     this.origin={ x:r[index].origin.x*scale, y:r[index].origin.y*scale };
     this.rotation =0;
     this.paths = [];
 
-    this.timeCounter=0;
+    this.counter=0;
 
     for(let i=0; i<m.length; i++){
       // create path from model save data
@@ -89,7 +89,6 @@ class RigShape{
     this.pins=[];
     for(let i=0; i<r[index].pins.length; i++){
       let p = r[index].pins[i];
-      //  // console.log("add connection to "+animShapes[index].connectors[i].shape)
       this.pins.push({
         shape:new RigShape( p.shape,scale,m,r,a,c),
         x: p.x*scale,
@@ -97,66 +96,53 @@ class RigShape{
       });
     }
   }
+
   selectAnimation(index){
     this.pose=index;
-    for(let i=0; i<this.pins.length; i++){
-      //  // console.log("add connection to "+animShapes[index].connectors[i].shape)
+    for(let i=0; i<this.pins.length; i++)
       this.pins[i].shape.selectAnimation(index);
-    }
   }
   updateRotationValues(){
-
-    //setRotationsFromTimeStamps();\
     // if time is 0, rotations = initial values
-    if(this.timeCounter==0){
-      this.rotation= this.animations[this.pose].initVals[this.shapeIndex];
-    }
-    else{
-      // if time isn't 0, we hafta look at the timestamps
+    if(this.counter==0) this.rotation= this.animations[this.pose].initVals[this.sIndex];
+    else this.rotation = this.getRotFromTimeStamps();
 
-      this.rotation = this.getRotFromTimeStamps();
-      //     // console.log(this.rotation+", time: "+timeCounter);
-
-    }
-
-    for(let i=0; i<this.pins.length; i++){
+    for(let i=0; i<this.pins.length; i++)
       this.pins[i].shape.updateRotationValues();
-    }
 
-    this.timeCounter++;
-    if(this.timeCounter>this.animations[this.pose].animLength) this.timeCounter=0;
+    this.counter++;
+    if(this.counter>this.animations[this.pose].animLength) this.counter=0;
   }
 
   // context must be specified since this is used in both
   // the rig editor's and the anim editor's canvas.
-  display(context){
-    // display this
-
-
-    context.save();
-    context.rotate(rad(this.rotation));
-    context.translate(-this.origin.x,-this.origin.y)
+  display(c){
+    c.save();
+    c.rotate(rad(this.rotation));
+    c.translate(-this.origin.x,-this.origin.y)
 
     // display all paths in this shape
     for(let i=0; i<this.paths.length; i++){
+      // set style
+      cFill(this.colors[this.paths[i].fill]);
+      c.fill(this.paths[i].path);
 
-      context.strokeStyle=this.colors[this.paths[i].stroke];
-      context.fillStyle=this.colors[this.paths[i].fill];
-      //  context.strokeStyle="black"
-      //  context.fillStyle="blue"
-      context.fill(this.paths[i].path);
-      context.stroke(this.paths[i].path);
-      //  // console.log(this.paths[i].path)
+      // draw stroke if there is stroke
+      let s=this.colors[this.paths[i].stroke];
+      if(s!=nocolor){
+        c.strokeStyle=s;
+        c.stroke(this.paths[i].path);
+      }
     }
 
     // + display any pins
     for(let i=0; i<this.pins.length; i++){
-      context.save();
-      context.translate(this.pins[i].x,this.pins[i].y);
-      this.pins[i].shape.display(context);
-      context.restore();
+      c.save();
+      c.translate(this.pins[i].x,this.pins[i].y);
+      this.pins[i].shape.display(c);
+      c.restore();
     }
-    context.restore();
+    c.restore();
   }
 
   // getgotfromtimestamps()
@@ -165,98 +151,66 @@ class RigShape{
 
   getRotFromTimeStamps(){
 
-    let newrot; // value to be returned
 
     // get list of time stamps for this shape
-    let stamps = this.animations[this.pose].timeStamps[this.shapeIndex];
-    //// console.log(stamps);
-    // find which stamp is just behind and which stamp is just ahead
-    // at this point in time:
+    let p=this.animations[this.pose];
+    let stamps = p.timeStamps[this.sIndex];
 
-    let correctStampFound=false;
-    //  // console.log(stamps);
     // if this shape has time stamps
     if(stamps.length>0){
 
       // check each time stamp related to this shape
       for(let i=0; i<stamps.length; i++){
-
         // if current time is less than this stamp's time,
         // then stamps[j] is the stamp we are working towards.
-        if(this.timeCounter<=stamps[i].time&&!correctStampFound){
-
-          let lastStampTime=0;
-          let lastStampRot=0;
-
+        if(this.counter<=stamps[i].time){
+          setlast(0,0)
+          let s = stamps[i-1]
           // get time between last stamp and this next stamp:
-          if(i>0) {
-            // if last stamp was a timestamp
-            lastStampTime=stamps[i-1].time;
-            lastStampRot=stamps[i-1].rot;
-          }
-          else{
-            //if last stamp was the initval
-            lastStampTime=0;
-            lastStampRot=this.animations[this.pose].initVals[this.shapeIndex];
-          }
-
-          // calculate where we are (% of time between stamps) (fraction of 1)
-          let pos = (this.timeCounter-lastStampTime)/(stamps[i].time-lastStampTime);
-
+          if(i>0) setlast(s.time,s.rot);
+          else setlast(0,p.initVals[this.sIndex]); //if last stamp was the initval
           // calculate rotation:
-          // d = lastStampRot + %pos * (nextStampRot-lastStampRot)
-          newrot = lastStampRot + pos * (stamps[i].rot - lastStampRot);
-          //  // console.log(timeCounter,lastStampTime,stamps[i].time,pos,lastStampRot,newrot);
-
-          correctStampFound=true;
+          return this.lerprot(stamps[i].time,stamps[i].rot);
         }
       }
-      if(!correctStampFound){
         // case in which there are no more stamps ahead (work back to initval)
-
-        let lastStampTime=stamps[stamps.length-1].time;
-        let lastStampRot=stamps[stamps.length-1].rot;
-
-        let pos = (this.timeCounter-lastStampTime)/(this.animations[this.pose].animLength-lastStampTime);
-        //  // console.log("POS2* "+pos);
-        //    // console.log(timeCounter,lastStampTime,pos,lastStampRot,newrot);
-        newrot = lastStampRot + pos * (this.animations[this.pose].initVals[this.shapeIndex] - lastStampRot);
-      }
+        let s = last(stamps);
+        setlast(s.time,s.rot);
+        return this.lerprot(p.animLength,p.initVals[this.sIndex]);
     }
-    //currentRigPos[this.shapeIndex]=newrot;
-    return newrot;
+  }
+
+  lerprot(t,r){
+    return lastp.r + (this.counter-lastp.t)/(t-lastp.t) * (r - lastp.r);
   }
 }
 
-
-
-
+let lastp;
+let setlast=(t,r)=> lastp={t:t,r:r};
 
 let cmess="";
 let segments = [];
 let riglength;
 
-function newSeg(t,charindex,ns){
-  let p = {x:this.toNum(charindex,ns),y:this.toNum(charindex+1,ns)};
-  segments.push({type:t,points:[p]});
-}
+let newSeg=(t,charindex,ns)=>
+  segments.push({type:t,points:[{x:toNum(charindex,ns),y:toNum(charindex+1,ns)}]});
 
-function toNum(character,startnum){
-  return cmess.charCodeAt(character)-startnum;
-}
 
-function isns1(message,charindex){
-  return (message.charCodeAt(charindex)<ns2);
-}
+let toNum=(character,startnum)=>
+  cmess.charCodeAt(character)-startnum;
 
-function toAngle(i){
-  return 180*this.toNum(i,ns2)/30;
-}
+
+let isns1=(message,charindex)=>
+  (message.charCodeAt(charindex)<ns2);
+
+let toAngle=(i)=>
+  180*toNum(i,ns2)/30;
 
 
 
 
-function unpackModelMessage(modeldata){
+
+let unpackModelMessage=(modeldata)=>{
 
   let m = modeldata.split("*");
   let model = [];
@@ -281,15 +235,14 @@ function unpackModelMessage(modeldata){
         if(sl>=0){
           // look at the current batch of points
           let s = segments[sl];
+          let p = s.points;
           // if they were part of a line, start a new curve
           if(s.type=="L") newSeg('C',j,ns2);
           // if instead we already have a curve going
           else {
             // if it's not full, add a point
-            let p = s.points;
             if(p.length<3) p.push({x:toNum(j,ns2),y:toNum(j+1,ns2)});
-            // if it is full start a new curve
-            else newSeg('C',j,ns2);
+            else newSeg('C',j,ns2); // if it is full start a new curve
           }
         }
         // lastly if there was nothing in the list, add new curve entry
@@ -310,7 +263,7 @@ function unpackModelMessage(modeldata){
   return model;
 }
 
-function unpackRigMessage(rigdata){
+let unpackRigMessage=(rigdata)=>{
 
   let rig=[];
 
@@ -342,7 +295,7 @@ function unpackRigMessage(rigdata){
   return rig;
 }
 
-function unpackAnimation(anim){
+let unpackAnimation=(anim)=>{
 
   let animations = [];
   cmess = anim;
@@ -355,7 +308,7 @@ function unpackAnimation(anim){
     let nameEnd = m.indexOf('*',lastEnd+1);
     let a={ name: m.substring(lastEnd+1,nameEnd) };
     a.animLength = toNum(nameEnd+1,ns1);
-
+  //  console.log(a.animLength)
     let x = nameEnd+1+riglength;
     a.initVals = [];
     a.timeStamps = [];

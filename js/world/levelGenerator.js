@@ -1,5 +1,5 @@
 let level1;
-
+let killLine = 500;
 let sceneW=0;
 let fadeIn =0;
 let enemies = [];
@@ -7,40 +7,36 @@ let lvlCount=0;
 let enemyDifficulty=1;
 let lvlDiffIncreaseInterval = 3;
 let maxEnemyDifficulty =3;
-let platInterval = 65;
-let maxExtraPlatW = 150;
-let minPlatW = 50;
+
 // a place to setup some platforms and stuff
 
-let basicLevel=()=>{
+let basicLevel=(has404)=>{
+  sceneW = canvas.w;
+
   level1=new Level( [
     [50,killLine-100,100],
     [-60,killLine-60,100],
     [0, killLine, canvas.w]
-  ], sceneW, 100);
+  ], sceneW, 100,has404);
 }
-
-let randPlat=(x)=> Math.min( minPlatW + random()*maxExtraPlatW , (sceneW-x)/2 );
-
 
 
 let continueLevel=(spawn)=>{
 
+  // extend kill line
   killLine+= 500;
   let plats = [[0,killLine,sceneW]]
   let stairs = flo(3+random()*3);
   let stairCount = flo(1+random()*3);
   let x = -canvas.w+random()*sceneW
 
+  // create stair formations
   for(let j=0; j< stairCount; j++){
     let y = killLine;
-
-
     for(let i=0; i<stairs; i++){
-      //console.log("push!")
-      y-= 60;
+
       let w = 50;
-      console.log(i,stairs)
+      y-= 60;
       if(i==stairs-1){
         w = 150;
         enemies.push(new Enemy(x,y-80,0,0,'spawner'));
@@ -55,14 +51,12 @@ let continueLevel=(spawn)=>{
     else x = -1*x + 400;
   }
 
+  // create new platform objects
   for(let i=0; i<plats.length; i++){
-
     level1.platforms.push(new Platform(plats[i][0],plats[i][1],plats[i][2]))
   }
 
-  level1.sections++;
-  levelData.sections++;
-
+  // update walls
   level1.newWalls(sceneW);
 }
 
@@ -77,88 +71,74 @@ let continueLevel=(spawn)=>{
 let createLevel=()=>{
 
   // reset level variables
-  dUI.open=false;
   noiseCounter=0
   enemies = [];
   items = [];
-  spawners = [];
+  killLine = 500;
+  // close dialog window
+  dUI.open=false;
 
-  firstEnemyKilled = false;
-  sceneW = canvas.w;
-
+  // if target page is home page
   if(currentLevel=='home'){
-
     basicLevel();
     createFriendlyNPCs();
   }
-  else if(currentLevel=='true404'){
+  // if the url user typed doesn't return a level:
+  else if(currentLevel=='true404')
+    basicLevel(true);
 
-    basicLevel();
-    let p=last(level1.platforms);
-    level1.text404 = new DisplayObject( p.x-10, p.y-10,300,300 );
-
-  }
+  // if target page is a level:
   else {
 
     sceneW = 2*canvas.w;
+    level1 = new Level([[0,killLine,sceneW]],sceneW, 400, true );
 
-    level1 = new Level([[0,killLine,sceneW]],sceneW, 400 );
-    let p = last(level1.platforms)
-    level1.text404 = new DisplayObject( p.x-10,p.y-10,300,300 );
-    level1.enemyDifficulty = levelData.difficulty; //difficultyLevels[index];
-    level1.cleared = levelData.cleared;//clearedStates[index];
-    console.log("sections",levelData.sections)
-    level1.sections = levelData.sections;
+    let p=level1.platforms[0];
+    let j=levelData.sections;
 
-    if(levelData.sections==0)
+    // if there is no progress on this level yet, create first spawner
+    if(j==0)
       enemies.push(new Enemy(p.x,p.y-80,0,0,'spawner'));
+      // if there is progress made on this level, add platforms below
+    else for(let k=0; k<j; k++){
 
-      else {
-        for(let k=0; k<levelData.sections; k++){
-          console.log("heh")
-        if(k==levelData.sections-1) continueLevel(true);
+        if(k==j-1) continueLevel(true); // add a spawner to the last section (unless level is cleared??)
         else continueLevel(false)
-        levelData.sections--;
       }
-    }
 
-
-  updateFavorites();
+      // save game/update favorites
+    updateFavorites();
+  }
 }
 
-}
-
-
-let linestyle=(c,a,w)=>{
-  ctx.strokeStyle=c+a;
-  ctx.lineWidth = w;
-}
 
 class Level{
 
-  constructor(plist,w,h){
+  constructor(plist,w,h,has404txt){
     let bgurl='index.html';
     if(currentLevel!='home')
-      bgurl='js/characters/enemyclass.js';
+    bgurl='js/characters/enemyclass.js';
 
-      fetch(bgurl)
-      .then(response => response.text())
-      .then(text => this.bgText=text);
+    fetch(bgurl)
+    .then(response => response.text())
+    .then(text => this.bgText=text);
 
-    this.unbg = [];
-    this.uncorrupting=false;
+    if(has404txt!=undefined){
+      let p = plist[0];
+      this.text404 = new DisplayObject( p[0]-10,p[1]-10,300,300 );
+    }
+
     this.platforms = [];
     this.bgFill='#ddff';
 
     for(let i=0; i<plist.length; i++)
-      this.platforms.push(new Platform(plist[i][0],plist[i][1],plist[i][2]));
+    this.platforms.push(new Platform(plist[i][0],plist[i][1],plist[i][2]));
 
     this.newWalls(sceneW);
-
     this.bgTxt = new DisplayObject(w/2,this.platforms[0].y+h,w*2,h*4);
 
     this.bgcounter=0;
-    this.nextThunder=100;
+    this.thunder=100;
     this.txtCounter=0;
     this.drops = [];
   }
@@ -173,113 +153,65 @@ class Level{
 
   displayBackground(){
 
-    cFill('#333F');
-    cRect(0,0,canvas.w,canvas.h);
+    cRect(0,0,canvas.w,canvas.h,'#333F');
 
-    if(this.bgcounter>this.nextThunder){
-      let val = 10-(this.bgcounter-this.nextThunder);
-      if(val>=0){
-        cFill('#FFF'+val);
-        cRect(0,0,canvas.w,canvas.h);
-      }
-      else if(Math.random()<0.3) this.nextThunder+=50+randInt(100);
-      else this.nextThunder+=200+randInt(200);
+    // run thunder
+    if(this.bgcounter>this.thunder){
+      let val = 10-(this.bgcounter-this.thunder);
+      if(val>=0)
+        cRect(0,0,canvas.w,canvas.h, '#FFF'+val);
+
+      else if(Math.random()<0.3) this.thunder+=50+randInt(100);
+      else this.thunder+=200+randInt(200);
     }
 
-    this.bgTxt.position();
-    cFill('#bbba');
-    cFont('12px Courier New')
+    // draw rain drops
+    let p=this.bgTxt.position();
+
+    // update rain drops
     for(let i=this.drops.length-1; i>=0; i--){
-      this.drops[i].y += 20;
-      cText( level1.bgText[this.drops[i].c],
-        this.bgTxt.screenPos.x+this.drops[i].x,
-        this.bgTxt.screenPos.y+this.drops[i].y );
-        if(this.drops[i].y>500) this.drops.splice(i,1);
-    }
 
-    if(this.bgcounter%1==0){
-
-      this.drops.push({x:randInt(sceneW),y:-500,c:randInt(400)});
-    //  level1.txtCounter++;
-    //  if(level1.txtCounter==level1.bgText.length) level1.txtCounter=0;
-    }
-    this.bgcounter++;
-  }
-  displayBackground2(){
-
-    cFill(this.bgFill);
-    cRect(0,0,canvas.w,canvas.h);
-    this.bgTxt.position();
-
-
-    if(this.bgTxt.screenPos!=false){
-      cFont('30px Arial');
-
-      // if uncorrupting is active, add indices to uncorrupted bg array
-      if(this.uncorrupting){
-        let index=randInt(6000);
-        let r=randInt(20);
-        for(let i=0; i<r; i++)
-          if(!this.unbg.includes(index+i)) this.unbg.push(index+i);
+      let j=this.drops[i];
+      // update position
+      j.y += 20;
+      // draw rain drop
+      cText( level1.bgText[j.c], p.x+j.x, p.y+j.y, '#bbba', 12 );
+      // remove drop once it hits the killLine
+      if(j.y>killLine) this.drops.splice(i,1);
       }
 
-      let counter=0;
-      let r = -1+randInt(3);
+      // add rain drops
+      if(this.bgcounter%1==0)
+        this.drops.push({x:randInt(sceneW),y:-500,c:randInt(400)});
+      this.bgcounter++;
+    }
 
-      for(let i=0; i<50; i++){
+    display404Background(){
+      let p=this.text404.position();
+      cText("404", p.x, p.y, 'black', 100);
+      cText("return to last page...", p.x, p.y+50, 'black', 30);
+    }
 
-        let alphaval = 'f';
-        if(i<10) alphaval=i;
-        let x=this.bgTxt.screenPos.x;
-        let txtcontent=this.bgText.substring(i*120,(i+1)*120);
+    displayPlatforms(){
 
-        for(let j=0; j<120; j++){
-          // if uncorrupted
-          if(currentLevel=='home'||this.unbg.includes(counter))
-            linestyle('#bbb',alphaval,2);
-            // if corrupted
-          else linestyle('#bdb',alphaval,12+r)
+      // display platforms
+      this.txtCounter=0;
+      for(let i=0; i<this.platforms.length; i++)
+        this.platforms[i].display();
 
-          ctx.strokeText(txtcontent[j],(x),(this.bgTxt.screenPos.y+i*50)/2);
-          counter++;
-          x+=ctx.measureText(txtcontent[j]).width*1.2;
-        }
+      // display walls
+      cFill('black');
+      for(let i=0; i<this.walls.length; i++){
+        let w = this.walls[i];
+        let p = w.position();
+        if(p!=false)
+        ctx.fillRect(p.x,p.y,w.w,w.h);
       }
-      ctx.lineWidth = 1;
     }
-  }
 
-  display404Background(){
-    this.text404.position();
-    cFont('100px Georgia');
-    cFill('black');
-    cText("404",this.text404.screenPos.x,this.text404.screenPos.y);
-    cFont('30px Georgia');
-    cText("return to last page...",this.text404.screenPos.x,this.text404.screenPos.y+50);
-  }
-
-  displayPlatforms(){
-
-    this.txtCounter=0;
-    for(let i=0; i<this.platforms.length; i++)
-      this.platforms[i].display();
-
-    cFill('black');
-    for(let i=0; i<this.walls.length; i++){
-      let w = this.walls[i];
-      w.position();
-      let p = w.screenPos;
-      if(p!=false)
-       ctx.fillRect(p.x,p.y,w.w,w.h);
+    countT(){
+      this.txtCounter++;
+      if(this.txtCounter>=this.bgText.length) this.txtCounter=0;
     }
-  }
 
-  displayCompletion(){
-    let t = levelData.completion+"% complete";
-    cFont("40px bold");
-    cFill('black');
-    cText( t, 10,30 );
-    cFill('white');
-    cText( t, 12,32 );
   }
-}

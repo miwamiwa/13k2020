@@ -20,12 +20,10 @@ let beatinput = [
 let bars=0;
 let section=0;
 
-function noteToFreq(note) {
-  let a = 440; //frequency of A (coomon value is 440Hz)
-  return (a / 32) * (2 ** ((note - 9) / 12));
-}
+let noteToFreq=(note)=> (440 / 32) * (2 ** ((note - 9) / 12));
 
-function newbar(){
+
+let newbar=()=>{
   /*
   switch(bars%8){
   case 0: beatinput[6].vals='  A   F'; break;

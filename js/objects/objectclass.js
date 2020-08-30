@@ -11,13 +11,11 @@ class DisplayObject{
   }
 
   position(){
-
-    let bounds = getBounds(this);
-
     // if object is on screen, then update screen pos.
-    if( checkCollision(bounds,camera) ) this.screenPos = getScreenPos(this);
+    if( checkCollision(getBounds(this),camera) ) this.screenPos = getScreenPos(this);
     // if it is offscreen screenpos is false.
     else this.screenPos = false;
+    return this.screenPos;
   }
 
   limitX(){

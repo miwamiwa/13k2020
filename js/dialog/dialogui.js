@@ -29,7 +29,7 @@ let runDialog=()=>{
     cFill('white');
     cRect(dUI.x,dUI.y,190,42);
     cFill('black');
-    cFont('16px Courier New')
+    cFont(16)
     cText(dUI.displayedText[0],dUI.x+5,dUI.y+18)
     cText(dUI.displayedText[1],dUI.x+5,dUI.y+36)
   }

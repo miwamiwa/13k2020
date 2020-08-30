@@ -30,7 +30,7 @@ constrain(Math.random()*sine4fact+0.3*(Math.sin(i / dividor)+0.3*Math.sin(i / (2
 
 
 let snarerelease=0.3;
-function playSnare(){
+let playSnare=()=>{
   playSound(preloadSound(
     10,
     new Envelope(0.02,0.01,0.3,snarerelease),
@@ -38,7 +38,7 @@ function playSnare(){
   ),5,'highpass',2200,4);
 }
 
-function playHats(){
+let playHats=()=>{
   playSound(preloadSound(
     400,
     new Envelope(0.01,0.01,0.1,0.2),
@@ -47,7 +47,7 @@ function playHats(){
 }
 
 let wubfactor=560;
-function playWobbleBass(freq){
+let playWobbleBass=(freq)=>{
   playSound(preloadSound(
     freq,
     new Envelope(0.05,0.51,0.2,0.51),
@@ -55,7 +55,7 @@ function playWobbleBass(freq){
   ),5,'lowshelf',wubfactor,10); // adjust filter freq value 200-1000 to get nice dub fx
 }
 
-function playNoiseySynth(freq){
+let playNoiseySynth=(freq)=>{
   //console.log(freq)
   playSound(preloadSound(
     freq,
@@ -66,14 +66,14 @@ function playNoiseySynth(freq){
   if(sine4counter%12==0) sine4fact = 1 - sine4fact;
 }
 
-function playHardHat(){
+let playHardHat=()=>{
   playSound(preloadSound(
     8,
     new Envelope(0.01,0.01,0.11,0.13),
     1,constSine3
   ),6,'lowshelf',2240,12);
 }
-function playKick(fact){
+let playKick=(fact)=>{
   playSound(preloadSound(
     fact, // compact bassy hits <1500, trappy pitched long hits 6000-20000
     new Envelope(0.01,0.11,0.3,0.35),
@@ -83,7 +83,7 @@ function playKick(fact){
 
 // factor:
 // compact bassy hits <1500, trappy pitched long hits 6000-20000
-function playBlaster(factor,vol){
+let playBlaster=(factor,vol)=>{
   playSound(preloadSound(
     factor,
     new Envelope(0.01,0.11,0.3,0.25),
@@ -91,7 +91,7 @@ function playBlaster(factor,vol){
   ),vol,'highpass',1080,8);
 }
 
-function playSine(factor){
+let playSine=(factor)=>{
   playSound(preloadSound(
     factor,
     new Envelope(0.01,0.11,0.3,0.35),
@@ -99,7 +99,7 @@ function playSine(factor){
   ),1.0,'notch',280,28);
 }
 
-function playDamageFX(){
+let playDamageFX=()=>{
   playSound(preloadSound(
     20,
     new Envelope(0.01,0.11,0.3,0.31),

@@ -1,8 +1,7 @@
 
 let displayStartUI=()=>{
 
-  cFill('white');
-  cRect(0,0,canvas.w,canvas.h);
+  cRect(0,0,canvas.w,canvas.h,'white');
   cFill('black');
   cText("sam's js13k game",50,50);
   cText("type 'home' in the address bar above to continue saved game,",50,65);

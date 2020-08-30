@@ -1,7 +1,7 @@
 let aBar = {};
 let aBarFill = 'black';
 
-function setupActionBar(){
+let setupActionBar=()=>{
 
   aBar= {
     x:canvas.x,
@@ -28,6 +28,4 @@ function setupActionBar(){
 
 }
 
-function aBarEl(){
-  return div(aBar,'grey');
-}
+let aBarEl=()=> div(aBar,'grey');

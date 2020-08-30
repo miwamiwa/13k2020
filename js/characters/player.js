@@ -1,6 +1,6 @@
 let player;
 
-function createPlayer(){
+let createPlayer=()=>{
 
   let pos = level1.platforms[level1.platforms.length-1];
   if(currentLevel=='home') pos=level1.platforms[0]
@@ -20,7 +20,7 @@ let playerJumping=false;
 let fuelcost=7;
 let shotcost=38;
 
-function updatePlayer(){
+let updatePlayer=()=>{
 
   player.limitX();
 
@@ -82,12 +82,12 @@ function updatePlayer(){
  player.jetFuel = Math.min( player.jetFuel+4, 100 );
 }
 
-function resetPlayerAnimation(){
+let resetPlayerAnimation=()=>{
   if(playerMoving) playerModel.fullRig.selectAnimation(0);
   else playerModel.fullRig.selectAnimation(3);
 }
 
-function damagePlayer(damage){
+let damagePlayer=(damage)=>{
   //console.log("player hit!");
   player.hitPoints -= damage;
   playDamageFX();

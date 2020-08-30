@@ -1,5 +1,5 @@
 let saveData = null;
-function loadSave(){
+let loadSave=()=>{
 
 //localStorage.removeItem(saveDataHeader);
   saveData=JSON.parse(localStorage.getItem(saveDataHeader));
@@ -14,7 +14,7 @@ function loadSave(){
 // newgamesave()
 //
 // resets the save game data
-function newGameSave(){
+let newGameSave=()=>{
 
   console.log("new save")
   saveData = {

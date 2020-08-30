@@ -4,7 +4,7 @@ let maxEnemies =3;
 
 let enemyShooterDamage = 10;
 
-function updateEnemies(){
+let updateEnemies=()=>{
 
   // if this is a level with enemies
   if(currentLevel!='home'&&currentLevel!='start'){
@@ -27,7 +27,10 @@ function updateEnemies(){
           for(let j=0; j<enemies.length;j++){
             if(enemies[j].type=='spawner'&&j!=i) nomorespawners = false;
           }
-          if(nomorespawners) continueLevel(true);
+          if(nomorespawners){
+            levelData.sections++;
+            continueLevel(true);
+          }
         }
         else {
 
@@ -108,7 +111,8 @@ class Enemy extends MovingObject {
   }
 
   updateSpawner(){
-    this.display();
+  let p=  this.display();
+  if(p!=false) cRect(p.x,p.y,40,40,'gold');
    this.spawnCounter++;
 
   }

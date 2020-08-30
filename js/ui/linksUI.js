@@ -69,7 +69,7 @@ let setupLevel=()=>{
 // adds a new level to the game without starting it
 
 let dif=0;
-function newLevel(name){
+let newLevel=(name)=>{
 
   if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0)
   dif = Math.min(enemyDifficulty+1,maxEnemyDifficulty);
@@ -79,9 +79,7 @@ function newLevel(name){
   saveData.levels.push({
     name:name,
     seedData:setupRandomSeed(),
-    completion:0,
     difficulty:dif,
-    unlocked:false,
     cleared:false,
     sections:0
   });
@@ -91,16 +89,11 @@ function newLevel(name){
 //
 // save current level progression
 
-function saveLevelData(){
-
-  console.log('save level data')
+let saveLevelData=()=>{
   if(currentLevel!='home'&&currentLevel!='start'){
     let i = isLevel(currentLevel);
-
-    console.log("is level result "+ i)
-    saveData.levels[i].completion = levelData.completion;
-    saveData.levels[i].unlocked = levelData.unlocked;
     saveData.levels[i].cleared = levelData.cleared;
+    sadeData.levels[i].sections = levelData.sections;
   }
 }
 
@@ -108,7 +101,7 @@ function saveLevelData(){
 //
 // called when you press go or hit enter in the text box
 
-function goToLink(){
+let goToLink=()=>{
 
   let v = listform.value;
   let tv = textform.value;

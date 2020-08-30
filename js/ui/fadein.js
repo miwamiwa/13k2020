@@ -11,11 +11,8 @@ let runFadeIn=()=>{
   if(fadeIn>waittime) fact = 1-(fadeIn-waittime)/30;
 
   if(fact>0){
-    cFill('rgba(0,0,0,'+fact+')');
-    cRect(0,0,canvas.w,canvas.h);
-    cFill('white');
-    cFont('20px Courier New')
-    cText(fadetxt,canvas.w/2-30,canvas.h/2-2);
+    cRect(0,0,canvas.w,canvas.h,'rgba(0,0,0,'+fact+')');
+    cText(fadetxt,canvas.w/2-30,canvas.h/2-2,'white',20);
   }
 
   fadeIn++;
@@ -30,5 +27,5 @@ let fade=(time,text)=>{
   fadeIn =0;
   waittime=time;
   if(text!=undefined) fadetxt=text;
-  else fadetx='';
+  else fadetxt='';
 }
