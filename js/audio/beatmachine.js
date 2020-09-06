@@ -3,80 +3,72 @@ let maxbars=16;
 
 let startBeatMachine=()=>
   setInterval(newbar,bar);
+let bassnote="0"
 
-
-
+let mel2= "HJMOMPOPOJMOP";
+let mel1="POMJHHHJMHH";
+let mel = mel1;//"HJMOMPOPOJMOP"//"POMJHHHJMHH"
 let beatinput = [
-  {vals:'x x 0 x xxx 0 x x x xxx x x',beatval:32,f:playHats}, //0
-  {vals:'x  xx',beatval:8,f:playKick,v: 200,p:false},         //1
-  {vals:'xoxxx',beatval:5,f:playSnare,p:false},               //2
-  {vals:'',beatval:3,f:playBlaster,v:360,p:false},            //3
-  {vals:'/  --',beatval:6,f:playWobbleBass,v: 0,p:false},     //4
-  {vals:'',beatval:8,f:playHardHat,p:false},                  //5
-  {vals:'  M   N',beatval:8,f:playNoiseySynth,v:0,p:false},   //6
-  {vals:'MNRW  V  W  YZYW',beatval:16,f:playSine,v:0,p:false},//7
+  {vals:' x x x x',beatval:8,f:playHats,p:true}, //0
+  {vals:'x x',beatval:16,f:playKick,v: 600,p:true},         //1
+  {vals:'     x',beatval:8,f:playSnare,p:true},
+              //2
+//  {vals:'   hfs',beatval:6,f:playBlaster,v:360,p:false},            //3
+  {vals:' 5',beatval:8,f:playWobbleBass,v: 2000,p:true},     //3
+//  {vals:'',beatval:8,f:playHardHat,p:false},                  //5
+  {vals:'  ',beatval:8,f:playNoiseySynth,v:0,p:true},   //4
+
+  {vals:'  M  K  R  P  M  P',beatval:16,f:playSine,v:0,p:true},//5
+  {vals:'  P  P  T  R  P  R',beatval:16,f:playSine,v:0,p:true},//6
+  {vals:'  R  T  W  T  R  T',beatval:17,f:playSine,v:0,p:true},//7
+//  {vals:'  M',beatval:16,f:playSine,v:0,p:false},//7
 ];
 
 let bars=0;
 let section=0;
 
 let noteToFreq=(note)=> (440 / 32) * (2 ** ((note - 9) / 12));
-
+let melCounter=0;
+let melCount2=1;
 
 let newbar=()=>{
-  /*
-  switch(bars%8){
-  case 0: beatinput[6].vals='  A   F'; break;
-  case 1: beatinput[6].vals='  J  HF'; break;
-  case 2: beatinput[6].vals='     ACD'; break;
 
-  case 4: beatinput[6].vals='DFDCA'; break;
-  case 5: beatinput[6].vals='  JGJK'; break;
-  case 6: beatinput[6].vals='  J   F'; break;
+if(bars%4==0){
 
-}
-*/
-let hats = beatinput[0];
-let noiznote = beatinput[6];
-let wub=beatinput[4];
-let kick=beatinput[1];
-let hardhat=beatinput[5];
-let snare=beatinput[2];
-
-switch(section){
-
-  case 0: hats.p=true; noiznote.p=true; wub.p=true; wubfactor=200; break;
-  case 1: noiznote.p=false; kick.p=true; hardhat.p=true; wubfactor=400; break;
-  case 2: snare.p=true; snarerelease=0.2; wubfactor=600; break;
-  case 3: noiznote.p=true; kick.p=false; wubfactor=200; break;
+  wubfact2=100+randInt(200)
+  beatinput[7].beatval=16+randInt(2);
+  beatinput[6].beatval=16+randInt(3);
 }
 
-if(section%2==1){
+if(currentLevel!="home"&&levelData&&!levelData.cleared){
+  if(bars%8==0){
+    if(mel!=mel1){
+      mel=mel1;
+      beatinput[3].vals=' 5'
 
-  if(random()>0.3&&bars%2==1){
-    kick.vals = 'x  x  x x     x';
-    kick.beatval=16;
+    }
+    else{
+      mel=mel2;
+      beatinput[3].vals=' 0'
+    }
+
+    melCount2=1;
+    melCounter=0;
   }
-  else {
-    kick.vals = 'x  xx';
-    kick.beatval=8;
+
+  beatinput[4].vals = "   "+mel[melCounter]+" "+mel[melCounter];
+  melCounter++;
+  if(melCounter>=melCount2){
+    melCounter=0;
+    melCount2++;
   }
+  if(melCount2>=mel.length) melCount2=0;
 }
-
-if(section>=0){
-
-  if(bars%2==0){
-    snare.vals='x xxx'
-    snare.beatval=5;
-    hardhat.vals='xoooxooo';
-  }else{
-    snare.vals='x  x'
-    snare.beatval=8;
-    hardhat.vals='oxox0x0x';
-  }
-}
+else beatinput[4].vals=""
 
 
+
+// trigger notes
 for(let i=0; i<beatinput.length; i++){
   if(beatinput[i].p){
     for(let j=0; j<beatinput[i].vals.length; j++){

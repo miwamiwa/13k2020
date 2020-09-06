@@ -22,24 +22,20 @@ let updateEnemies=()=>{
 
 
 
-        if(enemies[i].type=='spawner'){
-          let nomorespawners = true;
-          for(let j=0; j<enemies.length;j++){
-            if(enemies[j].type=='spawner'&&j!=i) nomorespawners = false;
-          }
-          if(nomorespawners){
+        if(enemies.length==1){
+          console.log("all enemies ded");
+
+          // if level isn't cleared yet, add a new section
+          if(levelData.sections<levelData.difficulty){
             levelData.sections++;
             continueLevel(true);
           }
-        }
-        else {
 
-          levelData.completion=Math.min(levelData.completion+1,100);
-
-          for(let j=0; j<enemies.length; j++){
-            if(enemies[j].type=='spawner'&&enemies[j].sIndex==enemies[i].sIndex)
-              enemies[j].enemyCount--;
+          else{
+            // if level is cleared
+            levelData.cleared=true;
           }
+
         }
 
         enemies.splice(i,1);
@@ -75,7 +71,7 @@ class Enemy extends MovingObject {
     this.roaming = true;
     this.goalReachedAction='none';
     this.jumpy=true;
-    this.roamPauseLength=1600;
+    this.roamPauseLength=200;
     this.attackCounter=0;
     this.nextAttack=0;
     this.attackInterval=25;
@@ -119,16 +115,15 @@ class Enemy extends MovingObject {
 
   spawnMore(){
 
-    this.nextSpawn--;
-    if(this.enemyCount<4&&this.spawnCounter>=this.nextSpawn){
-      let pick = Math.random();
+//this.nextSpawn--;
+    for(let i=0; i<3; i++){
       let choice='fighter'
-      if(pick>0.66) choice='flyer';
-      else if(pick>0.33) choice='shooter';
+      if(Math.random()>0.5) choice='shooter';
+//else if(pick>0.33) choice='shooter';
 
-      this.enemyCount++;
-      this.nextSpawn=this.spawnCounter+50;
-      enemies.push(new Enemy(this.x,this.y-80,this.currentPlatform,this.sIndex,choice));
+    //  this.enemyCount++;
+    //  this.nextSpawn=this.spawnCounter+50;
+      enemies.push(new Enemy(this.x - 100 + randInt(200),this.y-80,this.currentPlatform,this.sIndex,choice));
     }
   }
 
@@ -191,11 +186,11 @@ class Enemy extends MovingObject {
     if(this.x<player.x-pmargin) this.flightDir=1;
     else if(this.x>player.x+pmargin) this.flightDir=-1;
 
-  //  console.log(this.flightDir)
+  //  //console.log(this.flightDir)
     t.x+= this.flightDir*randInt(100);
 
 
-    console.log("added target ",t)
+    //console.log("added target ",t)
     this.flightTargets.push(t);
   }
 
@@ -204,7 +199,7 @@ class Enemy extends MovingObject {
     if(this.flightTargets.length==0){
       // if need new target
       if(d.d<130){
-        console.log("go to player")
+        //console.log("go to player")
         this.flightTargets.push({x:player.x,y:player.y});
         this.flyBy();
 
@@ -214,13 +209,13 @@ class Enemy extends MovingObject {
     }
     else {
       // if have a target, move to target
-    //  console.log("flying")
+    //  //console.log("flying")
       let d2 = distance(this.flightTargets[0].x,this.flightTargets[0].y,this.x,this.y);
 
         let reached=reach(this,this.flightTargets[0],this.flightVel);
         if(reached) this.flightTargets.shift();
 
-        console.log(this.x,this.y)
+        //console.log(this.x,this.y)
     }
   }
 
@@ -387,7 +382,7 @@ class Enemy extends MovingObject {
         if(x!=-1){
           let diff = level1.platforms[i].y - p.y;
           if(this.y<player.y && diff>0 && diff < 150){
-            console.log('moving down')
+            //console.log('moving down')
             tarfound=true;
             this.target = x+randInt(r);
             this.goalReachedAction='down'

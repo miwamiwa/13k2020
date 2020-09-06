@@ -124,15 +124,16 @@ class RigShape{
     // display all paths in this shape
     for(let i=0; i<this.paths.length; i++){
       // set style
-      cFill(this.colors[this.paths[i].fill]);
-      c.fill(this.paths[i].path);
+    //  cFill(this.colors[this.paths[i].fill]);
+    //  c.fill(this.paths[i].path);
 
       // draw stroke if there is stroke
-      let s=this.colors[this.paths[i].stroke];
-      if(s!=nocolor){
-        c.strokeStyle=s;
+    //  let s=this.colors[this.paths[i].stroke];
+    //  if(s!=nocolor){
+  //  c.strokeWeight='4px'
+        c.strokeStyle=this.colors[this.paths[i].fill];
         c.stroke(this.paths[i].path);
-      }
+    //  }
     }
 
     // + display any pins
@@ -315,6 +316,7 @@ let unpackAnimation=(anim)=>{
 
     for(let i=nameEnd+2; i<x+1; i++){
       a.initVals.push( toAngle(i) );
+    //  if(cmess[i]=='\\') i++;
     }
 
     lastEnd = x+1;
@@ -322,6 +324,10 @@ let unpackAnimation=(anim)=>{
 
       a.timeStamps.push([]);
       let nextEnd = m.indexOf('*',lastEnd+1);
+      if(nextEnd==-1){
+        nextEnd=m.length;
+        done=true;
+      }
       let counter=0;
 
       for(let j=lastEnd+1; j<nextEnd; j++){
@@ -332,7 +338,7 @@ let unpackAnimation=(anim)=>{
       }
 
       lastEnd = nextEnd;
-      if(nextEnd==-1) done = true;
+
     }
     animations.push(a);
   }

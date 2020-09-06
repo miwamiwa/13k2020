@@ -76,8 +76,9 @@ class MovingObject extends DisplayObject {// extends display object class
       }
 
       // handle knockback
-      if(this.impactForce.x>0) this.impactForce.x--;
-      else if(this.impactForce.x<0) this.impactForce.x++;
+      if(this.impactForce.x-1>0) this.impactForce.x--;
+      else if(this.impactForce.x+1<0) this.impactForce.x++;
+      else this.impactForce.x=0;
 
       this.x += this.lrSpeed + this.impactForce.x;
 

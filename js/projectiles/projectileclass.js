@@ -54,7 +54,10 @@ class Projectile extends MovingObject{
         cRect(p.x,p.y,this.size,this.size);
       }
     }
-    else this.display();
+    else{
+      let p=this.display();
+      if(p!=false) cRect(p.x,p.y,this.size,this.size);
+    }
 
   }
 
@@ -74,7 +77,7 @@ class Projectile extends MovingObject{
         // if an emey is hit
         if(damage!=false){
           if(input[i].type=='spawner'){
-            damage = 5;
+            damage = 100;
             input[i].spawnMore();
           }
           else this.bump(input[i],4);

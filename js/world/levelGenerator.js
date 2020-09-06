@@ -28,27 +28,32 @@ let continueLevel=(spawn)=>{
   let plats = [[0,killLine,sceneW]]
   let stairs = flo(3+random()*3);
   let stairCount = flo(1+random()*3);
-  let x = -canvas.w+random()*sceneW
+
 
   // create stair formations
   for(let j=0; j< stairCount; j++){
+
+    let x = -(stairCount/3)*canvas.w  + (j)* sceneW/stairCount + 75;
     let y = killLine;
     for(let i=0; i<stairs; i++){
 
       let w = 50;
       y-= 60;
       if(i==stairs-1){
-        w = 150;
+        w = 250;
         enemies.push(new Enemy(x,y-80,0,0,'spawner'));
       }
       plats.push([x,y,w+random()*50])
       x+= -40+random()*80;
     }
+    /*
     if(j==0){
       if(Math.abs(x)<300) x-= 600;
       else x*=-1;
     }
     else x = -1*x + 400;
+    */
+//x = -canvas.w + (j+1)* sceneW/stairCount +50 ;
   }
 
   // create new platform objects

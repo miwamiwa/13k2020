@@ -71,6 +71,7 @@ let setupLevel=()=>{
 let dif=0;
 let newLevel=(name)=>{
 
+  // setup level difficulty
   if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0)
   dif = Math.min(enemyDifficulty+1,maxEnemyDifficulty);
   lvlCount++;
@@ -79,7 +80,7 @@ let newLevel=(name)=>{
   saveData.levels.push({
     name:name,
     seedData:setupRandomSeed(),
-    difficulty:dif,
+    difficulty:1+flo(lvlCount/2),
     cleared:false,
     sections:0
   });
@@ -93,7 +94,7 @@ let saveLevelData=()=>{
   if(currentLevel!='home'&&currentLevel!='start'){
     let i = isLevel(currentLevel);
     saveData.levels[i].cleared = levelData.cleared;
-    sadeData.levels[i].sections = levelData.sections;
+    saveData.levels[i].sections = levelData.sections;
   }
 }
 

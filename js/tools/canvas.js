@@ -16,7 +16,7 @@ let createCanvas=()=>{
   //canvas.c.setAttribute("style",``);
   ctx = canvas.c.getContext("2d");
 
-
+  ctx.filter = 'contrast(1.5) drop-shadow(1px 1px 2px #000)';
 }
 /*
 window.onresize=resizeCanvas;

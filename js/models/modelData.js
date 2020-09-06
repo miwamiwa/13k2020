@@ -14,7 +14,7 @@ let edata={
 let abdata={
   m:unpackModelMessage(":;:?Uiqcgkgsgmqsx*:=:GUEUhzbvc{GX*:=:IUKUnzuvs{IX*;<:KCplfmhf*;;:NCBCFBe_p^pbJ@KB*;:;IFGF*;:;FDhhkijg*;:;IDlinhmg"),
   r:unpackRigMessage("HK1ki^HF0"),
-  a:unpackAnimation("*still*H]`**YA"),
+  a:unpackAnimation("*still*H]`**YA*"),
   c:[nocolor,"rgba(157,95,194,1.0)","rgba(207,206,253,1.0)","rgba(232,255,79,1.0)"]
 }
 
