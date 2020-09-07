@@ -71,7 +71,7 @@ let updatePlayer=()=>{
 
 
 
- aBar.health.innerHTML='health: '+Math.floor( player.hitPoints );
+ //aBar.health.innerHTML='health: '+Math.floor( player.hitPoints );
 
  if(player.hitPoints<=0){
    loadHomeLevel();

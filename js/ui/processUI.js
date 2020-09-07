@@ -42,6 +42,9 @@ let processDataStrips=()=>{
       updateFavorites();
       // reset link so that a new award is found next time about
       nextLink="";
+      level1.clearLevel2();
+      levelData.cleared2=true;
+      textSpawnerGuy.doneSpawning=true;
     }
 }
 

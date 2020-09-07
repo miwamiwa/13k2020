@@ -19,6 +19,7 @@ let newGameSave=()=>{
   console.log("new save")
   saveData = {
     levels:[],
+    textProgress:0
   }
 }
 

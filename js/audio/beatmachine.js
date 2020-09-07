@@ -64,7 +64,11 @@ if(currentLevel!="home"&&levelData&&!levelData.cleared){
   }
   if(melCount2>=mel.length) melCount2=0;
 }
-else beatinput[4].vals=""
+else{
+  beatinput[4].vals=""
+  beatinput[3].vals=""
+}
+
 
 
 

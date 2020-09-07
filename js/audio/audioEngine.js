@@ -12,7 +12,7 @@ let startSound=()=>{
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   aContext = new AudioContext();
   samprate = aContext.sampleRate;
-  startBeatMachine();
+ startBeatMachine();
 }
 
 

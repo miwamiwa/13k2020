@@ -1,12 +1,10 @@
 let start=()=>{
-  
+
   loadSave();
   //pickNextLinkAward()
   fadeIn =0;
   createCanvas();
   addressbar();
-
-  setupActionBar();
 
   // buffer models
   loadModelData();

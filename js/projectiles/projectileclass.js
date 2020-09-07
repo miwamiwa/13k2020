@@ -77,13 +77,16 @@ class Projectile extends MovingObject{
         // if an emey is hit
         if(damage!=false){
           if(input[i].type=='spawner'){
-            damage = 100;
+            input[i].hitPoints =0;
             input[i].spawnMore();
           }
-          else this.bump(input[i],4);
+          else if(input[i].type!='spawner2'){
+            this.bump(input[i],4);
+            input[i].hitPoints -= damage;
+          }
 
           playBlaster(200,6,);
-          input[i].hitPoints -= damage;
+
         }
       }
     }

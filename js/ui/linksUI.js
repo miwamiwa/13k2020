@@ -18,28 +18,6 @@ let addressbar=()=>{
 
 }
 
-// formkeydown()
-//
-// called on keydown in the text input form
-
-let formKeyDown=()=>{
-  // if ENTER is pressed
-  if(event.keyCode==13){
-    textform.value = textform.value.trim();
-    goToLink();
-    textform.blur();
-  }
-}
-
-// inpulistchanged()
-//
-// called when item from the select list is chosen
-
-let inputListChanged=()=>{
-  let v = listform.value;
-  textform.value=v.substring(0,v.indexOf(" "));
-  goToLink();
-}
 
 // setuplevel()
 //
@@ -82,6 +60,7 @@ let newLevel=(name)=>{
     seedData:setupRandomSeed(),
     difficulty:1+flo(lvlCount/2),
     cleared:false,
+    cleared2:false,
     sections:0
   });
 }
@@ -94,6 +73,7 @@ let saveLevelData=()=>{
   if(currentLevel!='home'&&currentLevel!='start'){
     let i = isLevel(currentLevel);
     saveData.levels[i].cleared = levelData.cleared;
+    saveData.levels[i].cleared2 = levelData.cleared2;
     saveData.levels[i].sections = levelData.sections;
   }
 }
@@ -105,14 +85,14 @@ let saveLevelData=()=>{
 let goToLink=()=>{
 
   let v = listform.value;
-  let tv = textform.value;
 
   if(currentLevel=='start'){
-    if(tv=="home"){
+    if(v=="home"){
       loadHomeLevel();
+      updateFavorites();
       return
     }
-    if(tv=="new"){
+    if(v=="new"){
       newGameSave();
       loadHomeLevel();
       return
@@ -125,12 +105,12 @@ let goToLink=()=>{
     // save current level
     if(levelData!=undefined) saveLevelData();
     // default target link is select form value
-    if(v!='home') currentLevel  = v.substring(0,v.indexOf(" "));
-    else currentLevel='home';
+    currentLevel  = v.substring(0,v.indexOf(" "));
+  //  else currentLevel='home';
     // if text form input is different, then chose text form instead.
-    if(tv!=v&&tv!="") currentLevel = tv;
+    //if(tv!=v&&tv!="") currentLevel = tv;
     // if user guessed the current research link, get new research link
-    if(currentLevel==nextLink) pickNextLinkAward();
+  //  if(currentLevel==nextLink) pickNextLinkAward();
     // if target is a start screen command
     if(currentLevel=='home') loadHomeLevel();
 

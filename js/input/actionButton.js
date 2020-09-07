@@ -10,7 +10,7 @@ let actionButton=()=>{
 
         dUI.open=true;
         dUI.t=aboutguy;
-        dUI.line = texts[dialogNum].split(" ");
+        dUI.line = texts[saveData.textProgress].split(" ");
 
         if(!revealedLink.includes('_'))
           pickNextLinkAward();

@@ -7,7 +7,6 @@ let dUI = {
   displayedText:""
 };
 
-let dialogNum =0;
 let dialogDone = false;
 let maxCharsPerLine = 20;
 
@@ -54,7 +53,7 @@ let continueDialog=()=>{
     dialogDone = false;
 
     // trigger action.. so far there is only one.. should this be an if()?
-    switch(dialogNum){
+    switch(saveData.textProgress){
       case 0:
       for(let i=0; i<2; i++)
         newLevel(allLinkNames[i]);
@@ -63,7 +62,7 @@ let continueDialog=()=>{
     }
 
 
-    if(aboutguy.interactible&&dialogNum<texts.length-1) dialogNum ++;
+    if(aboutguy.interactible&&saveData.textProgress<texts.length-1) saveData.textProgress ++;
   }
   else
     cutDialog();

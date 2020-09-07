@@ -41,19 +41,12 @@ let continueLevel=(spawn)=>{
       y-= 60;
       if(i==stairs-1){
         w = 250;
-        enemies.push(new Enemy(x,y-80,0,0,'spawner'));
+        if(spawn)
+          enemies.push(new Enemy(x,y-80,0,0,'spawner'));
       }
       plats.push([x,y,w+random()*50])
       x+= -40+random()*80;
     }
-    /*
-    if(j==0){
-      if(Math.abs(x)<300) x-= 600;
-      else x*=-1;
-    }
-    else x = -1*x + 400;
-    */
-//x = -canvas.w + (j+1)* sceneW/stairCount +50 ;
   }
 
   // create new platform objects
@@ -100,16 +93,24 @@ let createLevel=()=>{
 
     let p=level1.platforms[0];
     let j=levelData.sections;
+    if(levelData.cleared) level1.clearLevel();
+    // if level isn't cleared, load enemies
 
-    // if there is no progress on this level yet, create first spawner
-    if(j==0)
-      enemies.push(new Enemy(p.x,p.y-80,0,0,'spawner'));
-      // if there is progress made on this level, add platforms below
-    else for(let k=0; k<j; k++){
+      // if there is no progress on this level yet, create first spawner
+      if(j==0)
+        enemies.push(new Enemy(p.x,p.y-80,0,0,'spawner'));
+        // if there is progress made on this level, add platforms below
+      else for(let k=0; k<j; k++){
 
-        if(k==j-1) continueLevel(true); // add a spawner to the last section (unless level is cleared??)
-        else continueLevel(false)
-      }
+          if(k==j-1) continueLevel(!levelData.cleared); // add a spawner to the last section (unless level is cleared??)
+          else continueLevel(false)
+        }
+
+
+        if(levelData.cleared2) level1.clearLevel2();
+        else if(levelData.cleared) level1.addSpawner2();
+
+
 
       // save game/update favorites
     updateFavorites();
@@ -134,7 +135,7 @@ class Level{
     }
 
     this.platforms = [];
-    this.bgFill='#ddff';
+    this.bgFill='#333F';
 
     for(let i=0; i<plist.length; i++)
     this.platforms.push(new Platform(plist[i][0],plist[i][1],plist[i][2]));
@@ -146,6 +147,25 @@ class Level{
     this.thunder=100;
     this.txtCounter=0;
     this.drops = [];
+    this.cleared=false;
+    this.cleared2=false;
+  }
+
+  addSpawner2(){
+    let p = this.platforms[1+randInt(this.platforms.length-1)];
+    //console.log("cleared")
+    enemies.push(new Enemy(p.x,p.y-80,0,0,'spawner2'));
+    textSpawnerGuy = last(enemies);
+  }
+
+  clearLevel(){
+    this.cleared=true;
+    this.bgFill="#666"
+  }
+
+  clearLevel2(){
+    this.cleared2=true;
+    this.bgFill="#ccc"
   }
 
   newWalls(w){
@@ -158,16 +178,21 @@ class Level{
 
   displayBackground(){
 
-    cRect(0,0,canvas.w,canvas.h,'#333F');
+
+    cRect(0,0,canvas.w,canvas.h,this.bgFill);
 
     // run thunder
-    if(this.bgcounter>this.thunder){
+    if(this.bgcounter>this.thunder&&!level1.cleared2){
       let val = 10-(this.bgcounter-this.thunder);
       if(val>=0)
         cRect(0,0,canvas.w,canvas.h, '#FFF'+val);
 
       else if(Math.random()<0.3) this.thunder+=50+randInt(100);
-      else this.thunder+=200+randInt(200);
+      else{
+        let i=200;
+        if(level1.cleared) i = 20;
+        this.thunder+=i+randInt(i);
+      }
     }
 
     // draw rain drops
