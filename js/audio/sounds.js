@@ -24,6 +24,11 @@ constrain(0.5*(Math.sin(i / dividor)+Math.sin(i / (wubfact2+dividor))),0,0.10);
 let constSine3=(i,dividor)=>
 constrain(0.2*Math.random()*(Math.sin(i / dividor)+Math.sin(i / (100+dividor))),0,0.10);
 
+let constSine5=(i,dividor)=>
+constrain(0.2*Math.random()*(Math.sin(i / dividor)+Math.sin(i / (1000+dividor))),0,0.10);
+
+
+
 let constSine4=(i,dividor)=>
 constrain(Math.random()*sine4fact+0.3*(Math.sin(i / dividor)+0.3*Math.sin(i / (2+dividor))),0,0.10);
 
@@ -39,6 +44,24 @@ let playSnare=()=>{
   ),5,'highpass',1200,4);
 }
 
+let cash2timeout;
+let playCash=()=>{
+
+  play(1600, 0.01,0.02,0.3,0.6, 2,constSine2,4,'lowpass',1200,2);
+  clearTimeout(cash2timeout);
+  cash2timeout=setTimeout(function(){
+    play(2400, 0.01,0.02,0.3,0.6, 2,constSine2,4,'lowpass',1800,2);
+}, 260);
+}
+
+let play=(freq,a,d,s,r,cycles,func,vol,ftype,ffreq,fq,slide)=>{
+  playSound(preloadSound(
+    freq,
+    new Envelope(a,d,s,r),
+    cycles,func,slide
+  ),vol,ftype,ffreq,fq);
+}
+
 let playHats=()=>{
   playSound(preloadSound(
     40,
@@ -46,6 +69,31 @@ let playHats=()=>{
     40,noisey
   ),14,'highpass',6400,6);
 }
+
+
+let constSineZ=(i,dividor)=>
+constrain(0.1*Math.random()+0.8*(Math.sin(i / (0.2*i+dividor))),0,0.60);
+
+
+let playHop=(fact)=>{
+  playSound(preloadSound(
+    fact,
+    new Envelope(0.01,0.11,0.3,0.31),
+    10,constSine2,-0.001
+  ),8,'highpass',500,2);
+}
+
+
+let playHop2=()=>{
+  playSound(preloadSound(
+    200,
+    new Envelope(0.01,0.11,0.3,0.31),
+    200,constSineZ
+  ),9,'highshelf',1500,2);
+}
+
+
+
 
 let wubfactor=250;
 let playWobbleBass=(freq)=>{
@@ -109,6 +157,15 @@ let playDamageFX=()=>{
   playSound(preloadSound(
     20,
     new Envelope(0.01,0.11,0.3,0.31),
-    60+Math.floor(Math.random()*20),constSine3
+    60+randInt(20),constSine3
   ),14,'highshelf',1500,2);
+}
+
+
+let playThunder=()=>{
+  playSound(preloadSound(
+    15+randInt(85),
+    new Envelope(0.3,0.61,0.3,2.81),
+    20+randInt(50),constSine5
+  ),4,'lowpass',300+randInt(2200),2);
 }

@@ -6,7 +6,7 @@ let createPlayer=()=>{
   if(currentLevel=='home') pos=level1.platforms[0]
   else pos.x-= 130;
   player=new MovingObject(pos.x,pos.y-100,40,'#2a20');
-  //player.initJumpForce=40;
+  player.initJumpForce=40;
   player.facing='left';
   player.jetFuel=100;
   player.gunPower=100;
@@ -19,7 +19,9 @@ let lastPlayerMovingState=false;
 let playerJumping=false;
 let fuelcost=7;
 let shotcost=38;
-
+let mcounter=0;
+let wcounter=0;
+let dY=0;
 let updatePlayer=()=>{
 
   player.limitX();
@@ -40,30 +42,49 @@ let updatePlayer=()=>{
 
 
   // damp jetpack force
-  else if(player.jumpForce>0) player.jumpForce-=2;
+  else if(player.jumpForce>0) player.jumpForce-=4;
   else player.jumpForce=0;
   player.display();
-  playerModel.x=player.screenPos.x+20;
-  playerModel.y=player.screenPos.y+10;
+
 
   playerMoving=false;
 
   if(player.movingLeft||player.movingRight) playerMoving=true;
+  dY = 0;
+  if(playerMoving){
+    let d = Math.cos(mcounter);
+    dY = 2+d*d*6;
+    mcounter+=  0.2*Math.PI
+
+    wcounter++;
+  }
+  if(playerMoving||wcounter%5!=0){
+    wcounter++;
+    if(wcounter%5==0&&player.jumpForce==0&&player.fallSpeed==0) playHop2();
+  }
+
+
+
+  playerModel.x=player.screenPos.x+20;
+  playerModel.y=player.screenPos.y+10-dY;
 
   if((player.jumpForce>0||player.fallSpeed>0)&&!playerJumping){
 
     playerJumping=true;
-    playerModel.fullRig.selectAnimation(2);
+    playerModel.fullRig.selectAnimation(5);
 
     //console.log("jump")
   }
-  else if(player.jumpForce==0&&playerJumping){
+  else if(player.jumpForce==0&&player.fallSpeed==0&&playerJumping){
   //  console.log('jump over')
     playerJumping=false;
     resetPlayerAnimation();
   }
-  else if(playerMoving&&!lastPlayerMovingState) playerModel.fullRig.selectAnimation(0);
-  else if(!playerMoving&&lastPlayerMovingState) playerModel.fullRig.selectAnimation(3);
+  else if(playerMoving&&!lastPlayerMovingState) resetPlayerAnimation();
+  else if(!playerMoving&&lastPlayerMovingState){
+    resetPlayerAnimation();
+    playHop2();
+  }
   lastPlayerMovingState=playerMoving;
 
   playerModel.update(ctx,(player.facing=='left'));
@@ -78,13 +99,15 @@ let updatePlayer=()=>{
    fade(60,'ouchies');
  }
 
- player.gunPower = Math.min( player.gunPower+4, 100 );
- player.jetFuel = Math.min( player.jetFuel+4, 100 );
+ player.gunPower = Math.min( player.gunPower+2, 100 );
+ if(!cantjetpack)
+ player.jetFuel = Math.min( player.jetFuel+2, 100 );
 }
 
 let resetPlayerAnimation=()=>{
-  if(playerMoving) playerModel.fullRig.selectAnimation(0);
-  else playerModel.fullRig.selectAnimation(3);
+  if(player.jumpForce>0||player.fallSpeed>0) playerModel.fullRig.selectAnimation(4);
+  else if(playerMoving) playerModel.fullRig.selectAnimation(2);
+  else playerModel.fullRig.selectAnimation(0);
 }
 
 let damagePlayer=(damage)=>{
@@ -92,7 +115,7 @@ let damagePlayer=(damage)=>{
   player.hitPoints -= damage;
   playDamageFX();
 
-  playerModel.selectAnimation(1);
+  playerModel.selectAnimation(4);
   setTimeout(function(){
     resetPlayerAnimation();
   },400)

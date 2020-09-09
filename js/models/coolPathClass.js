@@ -131,7 +131,7 @@ class RigShape{
     //  let s=this.colors[this.paths[i].stroke];
     //  if(s!=nocolor){
   //  c.strokeWeight='4px'
-        c.strokeStyle=this.colors[this.paths[i].fill];
+        c.strokeStyle=this.colors[this.paths[i].stroke];
         c.stroke(this.paths[i].path);
     //  }
     }
@@ -179,6 +179,7 @@ class RigShape{
         setlast(s.time,s.rot);
         return this.lerprot(p.animLength,p.initVals[this.sIndex]);
     }
+    else return this.animations[this.pose].initVals[this.sIndex];
   }
 
   lerprot(t,r){

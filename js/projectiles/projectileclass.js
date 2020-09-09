@@ -2,6 +2,7 @@ class Projectile extends MovingObject{
 
   constructor(x,y,size,fill, speed,targetx,targety,hitsplayer){
     super(x,y,size,fill);
+    
     this.hitsplayer=hitsplayer;
     this.destroyed = false;
 

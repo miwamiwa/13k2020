@@ -6,17 +6,23 @@ let createFriendlyNPCs=()=>{
   aboutguy=new MovingObject(pos.x+150,pos.y-30,20,nocolor);
 }
 
+let lastaboutstate=false;
 
 let runFriendlyNPCs=()=>{
 
   aboutguy.display();
-  enableInteraction(aboutguy,"press E",50);
+  enableInteraction(aboutguy,"press E",80);
   if(aboutguy.screenPos!=false){
   //  edata.fullRig.
   aboutModel.x=aboutguy.screenPos.x+8;
-  aboutModel.y=aboutguy.screenPos.y-24;
+  aboutModel.y=aboutguy.screenPos.y-4;
     aboutModel.update(ctx,false);
+
+    if(!dUI.open&&lastaboutstate) aboutModel.fullRig.selectAnimation(0);
+    else if(dUI.open&&!lastaboutstate) aboutModel.fullRig.selectAnimation(1);
   }
+
+  lastaboutstate=dUI.open;
 }
 
 
@@ -27,7 +33,7 @@ let enableInteraction=(npc, text, range)=>{
     if(d.d<range){
 
       npc.interactible = true;
-      
+
       let p = npc.screenPos;
       ctx.fillText(text,p.x+25,p.y-40,'black',10);
     }

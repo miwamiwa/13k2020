@@ -21,6 +21,7 @@ let beatinput = [
   {vals:'  M  K  R  P  M  P',beatval:16,f:playSine,v:0,p:true},//5
   {vals:'  P  P  T  R  P  R',beatval:16,f:playSine,v:0,p:true},//6
   {vals:'  R  T  W  T  R  T',beatval:17,f:playSine,v:0,p:true},//7
+//  {vals:' x x',beatval:4,f:playCash,p:true}
 //  {vals:'  M',beatval:16,f:playSine,v:0,p:false},//7
 ];
 

@@ -42,17 +42,25 @@ let updateEnemies=()=>{
           generateLoot(enemies[i]);
 
 
+
+        poof(enemies[i].x,enemies[i].y,enemies[i].model.colors);
         enemies.splice(i,1);
       }
     }
   }
 }
 
+let poof=(x,y,colors)=>{
+
+
+  generateLoot({x:x,y:y},true, colors);
+}
+
 class Enemy extends MovingObject {
 
   constructor(x,y,p,sIndex,type){
 
-    super(x,y,40,"#cc30");
+    super(x,y,60,"#cc30");
     this.type=type;
     this.lrMaxSpeed=3;
 
@@ -69,7 +77,11 @@ class Enemy extends MovingObject {
     this.facing='left';
     this.attackAnimOverTimeout;
     this.doneSpawning=false;
-      this.model = new CoolPath(0,0, edata);
+    if(type=='spawner'||type=='spawner2'){
+      this.model = new CoolPath(0,0, s1data, 2);
+      this.model.fullRig.selectAnimation(0);
+    }
+    else   this.model = new CoolPath(0,0, edata,1.4);
       if(type=='shooter') this.model.colors[2] = "rgba(147,241,5,1.0)";
 
     // spawner variables
@@ -87,16 +99,33 @@ class Enemy extends MovingObject {
 
   updateSpawner(){
   let p=  this.display();
-  if(p!=false) cRect(p.x,p.y,40,40,'gold');
+  if(p!=false){
+    this.model.x=this.screenPos.x+20;
+    this.model.y=this.screenPos.y+20;
+    this.model.update(ctx,false);
+  }
    this.spawnCounter++;
 
   }
 
   updateSpawner2(){
   let p=  this.display();
+  let t,c;
   if(p!=false){
     cRect(p.x,p.y,40,40,'blue');
-    cText(this.spawner2text,p.x,p.y,'black',15);
+
+    for(let i=0; i<revealedLink.length; i++){
+      t=revealedLink[i];
+      c='black';
+      if(t=="_"){
+        t = String.fromCharCode( 48+ randInt( 74 ) );
+        c='grey'
+      }
+
+      cRect(p.x + i*10,p.y,40,'blue');
+      cText( t,p.x + i*10,p.y + 15,c,15);
+    }
+
   }
    this.spawnAtInterval();
   }
@@ -185,7 +214,7 @@ class Enemy extends MovingObject {
         playBlaster(800,1);
         this.shoot(player.screenPos.x,player.screenPos.y,10,true);
         // start attack animation
-        this.animate(2);
+        this.animate(1);
         // set cooldown
         this.nextAttack = this.attackCounter+this.attackInterval;
         // reset enemy animation
@@ -196,7 +225,7 @@ class Enemy extends MovingObject {
   }
 
   resetEnemyAnim(){
-    this.attackAnimOverTimeout=setTimeout(function(enemy){enemy.animate(1);},400,this);
+    this.attackAnimOverTimeout=setTimeout(function(enemy){enemy.animate(0);},400,this);
   }
 
   fight(d){
@@ -208,7 +237,7 @@ class Enemy extends MovingObject {
         // damage player
         damagePlayer(this.attackPower);
         // start attack animation
-        this.animate(2);
+        this.animate(1);
         // set cooldown
         this.nextAttack = this.attackCounter+this.attackInterval;
         // reset enemy animation

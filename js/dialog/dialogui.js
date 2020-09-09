@@ -22,7 +22,7 @@ let runDialog=()=>{
     if(dUI.t!=0){
       let p = getScreenPos({x:dUI.t.x,y:dUI.t.y,w2:50,h2:50});
       dUI.x = p.x;
-      dUI.y = p.y - 70;
+      dUI.y = p.y - 100;
     }
 
     cFill('white');

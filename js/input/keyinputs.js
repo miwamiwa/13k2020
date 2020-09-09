@@ -1,6 +1,6 @@
 let cantGoDown = false;
 let cantjetpack=false;
-
+let jetkeypressed=false;
 
 let keypress=()=>{
   if(!tFormSelected){
@@ -13,9 +13,17 @@ let keypress=()=>{
       case 68: player.goRight(); break;
 
       case 32: //space
-      if(!player.jetpacks&&player.jumpForce<8) player.jump();
-      if(!cantjetpack)
-        player.jetpacks=true;
+      if(!jetkeypressed){
+        jetkeypressed=true;
+
+        if(!player.jetpacks&&player.jumpForce<8&&player.fallSpeed<4){
+          playHop(300);
+          player.jump();
+        }
+        if(!cantjetpack)
+          player.jetpacks=true;
+      }
+
 
       break;
 
@@ -49,7 +57,7 @@ let keyrelease=()=>{
 
       case 32:
       player.jetpacks=false;
-
+      jetkeypressed=false;
        break;
     }
   }

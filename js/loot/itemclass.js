@@ -1,12 +1,20 @@
 let items = [];
 
-let generateLoot=(target)=>{
+let generateLoot=(target,poofy,colors)=>{
 
   let res = 5+randInt(15);
+  let fill = 'grey';
 
+  //console.log("poof!", colors,i)
+
+  //console.log(color)
   for(let i=0; i<res; i++){
 
-    items.push(new Item(target.x,target.y-50,10,'grey'));
+    if(colors!=undefined) fill= colors[ 1+randInt(colors.length-1) ];
+
+    if(poofy!=undefined) items.push(new Item(target.x,target.y-50,4,fill,true));
+    else items.push(new Item(target.x,target.y-50,10,fill));
+
 
     // apply force to item
     let j=items[items.length-1];
@@ -24,21 +32,29 @@ let updateItems=()=>{
   for(let i=items.length-1; i>=0; i--){
 //    console.log("hey")
     items[i].update();
-    if(items[i].looted) items.splice(i,1);
+    if(items[i].looted||(items[i].poofy && items[i].pfact>30)) items.splice(i,1);
+
   }
 }
 
 class Item extends MovingObject {
 
-  constructor(x,y,size,fill){
+  constructor(x,y,size,fill,poofy){
     super(x,y,size,fill);
+    this.size=size;
     this.looted = false;
     this.v=1;
+    if(poofy!=undefined){
+      this.poofy=true;
+      this.pfact=0;
+    }
   }
 
   update(){
-
-    if(!this.looted){
+    if(this.poofy){
+      this.pfact++;
+    }
+    else if(!this.looted){
       let d = distance(this.x,this.y,player.x,player.y);
 
       // item picked up
@@ -58,8 +74,8 @@ class Item extends MovingObject {
       }
       else if(this.v>1) this.v--;
 
-      let p=this.display();
-      if(p!=false) cRect(p.x,p.y,20,20,'grey');
     }
+    let p=this.display();
+    if(p!=false) cRect(p.x,p.y,this.size,this.size,this.fill);
   }
 }

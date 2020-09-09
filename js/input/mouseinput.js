@@ -3,7 +3,6 @@ let mouseX =0;
 let mouseY =0;
 let cantShoot=false;
 
-const playerShotCooldown =100; //ms
 
 // mousepressed()
 //
@@ -23,16 +22,19 @@ let mousePressed=()=>{
     // trigger sfx
     playBlaster(1800,3);
     // create projectile
-    player.shoot(mouseX,mouseY,15,false);
+    player.shoot(mouseX,mouseY,25,false);
     // trigger player animation
-    playerModel.selectAnimation(4);
+    if(player.movingRight||player.movingLeft) playerModel.selectAnimation(3);
+    else playerModel.selectAnimation(1);
 
     // trigger cooldown and animation reset
     cantShoot=true;
     setTimeout(function(){
       resetPlayerAnimation();
       cantShoot=false;
-    }, playerShotCooldown);
+    }, 250);
+
+
   }
 }
 

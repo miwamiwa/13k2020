@@ -12,7 +12,7 @@ let startSound=()=>{
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   aContext = new AudioContext();
   samprate = aContext.sampleRate;
- startBeatMachine();
+  startBeatMachine();
 }
 
 
@@ -25,7 +25,7 @@ let startSound=()=>{
 // f: frequency, sec: sample length
 // cycles: how many cycles should actually be generated (then copied to fill the buffer)
 
-let preloadSound=(f,envelope,cycles,func)=>{
+let preloadSound=(f,envelope,cycles,func,sliding)=>{
 
   let result = [];
 
@@ -36,13 +36,19 @@ let preloadSound=(f,envelope,cycles,func)=>{
 
   // preload a cycle
   let prebuffer = [];
+  if(sliding==undefined){
+    for(let i=0; i<preBuffL; i++)
+      prebuffer.push( func(i,dividor) );
 
-  for(let i=0; i<preBuffL; i++)
-    prebuffer.push( func(i,dividor) );
+    // load full sound
+    for (let i = 0; i < length; i++)
+      result[i] = 0.4* envelope.level(i) * prebuffer[i%preBuffL];
+  }
+  else {
+    for (let i = 0; i < length; i++)
+      result[i] = 0.4* envelope.level(i) * func(i,dividor+i*sliding);
+  }
 
-  // load full sound
-  for (let i = 0; i < length; i++)
-    result[i] = 0.4* envelope.level(i) * prebuffer[i%preBuffL];
 
   return result;
 }

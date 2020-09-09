@@ -69,10 +69,11 @@ let continueLevel=(spawn)=>{
 let createLevel=()=>{
 
   // reset level variables
-  noiseCounter=0
+//  noiseCounter=0
   enemies = [];
   items = [];
   killLine = 500;
+  ncount=0;
   // close dialog window
   dUI.open=false;
 
@@ -187,11 +188,17 @@ class Level{
       if(val>=0)
         cRect(0,0,canvas.w,canvas.h, '#FFF'+val);
 
-      else if(Math.random()<0.3) this.thunder+=50+randInt(100);
+      else if(Math.random()<0.3){
+        this.thunder+=50+randInt(100);
+
+        playThunder();
+      }
       else{
         let i=200;
         if(level1.cleared) i = 20;
         this.thunder+=i+randInt(i);
+
+        playThunder();
       }
     }
 

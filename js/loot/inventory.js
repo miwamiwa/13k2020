@@ -11,7 +11,7 @@ let addLoot=()=>{
     // add data strip
     datastrip++;
     updateInv(datastrip);
-
+    playCash();
     // if we have enough data strips, trigger research
     if(datastrip>dataCost){
       datastrip-=dataCost
@@ -28,8 +28,8 @@ let addLoot=()=>{
 // updates inventory display
 
 let updateInv=(input)=>{
-  
+
 //  aBar.inventory.innerHTML='data strips: '+input+' / '+dataCost;
 //  aBar.research.innerHTML=t;
-  textSpawnerGuy.spawner2text = "url: "+revealedLink;
+  textSpawnerGuy.spawner2text = revealedLink;
 }

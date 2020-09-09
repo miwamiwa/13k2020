@@ -26,6 +26,6 @@ class DisplayObject{
 
     if(targetx<this.screenPos.x) this.facing='left';
     else this.facing='right';
-    projectiles.push(new Projectile(this.x,this.y,4,"black",speed,targetx,targety,hitsplayer));
+    projectiles.push(new Projectile(this.x,this.y,6,"green",speed,targetx,targety,hitsplayer));
   }
 }

@@ -27,13 +27,13 @@ let addressbar=()=>{
 let setupLevel=()=>{
 
   let islevel=isLevel(currentLevel);
-
+  console.log(islevel,currentLevel)
   // if level already exists, point current level to save data
   if(islevel!=-1) levelData = saveData.levels[islevel];
 
   // if level doesn't exist
   else {
-
+    console.log("new level data")
     // setup new level data.
     newLevel(dif);
     // point to this level to load it next
@@ -84,44 +84,32 @@ let saveLevelData=()=>{
 
 let goToLink=()=>{
 
+  // get favorites selection
   let v = listform.value;
 
-  if(currentLevel=='start'){
-    if(v=="home"){
-      loadHomeLevel();
-      updateFavorites();
-      return
-    }
-    if(v=="new"){
-      newGameSave();
-      loadHomeLevel();
-      return
-    }
+  // if user selected home
+  if(v=="home"){
+    loadHomeLevel();
+    updateFavorites();
+    return
   }
-  else
-
-  if(saveData.levels.length!=0){
-
+  // if this is start page and user selects new game
+  else if(currentLevel=='start'&&v=="new"){
+    newGameSave();
+    loadHomeLevel();
+    updateFavorites();
+    return
+  }
+  // otherwise if this is a level
+  else if(saveData.levels.length!=0){
     // save current level
     if(levelData!=undefined) saveLevelData();
-    // default target link is select form value
     currentLevel  = v.substring(0,v.indexOf(" "));
-  //  else currentLevel='home';
-    // if text form input is different, then chose text form instead.
-    //if(tv!=v&&tv!="") currentLevel = tv;
-    // if user guessed the current research link, get new research link
-  //  if(currentLevel==nextLink) pickNextLinkAward();
-    // if target is a start screen command
-    if(currentLevel=='home') loadHomeLevel();
-
-    // if target isn't home screen
-    else {
-      // setup and start level
-      fade(24);
-      setupLevel();
-      createLevel();
-      createPlayer();
-    }
+    // setup and start level
+    fade(24);
+    setupLevel();
+    createLevel();
+    createPlayer();
   }
 }
 

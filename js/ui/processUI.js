@@ -1,5 +1,5 @@
 
-let allLinkNames = ["contact","store","gallery","news","events","wormhole","destroy","noob","rekt","acidpool","badfile"];
+let allLinkNames = ["contact","store","evilfile","badvirus","maliciousstuff","dontclickhere"];
 let nextLink = "";
 let revealedLink = "";
 let revealedChars =0;

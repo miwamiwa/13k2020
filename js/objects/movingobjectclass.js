@@ -7,7 +7,7 @@ class MovingObject extends DisplayObject {// extends display object class
     // parameters
     this.hasGravity=true; // object falls if true
     this.fallAcc=2; // fall acceleration
-    this.lrMaxSpeed=10; // max horizontal speed
+    this.lrMaxSpeed=12; // max horizontal speed
     this.lrAcc=1; // horizontal acceleration
     this.initJumpForce=25;
     // variables
@@ -56,6 +56,7 @@ class MovingObject extends DisplayObject {// extends display object class
 
   jump(){
 
+    
     this.jumpForce = this.initJumpForce;
   }
 
