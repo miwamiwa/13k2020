@@ -214,12 +214,12 @@ class Level{
       // draw rain drop
       cText( level1.bgText[j.c], p.x+j.x, p.y+j.y, '#bbba', 12 );
       // remove drop once it hits the killLine
-      if(j.y>killLine) this.drops.splice(i,1);
+      if(j.y>player.y) this.drops.splice(i,1);
       }
 
       // add rain drops
-      if(this.bgcounter%1==0)
-        this.drops.push({x:randInt(sceneW),y:-500,c:randInt(400)});
+      if(this.bgcounter%4==0)
+        this.drops.push({x:player.x+randInt(canvas.w),y:player.y-800,c:randInt(400)});
       this.bgcounter++;
     }
 

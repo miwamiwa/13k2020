@@ -17,7 +17,7 @@ let updateFavorites=()=>{
   let fav = `favorites:<select id="favorites"> ${options} </select>`
 
   // setup address bar
-  addbar.innerHTML = ` www.coolshoes.com/${currentLevel} ${fav} <span onclick='goToLink()'>go</span> `;
+  addbar.innerHTML = ` www.coolsite.com/${currentLevel} ${fav} <span onclick='goToLink()'>go</span> `;
 
   // pointto() is short for getdocbyid() lol
   //textform=pointTo("tinput");
