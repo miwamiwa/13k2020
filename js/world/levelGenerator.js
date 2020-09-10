@@ -7,6 +7,9 @@ let lvlCount=0;
 let enemyDifficulty=1;
 let lvlDiffIncreaseInterval = 3;
 let maxEnemyDifficulty =3;
+let bgurl='js/characters/enemyclass.js';
+
+
 
 // a place to setup some platforms and stuff
 
@@ -51,10 +54,13 @@ let continueLevel=(spawn)=>{
 
   // create new platform objects
   for(let i=0; i<plats.length; i++){
-    level1.platforms.push(new Platform(plats[i][0],plats[i][1],plats[i][2]))
+    let t = level1.getplatformtext(plats[i][2]);
+
+    level1.platforms.push(new Platform(plats[i][0],plats[i][1],plats[i][2],t))
   }
 
   // update walls
+  level1.moreClouds(2);
   level1.newWalls(sceneW);
 }
 
@@ -122,13 +128,7 @@ let createLevel=()=>{
 class Level{
 
   constructor(plist,w,h,has404txt){
-    let bgurl='index.html';
-    if(currentLevel!='home')
-    bgurl='js/characters/enemyclass.js';
 
-    fetch(bgurl)
-    .then(response => response.text())
-    .then(text => this.bgText=text);
 
     if(has404txt!=undefined){
       let p = plist[0];
@@ -138,18 +138,61 @@ class Level{
     this.platforms = [];
     this.bgFill='#333F';
 
-    for(let i=0; i<plist.length; i++)
-    this.platforms.push(new Platform(plist[i][0],plist[i][1],plist[i][2]));
+    this.txtCounter=0;
+    for(let i=0; i<plist.length; i++){
+      let t = this.getplatformtext(plist[i][2]);
+      this.platforms.push(new Platform(plist[i][0],plist[i][1],plist[i][2],t));
+    }
+
+    //let cloudCount=4;
+    this.clouds = [];
+    this.moreClouds(3);
 
     this.newWalls(sceneW);
     this.bgTxt = new DisplayObject(w/2,this.platforms[0].y+h,w*2,h*4);
 
     this.bgcounter=0;
     this.thunder=100;
-    this.txtCounter=0;
+
     this.drops = [];
     this.cleared=false;
     this.cleared2=false;
+  }
+
+  moreClouds(cloudCount){
+    for(let i=0; i<cloudCount; i++){
+
+      let rows = 3+randInt(4);
+      let t = [];
+      for(let j=0; j<rows; j++){
+        t.push(this.getplatformtext(30+randInt(100)))
+      }
+      let d = 1;
+      if(i%2==0) d=-1;
+      //let p= this.platforms[0];
+      this.clouds.push({
+        o: new DisplayObject(
+          0+  i*200 + randInt(100),
+          killLine+randInt(450),
+          1000,1000
+        ),
+
+        t:t,
+        n: randInt(200),
+        dir: d
+      })
+    }
+  }
+
+  getplatformtext(l){
+    let t="";
+    for(let j=0; j<l/3; j++){
+
+      t += bgText[this.txtCounter];
+      this.txtCounter++;
+      if(this.txtCounter==bgText.length) this.txtCounter=0;
+    }
+    return t;
   }
 
   addSpawner2(){
@@ -173,7 +216,7 @@ class Level{
     this.walls=[
       new DisplayObject( - 0.75*w, 0, w/2, 2000 ),
       new DisplayObject( w*0.75, 0, w/2, 2000 ),
-      new DisplayObject( 0, killLine+500, 2000, 1000 )
+      new DisplayObject( 0, killLine+520, 2000, 1000 )
     ];
   }
 
@@ -202,6 +245,27 @@ class Level{
       }
     }
 
+    // draw clouds
+
+    for(let i=0; i<this.clouds.length; i++){
+      let c = this.clouds[i]
+      c.o.position();
+
+      if(c.o.screenPos!=false){
+        for(let j=0; j<c.t.length; j++)
+          cText(c.t[j],c.o.screenPos.x*(0.7+0.03*j),c.o.screenPos.y*0.8+j*15,'#bbb3', 30);
+      }
+
+
+
+      c.o.x += c.dir*.2;
+
+
+      if(this.bgcounter%150==0&&Math.random()>0.5)
+        c.dir *= -1;
+
+    }
+
     // draw rain drops
     let p=this.bgTxt.position();
 
@@ -212,7 +276,7 @@ class Level{
       // update position
       j.y += 20;
       // draw rain drop
-      cText( level1.bgText[j.c], p.x+j.x, p.y+j.y, '#bbba', 12 );
+      cText( bgText[j.c], p.x+j.x, p.y+j.y, '#bbba', 12 );
       // remove drop once it hits the killLine
       if(j.y>player.y) this.drops.splice(i,1);
       }
@@ -232,7 +296,7 @@ class Level{
     displayPlatforms(){
 
       // display platforms
-      this.txtCounter=0;
+
       for(let i=0; i<this.platforms.length; i++)
         this.platforms[i].display();
 
@@ -246,9 +310,6 @@ class Level{
       }
     }
 
-    countT(){
-      this.txtCounter++;
-      if(this.txtCounter>=this.bgText.length) this.txtCounter=0;
-    }
+
 
   }

@@ -11,11 +11,15 @@ let start=()=>{
 
   startSound();
 
+  fetch(bgurl)
+  .then(response => response.text())
+  .then(text => bgText=text.replace(" ",""));
+
   // start main loop
   setInterval( run, 33 );
 }
 
-
+let bgText;
 window.onload = start;
 let currentLevel='start';
 
