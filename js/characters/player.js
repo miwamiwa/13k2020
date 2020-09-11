@@ -1,11 +1,12 @@
 let player;
 
+
 let createPlayer=()=>{
 
   let pos = level1.platforms[level1.platforms.length-1];
   if(currentLevel=='home') pos=level1.platforms[0]
   else pos.x-= 130;
-  player=new MovingObject(pos.x,pos.y-100,40,'#2a20');
+  player=new MovingObject(pos.x,pos.y-100,50,'#2a20');
   player.initJumpForce=40;
   player.facing='left';
   player.jetFuel=100;
@@ -22,6 +23,10 @@ let shotcost=38;
 let mcounter=0;
 let wcounter=0;
 let dY=0;
+
+let fuelregen;
+let amnoregen;
+
 let updatePlayer=()=>{
 
   player.limitX();
@@ -51,9 +56,9 @@ let updatePlayer=()=>{
 
   if(player.movingLeft||player.movingRight) playerMoving=true;
   dY = 0;
-  if(playerMoving){
+  if(playerMoving&&player.jumpForce==0&&player.fallSpeed==0){
     let d = Math.cos(mcounter);
-    dY = 2+d*d*6;
+    dY = 2+d*d*7;
     mcounter+=  0.2*Math.PI
 
     wcounter++;
@@ -66,7 +71,7 @@ let updatePlayer=()=>{
 
 
   playerModel.x=player.screenPos.x+20;
-  playerModel.y=player.screenPos.y+10-dY;
+  playerModel.y=player.screenPos.y+14-dY;
 
   if((player.jumpForce>0||player.fallSpeed>0)&&!playerJumping){
 
@@ -99,9 +104,17 @@ let updatePlayer=()=>{
    fade(60,'ouchies');
  }
 
- player.gunPower = Math.min( player.gunPower+2, 100 );
+
+ if(awarded('r3')) amnoregen =3;
+ else amnoregen=2;
+
+ player.gunPower = Math.min( player.gunPower+amnoregen, 100 );
+
+ if(awarded('r2')) fuelregen =3;
+ else fuelregen=2;
+
  if(!cantjetpack)
- player.jetFuel = Math.min( player.jetFuel+2, 100 );
+  player.jetFuel = Math.min( player.jetFuel+fuelregen, 100 );
 }
 
 let resetPlayerAnimation=()=>{
@@ -112,6 +125,9 @@ let resetPlayerAnimation=()=>{
 
 let damagePlayer=(damage)=>{
   //console.log("player hit!");
+
+  if(awarded('r4')) damage*=0.6;
+
   player.hitPoints -= damage;
   playDamageFX();
 

@@ -132,6 +132,7 @@ class RigShape{
     //  if(s!=nocolor){
   //  c.strokeWeight='4px'
         c.strokeStyle=this.colors[this.paths[i].stroke];
+        c.lineWidth='2'
         c.stroke(this.paths[i].path);
     //  }
     }
@@ -253,10 +254,12 @@ let unpackModelMessage=(modeldata)=>{
       }
     }
 
+    let  stroke = toNum(2,ns1);
+    if(stroke>99) stroke/=100;
     model.push({
       shape:toNum(0,ns1),
       fill:toNum(1,ns1),
-      stroke:toNum(2,ns1),
+      stroke:stroke,
       origin:{x:toNum(3,ns1),y:toNum(4,ns1)},
       segments:segments
     });

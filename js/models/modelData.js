@@ -8,7 +8,7 @@ let edata={
   m:unpackModelMessage(":;:HVDOhgkaskooniqikklinf*;;:AETMQOQL*<;:AGOMOKML*=;:FAHJEOIP*>;:FAHJEOIP"),
   r:unpackRigMessage("GQ1im^in_jx`kxaAE0AG0FA0FA0"),
   a:unpackAnimation("*run*F^]]hQ*\\@*[@*[@*R@*j@*eat*F]]]iS*W<\\@*X<]@TB*c<]@eB*Q@*j@*fall*PbZ^QP*_C*YC*ZC*QC*TC"),
-  c:["#cfc",nocolor]
+  c:["#eccf",nocolor]
 }
 
 let abdata={

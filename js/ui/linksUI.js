@@ -6,8 +6,13 @@ let levelData;
 let addressbar=()=>{
 
   addbar = div();
-  addbar.style.width=canvas.w+'px';
-  addbar.style.backgroundColor='grey'
+  let t = addbar.style;
+  t.width=canvas.w+'px';
+  //t.height='50px'
+  t.backgroundColor='grey'
+  t.display='flex';
+  t.flexDirection='row';
+  t.justifyContent='space-around'
 
   updateFavorites();
 
@@ -49,6 +54,7 @@ let setupLevel=()=>{
 let dif=0;
 let newLevel=(name)=>{
 
+  blingFavorites();
   // setup level difficulty
   if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0)
   dif = Math.min(enemyDifficulty+1,maxEnemyDifficulty);

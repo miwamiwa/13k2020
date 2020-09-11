@@ -36,13 +36,10 @@ constrain(Math.random()*sine4fact+0.3*(Math.sin(i / dividor)+0.3*Math.sin(i / (2
 
 
 let snarerelease=0.3;
-let playSnare=()=>{
-  playSound(preloadSound(
-    10,
-    new Envelope(0.02,0.01,0.4,snarerelease),
-    4,noisey2
-  ),5,'highpass',1200,4);
-}
+
+let playSnare=()=>
+  play( 10, 0.02,0.01,0.4,snarerelease , 4,noisey2,5,'highpass',1200,4);
+
 
 let cash2timeout;
 let playCash=()=>{
@@ -62,110 +59,66 @@ let play=(freq,a,d,s,r,cycles,func,vol,ftype,ffreq,fq,slide)=>{
   ),vol,ftype,ffreq,fq);
 }
 
-let playHats=()=>{
-  playSound(preloadSound(
-    40,
-    new Envelope(0.01,0.01,0.5,0.8),
-    40,noisey
-  ),14,'highpass',6400,6);
-}
+let playHats=()=>
+  play(40,0.01,0.01,0.5,0.8,40,noisey,14,'highpass',6400,6);
 
 
 let constSineZ=(i,dividor)=>
 constrain(0.1*Math.random()+0.8*(Math.sin(i / (0.2*i+dividor))),0,0.60);
 
 
-let playHop=(fact)=>{
-  playSound(preloadSound(
-    fact,
-    new Envelope(0.01,0.11,0.3,0.31),
-    10,constSine2,-0.001
-  ),8,'highpass',500,2);
-}
+let playHop=(fact)=>
+  play(fact,0.01,0.11,0.3,0.31,10,constSine2,8,'highpass',500,2,-0.001);
 
 
-let playHop2=()=>{
-  playSound(preloadSound(
-    200,
-    new Envelope(0.01,0.11,0.3,0.31),
-    200,constSineZ
-  ),9,'highshelf',1500,2);
-}
 
-
+let playHop2=()=>
+  play( 200,0.01,0.11,0.3,0.31,200,constSineZ,9,'highshelf',1500,2);
 
 
 let wubfactor=250;
-let playWobbleBass=(freq)=>{
-  playSound(preloadSound(
-    freq,
-    new Envelope(0.05,0.51,0.8,1.41),
-    4,constSine
-  ),3.6,'lowpass',wubfactor,10); // adjust filter freq value 200-1000 to get nice dub fx
-}
+let playWobbleBass=(freq)=>
+  play(freq,.05,0.51,0.8,1.41, 4,constSine,3.6,'lowpass',wubfactor,10); // adjust filter freq value 200-1000 to get nice dub fx
+
 
 let playNoiseySynth=(freq)=>{
   //console.log(freq)
-  playSound(preloadSound(
-    freq,
-    new Envelope(0.01,0.11,0.3,1.45),
-    50,constSine4
-  ),8.5,'lowpass',1500,8);
+  play( freq,0.01,0.11,0.3,1.45, 50,constSine4,8.5,'lowpass',1500,8);
   sine4counter++;
   if(sine4counter%12==0) sine4fact = 1 - sine4fact;
 }
 
-let playHardHat=()=>{
-  playSound(preloadSound(
-    8,
-    new Envelope(0.01,0.01,0.11,0.13),
-    1,constSine3
-  ),6,'lowshelf',2240,12);
-}
-let playKick=(fact)=>{
-  playSound(preloadSound(
-    fact, // compact bassy hits <1500, trappy pitched long hits 6000-20000
-    new Envelope(0.01,0.11,0.3,0.35),
-    500,constSineB
-  ),16,'lowpass',180,12);
-}
+let playHardHat=()=>
+  play(8,0.01,0.01,0.11,0.13,1,constSine3,6,'lowshelf',2240,12);
+
+
+ // compact bassy hits <1500, trappy pitched long hits 6000-20000
+let playKick=(fact)=>
+  play(fact, 0.01,0.11,0.3,0.35, 500,constSineB ,16,'lowpass',180,12);
+
 
 // factor:
 // compact bassy hits <1500, trappy pitched long hits 6000-20000
-let playBlaster=(factor,vol)=>{
-  playSound(preloadSound(
-    factor,
-    new Envelope(0.01,0.11,0.3,0.25),
-    100,constSineB2
-  ),vol,'highpass',1080,8);
-}
+let playBlaster=(factor,vol)=>
+  play( factor, 0.01,0.11,0.3,0.25, 100,constSineB2 ,vol,'highpass',1080,8);
+
 
 let playSine=(factor)=>{
   if(currentLevel!="home"){
     let t = .15;
     if(levelData&&levelData.cleared) t = 0.8;
-    playSound(preloadSound(
+    play(
       factor,
-      new Envelope(0.01,0.11,0.3,t),
+      0.01,0.11,0.3,t,
       1,constSine
-    ),.7,'highpass',600,1);
+    ,.7,'highpass',600,1);
   }
-
 }
 
-let playDamageFX=()=>{
-  playSound(preloadSound(
-    20,
-    new Envelope(0.01,0.11,0.3,0.31),
-    60+randInt(20),constSine3
-  ),14,'highshelf',1500,2);
-}
+let playDamageFX=()=>
+  play( 20, 0.01,0.11,0.3,0.31, 60+randInt(20),constSine3 ,14,'highshelf',1500,2);
 
 
-let playThunder=()=>{
-  playSound(preloadSound(
-    15+randInt(85),
-    new Envelope(0.3,0.61,0.3,2.81),
-    20+randInt(50),constSine5
-  ),4,'lowpass',300+randInt(2200),2);
-}
+
+let playThunder=()=>
+  play( 15+randInt(85), 0.3,0.61,0.3,2.81, 20+randInt(50),constSine5 ,4,'lowpass',300+randInt(2200),2);

@@ -20,8 +20,8 @@ class Platform extends DisplayObject { // extends display object class
       ctx.strokeStyle='#a438';
       ctx.strokeRect(p.x,p.y,this.w,20);
       let pl = this.ptext.length;
-      cText(this.ptext.substring(0,pl/2),p.x,p.y+10, this.fill,10);
-      cText(this.ptext.substring(pl/2,pl),p.x,p.y+20, this.fill,10);
+      cText(this.ptext.substring(0,pl/2),p.x,p.y+8, this.fill,10);
+      cText(this.ptext.substring(pl/2,pl),p.x,p.y+18, this.fill,10);
 
     }
   }

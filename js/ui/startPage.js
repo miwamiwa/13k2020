@@ -1,7 +1,7 @@
 
 let displayStartUI=()=>{
 
-  cRect(0,0,canvas.w,canvas.h,'white');
+  cRect(0,0,canvas.w,canvas.h,'#aab');
   cFill('black');
   cText("sam's js13k game",50,50);
   cText("pick 'home' in the select tool above to continue last save,",50,65);

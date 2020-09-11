@@ -10,9 +10,9 @@ let generateLoot=(target,poofy,colors)=>{
   //console.log(color)
   for(let i=0; i<res; i++){
 
-    if(colors!=undefined) fill= colors[ 1+randInt(colors.length-1) ];
+    if(colors!=undefined) fill= colors[ randInt(colors.length) ];
 
-    if(poofy!=undefined) items.push(new Item(target.x,target.y-50,4,fill,true));
+    if(poofy!=undefined) items.push(new Item(target.x,target.y-50,8,fill,true));
     else items.push(new Item(target.x,target.y-50,10,fill));
 
 

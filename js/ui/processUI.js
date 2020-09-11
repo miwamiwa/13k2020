@@ -1,5 +1,5 @@
-
-let allLinkNames = ["contact","store","evilfile","badvirus","maliciousstuff","dontclickhere"];
+let directorylevels = ['submit','entries','partners','experts','prizes','rules','blog']
+let allLinkNames = ['submit','blog','entries','partners','experts','prizes','rules','evilbot','invaderz'];
 let nextLink = "";
 let revealedLink = "";
 let revealedChars =0;
@@ -12,20 +12,12 @@ let dataCost = 10; // cost to uncover url bits
 
 let processDataStrips=()=>{
 
-  // if next link isn't defined,
-  // pick next link award :
-  if(nextLink=="") pickNextLinkAward();
-
-
-
-  // reveal url:
-
   // pick a character that isn't revealed yet
   let rl=revealedLink.length;
     let pick = randInt(rl);
-    while(revealedLink[pick]!="_"){
+    while(revealedLink[pick]!="_")
       pick = randInt(rl);
-    }
+
 
     // update revealed link:
     // add a new character in the middle
@@ -39,12 +31,15 @@ let processDataStrips=()=>{
     // if this url is complete, add it to levels list
     if(revealedChars==rl){
       newLevel(nextLink);
-      updateFavorites();
-      // reset link so that a new award is found next time about
-      nextLink="";
+
+      // mark level as cleared
+      enemies[0].unlocked=true;
       level1.clearLevel2();
       levelData.cleared2=true;
+      saveData.directoryProgress++;
       textSpawnerGuy.doneSpawning=true;
+
+      updateFavorites();
     }
 }
 
@@ -59,7 +54,7 @@ let rSub=(i,j)=> revealedLink.substring(i,j);
 // returns a random link from the list of all links heck yeah
 
 let randomlink=()=> allLinkNames[randInt(allLinkNames.length)];
-
+let linkCounter=1;
 
 // picknextlinkaward()
 //
@@ -67,12 +62,8 @@ let randomlink=()=> allLinkNames[randInt(allLinkNames.length)];
 
 let pickNextLinkAward=()=>{
 
-  // pick a url that hasn't been used yet
-  let pick = randomlink();
-  if( saveData.levels.length<allLinkNames.length )
-    while(isLevel( pick )!=-1)
-      pick = randomlink();
 
+      /*
   // or if no more urls are available make up a random word
   else{
     let wordL = 4+randInt(4);
@@ -81,9 +72,11 @@ let pickNextLinkAward=()=>{
     for(let i=0; i<wordL; i++)
       pick+= String.fromCharCode(97+randInt(26));
   }
+  */
 
   // setup new mystery url
-  nextLink = pick;
+  nextLink = allLinkNames[linkCounter]
+  linkCounter++;
   revealedLink = "";
   revealedChars =0;
   for(let i=0; i<nextLink.length; i++){

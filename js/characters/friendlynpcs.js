@@ -7,7 +7,7 @@ let createFriendlyNPCs=()=>{
 }
 
 let lastaboutstate=false;
-
+let aboutguytalking=false;
 let runFriendlyNPCs=()=>{
 
   aboutguy.display();
@@ -18,11 +18,47 @@ let runFriendlyNPCs=()=>{
   aboutModel.y=aboutguy.screenPos.y-4;
     aboutModel.update(ctx,false);
 
-    if(!dUI.open&&lastaboutstate) aboutModel.fullRig.selectAnimation(0);
-    else if(dUI.open&&!lastaboutstate) aboutModel.fullRig.selectAnimation(1);
+    if(!dUI.open&&lastaboutstate){
+
+      aboutguytalking = false;
+    }
+    else if(dUI.open&&!lastaboutstate){
+
+      aboutguytalking=true;
+
+      aboutGuyTalk();
+    }
   }
 
   lastaboutstate=dUI.open;
+}
+
+let agTalkTimeout;
+let agTalkCounter=8;
+let aboutGuyTalk=()=>{
+
+  let l = 60+randInt(140)
+  let t = undefined;
+  let filt = 1200;
+  let freq = 400+randInt(50);
+  //if(Math.random()<0.3&&agTalkCounter==1) l*=4;
+  if(Math.random()<0.8){
+    t = -0.0001*randInt(50);
+    filt = 200;
+  }
+
+
+  if(Math.random()<0.8)
+  play(freq,0.01*randInt(3),0.11,0.3,l/1100,10,constSine3,4,'highpass',filt,3,t);
+//  else aboutModel.fullRig.selectAnimation(0);
+  agTalkCounter--;
+
+  if(aboutguytalking&&agTalkCounter>0){
+    aboutModel.fullRig.selectAnimation(1);
+    agTalkTimeout=setTimeout(aboutGuyTalk, l);
+  }
+  else aboutModel.fullRig.selectAnimation(0);
+
 }
 
 

@@ -18,49 +18,61 @@ let updateEnemies=()=>{
       // if enemy killed:
       if(enemies[i].hitPoints<=0){
 
+        // if this is a regular level
+        if(directorylevels.includes(currentLevel)){
+          if(enemies.length==1){
 
-        if(enemies.length==1){
+            // if level isn't cleared yet, add a new section
+            if(levelData.sections<levelData.difficulty){
+              levelData.sections++;
+              continueLevel(true);
+            }
 
-          // if level isn't cleared yet, add a new section
-          if(levelData.sections<levelData.difficulty){
-            levelData.sections++;
-            continueLevel(true);
+            else if(!level1.cleared){
+              // if level is "cleared"
+              levelData.cleared=true;
+              level1.clearLevel();
+              // add the text spawner thingy
+              level1.addSpawner2();
+              updateFavorites();
+            }
+
           }
-
-          else if(!level1.cleared){
-            // if level is "cleared"
-            levelData.cleared=true;
-            level1.clearLevel();
-            // add the text spawner thingy
-            level1.addSpawner2();
-            updateFavorites();
-          }
-
+          // if enemy is killed while spawner2 is out and active
+          else if(level1.cleared&&!level1.cleared2)
+            generateLoot(enemies[i]);
         }
-        // if enemy is killed while spawner2 is out and active
-        else if(level1.cleared&&!level1.cleared2)
-          generateLoot(enemies[i]);
+        // if this is a boss level
+        else{
+          level1.clearLevel();
+          levelData.cleared=true;
+          saveData.bossProgress++;
+          updateFavorites();
+        }
 
-
-
-        poof(enemies[i].x,enemies[i].y,enemies[i].model.colors);
+        poof(enemies[i].x,enemies[i].y,[enemies[i].model.colors[0]]);
         enemies.splice(i,1);
       }
     }
   }
 }
 
-let poof=(x,y,colors)=>{
 
-
+let poof=(x,y,colors)=>
   generateLoot({x:x,y:y},true, colors);
-}
+
+
 
 class Enemy extends MovingObject {
 
   constructor(x,y,p,sIndex,type){
-
-    super(x,y,60,"#cc30");
+    let mratio = 1.4;
+    let size = 60;
+    if(type=="boss"){
+      mratio = 3;
+      size = 100;
+    }
+    super(x,y,size,"#cc30");
     this.type=type;
     this.lrMaxSpeed=3;
 
@@ -70,19 +82,28 @@ class Enemy extends MovingObject {
     this.currentPlatform=p;
     this.attackCounter=0;
     this.nextAttack=0;
+
+    // shooting interval
     this.attackInterval=25;
+    if(type=='boss') this.attackInterval=12;
+
     this.facing;
     this.attackPower = 20;
 
     this.facing='left';
     this.attackAnimOverTimeout;
     this.doneSpawning=false;
+
+    if(type=='spawner2')  pickNextLinkAward();
+
     if(type=='spawner'||type=='spawner2'){
       this.model = new CoolPath(0,0, s1data, 2);
       this.model.fullRig.selectAnimation(0);
     }
-    else   this.model = new CoolPath(0,0, edata,1.4);
-      if(type=='shooter') this.model.colors[2] = "rgba(147,241,5,1.0)";
+    else   this.model = new CoolPath(0,0, edata, mratio);
+
+      if(type=='shooter') this.model.colors[0] = "#8a8f";
+      if(type=='fighter') this.model.colors[0] = "#88af";
 
     // spawner variables
 
@@ -93,6 +114,8 @@ class Enemy extends MovingObject {
 
     this.nextSpawn=0;
 
+    this.unlockdist=0;
+    this.unlocked=false;
     this.spawner2interval=150;
     this.spawner2text="";
   }
@@ -112,7 +135,23 @@ class Enemy extends MovingObject {
   let p=  this.display();
   let t,c;
   if(p!=false){
-    cRect(p.x,p.y,40,40,'blue');
+
+    if(this.unlocked&&this.unlockdist<20) this.unlockdist+=2;
+    ctx.save();
+    ctx.strokeStyle='black'
+    ctx.lineWidth='10'
+
+    ctx.translate(p.x,p.y);
+
+
+    ctx.beginPath();
+    ctx.fillRect(0,0,10,-this.unlockdist)
+    ctx.arc(30, 0-this.unlockdist, 25, Math.PI,0);
+    ctx.stroke();
+
+
+    cRect(0,0,60,40,'blue');
+    cRect(3,12,54,20,'white');
 
     for(let i=0; i<revealedLink.length; i++){
       t=revealedLink[i];
@@ -122,13 +161,21 @@ class Enemy extends MovingObject {
         c='grey'
       }
 
-      cRect(p.x + i*10,p.y,40,'blue');
-      cText( t,p.x + i*10,p.y + 15,c,15);
+    //  cRect(p.x + i*10,p.y,40,'blue');
+      cText( t,i*6+4,25,c,12);
     }
 
+    for(let i=0; i<dataCost; i++){
+      if(i<datastrip%dataCost) cFill("white");
+      else cFill('grey');
+      cRect(i*5,35,4,4);
+    }
+    ctx.restore();
   }
    this.spawnAtInterval();
   }
+
+
 
   spawnAtInterval(){
     this.spawnCounter++;
@@ -189,6 +236,10 @@ class Enemy extends MovingObject {
       else if(this.type=='shooter'){
         this.enemyShooter(d);
 
+      }
+      else if(this.type=='boss'){
+        this.fight(d);
+        this.enemyShooter(d);
       }
 
 

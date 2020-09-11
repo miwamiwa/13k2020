@@ -82,15 +82,22 @@ let createLevel=()=>{
   ncount=0;
   // close dialog window
   dUI.open=false;
-
+//  console.log(directorylevels,currentLevel)
   // if target page is home page
   if(currentLevel=='home'){
     basicLevel();
     createFriendlyNPCs();
   }
-  // if the url user typed doesn't return a level:
-  else if(currentLevel=='true404')
+  // if this is a boss level
+  else if(!directorylevels.includes(currentLevel)){
+    //console.log("yoyo")
     basicLevel(true);
+    let p=level1.platforms[0];
+    if(!levelData.cleared)
+      enemies.push(new Enemy(p.x,p.y-80,0,0,'boss'));
+    else level1.clearLevel();
+  }
+
 
   // if target page is a level:
   else {

@@ -19,7 +19,10 @@ let newGameSave=()=>{
   console.log("new save")
   saveData = {
     levels:[],
-    textProgress:0
+    textProgress:0,
+    directoryProgress:0,
+    bossProgress:0,
+    gameProgress:[]
   }
 }
 
