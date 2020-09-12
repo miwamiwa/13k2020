@@ -1,4 +1,4 @@
-const friction=2;
+
 
 class MovingObject extends DisplayObject {// extends display object class
   constructor(x,y,size,fill){
@@ -10,6 +10,7 @@ class MovingObject extends DisplayObject {// extends display object class
     this.lrMaxSpeed=12; // max horizontal speed
     this.lrAcc=1; // horizontal acceleration
     this.initJumpForce=25;
+    this.friction=2;
     // variables
     this.movingLeft=false;
     this.movingRight=false;
@@ -71,8 +72,8 @@ class MovingObject extends DisplayObject {// extends display object class
         this.lrSpeed = Math.min( this.lrSpeed, this.lrMaxSpeed );
       }
       else {
-        if(this.lrSpeed+friction<0) this.lrSpeed+=friction;
-        else if(this.lrSpeed-friction>0) this.lrSpeed -= friction;
+        if(this.lrSpeed+this.friction<0) this.lrSpeed+=this.friction;
+        else if(this.lrSpeed-this.friction>0) this.lrSpeed -= this.friction;
         else this.lrSpeed=0;
       }
 

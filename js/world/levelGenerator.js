@@ -28,7 +28,7 @@ let continueLevel=(spawn)=>{
 
   // extend kill line
   killLine+= 500;
-  let plats = [[0,killLine,sceneW]]
+  let plats = [[0,killLine,sceneW*1.02]]
   let stairs = flo(5+random()*3);
   let stairCount = flo(1+random()*3);
   //let extracount=0;
@@ -66,7 +66,7 @@ let continueLevel=(spawn)=>{
 
   // update walls
   level1.moreClouds(2);
-  level1.newWalls(sceneW);
+//  level1.newWalls(sceneW);
 }
 
 
@@ -108,7 +108,7 @@ let createLevel=()=>{
   else {
 
     sceneW = 2*canvas.w;
-    level1 = new Level([[0,killLine,sceneW]],sceneW, 400, true );
+    level1 = new Level([[0,killLine,sceneW*1.02]],sceneW, 400, true );
 
     let p=level1.platforms[0];
     let j=levelData.sections;
@@ -125,11 +125,8 @@ let createLevel=()=>{
           else continueLevel(false)
         }
 
-
         if(levelData.cleared2) level1.clearLevel2();
         else if(levelData.cleared) level1.addSpawner2();
-
-
 
       // save game/update favorites
     updateFavorites();
@@ -159,7 +156,7 @@ class Level{
     this.clouds = [];
     this.moreClouds(3);
 
-    this.newWalls(sceneW);
+    //this.newWalls(sceneW);
     this.bgTxt = new DisplayObject(w/2,this.platforms[0].y+h,w*2,h*4);
 
     this.bgcounter=0;
@@ -222,7 +219,7 @@ class Level{
     this.cleared2=true;
     this.bgFill="#ccc"
   }
-
+/*
   newWalls(w){
     this.walls=[
       new DisplayObject( - 0.75*w, 0, w/2, 2000 ),
@@ -230,7 +227,7 @@ class Level{
       new DisplayObject( 0, killLine+520, 2000, 1000 )
     ];
   }
-
+*/
   displayBackground(){
 
 
@@ -314,7 +311,7 @@ class Level{
 
       for(let i=0; i<this.platforms.length; i++)
         this.platforms[i].display();
-
+        /*
       // display walls
       cFill('black');
       for(let i=0; i<this.walls.length; i++){
@@ -323,6 +320,7 @@ class Level{
         if(p!=false)
         ctx.fillRect(p.x,p.y,w.w,w.h);
       }
+      */
     }
 
 
