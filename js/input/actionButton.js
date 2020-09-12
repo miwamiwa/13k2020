@@ -52,7 +52,7 @@ let pickDialog=()=>{
       }
     }
 
-    if(d>0||notdone){
+    if((d>0&&b==0)||notdone){
 
       if(d==1){
         r=4;

@@ -8,7 +8,7 @@ let addressbar=()=>{
   addbar = div();
   let t = addbar.style;
   t.width=canvas.w+'px';
-  t.backgroundColor='grey'
+  t.backgroundColor='#768'
   t.display='flex';
   t.flexDirection='row';
   t.justifyContent='space-around'

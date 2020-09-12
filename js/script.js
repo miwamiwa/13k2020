@@ -30,9 +30,10 @@ let run=()=>{
     cameraFollow(player.x,player.y);
     level1.displayBackground();
     level1.displayPlatforms();
+    level1.display404Background();
 
-    if(currentLevel!='home') level1.display404Background();
-    else runFriendlyNPCs();
+    if(currentLevel=='home') 
+      runFriendlyNPCs();
 
     updateEnemies();
     updatePlayer();

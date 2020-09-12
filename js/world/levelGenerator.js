@@ -6,7 +6,7 @@ let enemies = [];
 let lvlCount=0;
 let enemyDifficulty=1;
 let lvlDiffIncreaseInterval = 3;
-let maxEnemyDifficulty =3;
+let maxEnemyDifficulty =4;
 let bgurl='js/characters/enemyclass.js';
 
 
@@ -29,9 +29,9 @@ let continueLevel=(spawn)=>{
   // extend kill line
   killLine+= 500;
   let plats = [[0,killLine,sceneW]]
-  let stairs = flo(3+random()*3);
+  let stairs = flo(5+random()*3);
   let stairCount = flo(1+random()*3);
-
+  //let extracount=0;
 
   // create stair formations
   for(let j=0; j< stairCount; j++){
@@ -57,6 +57,11 @@ let continueLevel=(spawn)=>{
     let t = level1.getplatformtext(plats[i][2]);
 
     level1.platforms.push(new Platform(plats[i][0],plats[i][1],plats[i][2],t))
+
+    if(spawn&&Math.random()>0.56)
+      enemies.push(new Enemy(plats[i][0],plats[i][1]-80,0,0,'minispawner'));
+    //  extracount++;
+
   }
 
   // update walls
@@ -137,10 +142,9 @@ class Level{
   constructor(plist,w,h,has404txt){
 
 
-    if(has404txt!=undefined){
       let p = plist[0];
-      this.text404 = new DisplayObject( p[0]-10,p[1]-10,300,300 );
-    }
+      this.text404 = new DisplayObject( p[0]-150,p[1]-10,300,300 );
+
 
     this.platforms = [];
     this.bgFill='#333F';
@@ -296,8 +300,12 @@ class Level{
 
     display404Background(){
       let p=this.text404.position();
-      cText("404", p.x, p.y, 'black', 100);
-      cText("return to last page...", p.x, p.y+50, 'black', 30);
+      if(!level1.cleared2&&currentLevel!='home'){
+        cText("404", p.x, p.y, '#c99', 100);
+        cText("return to last page...", p.x, p.y+50, '#c99', 30);
+      }
+      else cText(currentLevel+".html", p.x, p.y, '#666', 100);
+
     }
 
     displayPlatforms(){

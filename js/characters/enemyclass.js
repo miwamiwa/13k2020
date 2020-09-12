@@ -98,8 +98,9 @@ class Enemy extends MovingObject {
 
     if(type=='spawner'||type=='spawner2'){
       this.model = new CoolPath(0,0, s1data, 2);
-      this.model.fullRig.selectAnimation(0);
+      //this.model.fullRig.selectAnimation(0);
     }
+    else if(type=='minispawner') this.model = new CoolPath(0,0, s1data, 1.3);
     else   this.model = new CoolPath(0,0, edata, mratio);
 
       if(type=='shooter') this.model.colors[0] = "#8a8f";
@@ -122,13 +123,21 @@ class Enemy extends MovingObject {
 
   updateSpawner(){
   let p=  this.display();
+  let d = distance(player.x,player.y,this.x,this.y);
   if(p!=false){
     this.model.x=this.screenPos.x+20;
     this.model.y=this.screenPos.y+20;
     this.model.update(ctx,false);
   }
    this.spawnCounter++;
+   if(this.type=='minispawner'&&d.d<20){
+     this.popspawner();
+   }
+  }
 
+  popspawner(){
+    this.spawnOne();
+    this.hitPoints=0;
   }
 
   updateSpawner2(){
@@ -184,13 +193,18 @@ class Enemy extends MovingObject {
   }
 
   spawnMore(){
-    for(let i=0; i<3; i++)
+    this.hitPoints =0;
+
+    for(let i=0; i<levelData.sections+1; i++)
       this.spawnOne();
   }
 
   spawnOne(){
     let choice='fighter'
-    if(Math.random()>0.5) choice='shooter';
+    if(levelData.difficulty>2){
+      if(levelData.difficulty>3&&Math.random()>0.3) choice='shooter';
+      else if(Math.random()>0.6) choice='shooter';
+    }
 
     enemies.push(new Enemy(
       this.x - 100 + randInt(200),
@@ -204,7 +218,7 @@ class Enemy extends MovingObject {
 
   update(){
 
-    if(this.type=='spawner'){
+    if(this.type=='spawner'||this.type=='minispawner'){
       this.updateSpawner();
       return
     }

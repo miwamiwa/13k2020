@@ -1,5 +1,5 @@
 let directorylevels = ['submit','entries','partners','experts','prizes','rules','blog']
-let allLinkNames = ['submit','blog','entries','partners','experts','prizes','rules','evilbot','invaderz'];
+let allLinkNames = ['submit','blog','entries','evilbot','partners','experts','prizes','rules','invaderz'];
 let nextLink = "";
 let revealedLink = "";
 let revealedChars =0;

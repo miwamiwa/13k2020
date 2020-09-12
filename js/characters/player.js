@@ -31,6 +31,14 @@ let updatePlayer=()=>{
 
   player.limitX();
 
+  if(player.hitPoints<40){
+    player.lrMaxSpeed=7;
+    player.initJumpForce=29;
+  }
+  else {
+    player.lrMaxSpeed=12;
+    player.initJumpForce=40;
+  }
   // add jetpack force
   if(player.jetpacks&&player.jumpForce<10){
     if(player.jetFuel>=fuelcost){

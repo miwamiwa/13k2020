@@ -64,7 +64,7 @@ class Item extends MovingObject {
       }
 
       // item in player range
-      else if(d.d<80){ // set pull range here
+      else { // set pull range here
         this.v++;
         let r = this.v/d.d;
 
@@ -72,7 +72,7 @@ class Item extends MovingObject {
         this.y+=r*d.opp;
         this.fallSpeed=0;
       }
-      else if(this.v>1) this.v--;
+      //else if(this.v>1) this.v--;
 
     }
     let p=this.display();

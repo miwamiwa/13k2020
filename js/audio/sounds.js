@@ -105,7 +105,7 @@ let playBlaster=(factor,vol)=>
 
 let playSine=(factor)=>{
   if(currentLevel!="home"){
-    let t = .15;
+    let t = .35;
     if(levelData&&levelData.cleared) t = 0.8;
     play(
       factor,
