@@ -37,7 +37,7 @@ class Projectile extends MovingObject{
           // check collisions with walls
           this.checkForCollisions(level1.platforms,false);
           // check collisions with enemies
-          this.checkForCollisions(enemies,25);
+          this.checkForCollisions(enemies,32);
           // set fill & size
           if(saveData.gameProgress.includes('r1')) this.fs('#bb1', 10);
           else this.fs(this.fill,4);
@@ -49,10 +49,10 @@ class Projectile extends MovingObject{
           // check collision with player
           if(checkCollision(getBounds(this),getBounds(player))){
             this.stopProjectile();
-            this.bump(player,8);
+            this.bump(player,15);
             poof(player.x,player.y,['orange']);
             playDamageFX();
-            damagePlayer(enemyShooterDamage);
+            damagePlayer(shooterDamage);
           }
         }
 
@@ -106,7 +106,7 @@ class Projectile extends MovingObject{
             else if(input[i].type=='minispawner') input[i].hitPoints=0;
             else if(input[i].type=='boss') input[i].hitPoints -= damage/6;
             else if(input[i].type!='spawner2'){
-              this.bump(input[i],4);
+              this.bump(input[i],3);
               input[i].hitPoints -= damage;
             }
 

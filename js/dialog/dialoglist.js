@@ -1,22 +1,22 @@
 let texts = [
 
-  "Hmm? # Oh! You must be from the cleaning service. # Thank goodness you're here. # Our web page is being attacked by a mysterious virus! # Our pages have been replaced by fake 404s full of monsters. # Yuck! It's revolting! Here, let me add our directory to your favorites.",
-  "what's up ",  //1
-  "hey", //2
-  "dope",  //3
+  "Hm? # Oh hi! # This is a disaster! My website is crawling with monsters and all the pages return 404s! Please, help me recover my site!!! I can only access 2 pages, here let me add them to your favorites.",
+  "You must visit these URLs and destroy all the baddies you can find. We must also recover the rest of my site and find the source of this madness!",  //1
+  "Halp! 404 no more!", //2
+  "Better gear? Sure. # But not now.",  //3
 
-"wee! you cleared a page, good job. see how it was added to your favorites. now go clean more!",
+"Omg you recovered a lost PAGE! Good job. It's been added to your favorites. Here, let me give you a faster weapon. Now get cleaning!",
 
-  "that's 2 pages! nice job dude. here's a boost for your gun damage",//5
-  "that's 4 pages! nice job dude. here's a boost for your jump power",//6
-  "that's 6 pages! nice job dude. here's a boost for your amno",//7
-  "almost there guy! go to those boss files and rek whatever creature you might find!", //7
+  "",//5
+  "Here you go, better bullets. Thank god! lol",//6
+  "You know what? # Now you can jump higher.",//7
+  "Almost there buddy! Keep rekking stuff!", //8
 
-"wow you killed a boss dude heres a boost to your health",//9\
-"wow thats the second and last boss gj dude u done", //10
-"thanks for playing sam thanks you now play more", //11
+"Zomg you killed a boss.. Tada! More defense for you!!",//9\
+"Dude... # # dude! You finished the game!", //10
+"Thanks for playing. Sam thanks you.", //11
 
 "haha yaa go champ", //12
-"you want a tip # ... # get a job", //\13
+"you want a tip # ... # ???", //\13
 "sup"  //14
   ];

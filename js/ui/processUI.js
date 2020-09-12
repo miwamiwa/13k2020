@@ -3,7 +3,7 @@ let allLinkNames = ['submit','blog','entries','evilbot','partners','experts','pr
 let nextLink = "";
 let revealedLink = "";
 let revealedChars =0;
-let dataCost = 10; // cost to uncover url bits
+let dataCost = 6; // cost to uncover url bits
 
 
 // processdatastrips()
@@ -31,7 +31,7 @@ let processDataStrips=()=>{
     // if this url is complete, add it to levels list
     if(revealedChars==rl){
       newLevel(nextLink);
-      linkCounter++;
+    //  saveData.lvlCount++;
       // mark level as cleared
       enemies[0].unlocked=true;
       level1.clearLevel2();
@@ -50,8 +50,6 @@ let processDataStrips=()=>{
 let rSub=(i,j)=> revealedLink.substring(i,j);
 
 
-let linkCounter=2;
-
 // picknextlinkaward()
 //
 // setup the next url to research
@@ -59,9 +57,7 @@ let linkCounter=2;
 let pickNextLinkAward=()=>{
 
   // setup new mystery url
-  nextLink = allLinkNames[linkCounter]
-  console.log("NEXT LINKE: "+nextLink)
-  console.log('link counter',linkCounter)
+  nextLink = allLinkNames[saveData.lvlCount]
 
   revealedLink = "";
   revealedChars =0;

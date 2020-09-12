@@ -1,33 +1,29 @@
-let firstEnemyKilled = false;
-let enemyUpdateCounter=0;
-let maxEnemies =3;
+const shooterDamage = 19;
+const attackDamage = 26;
+
 let textSpawnerGuy;
-let shooterDamage = 10;
 
 let updateEnemies=()=>{
 
   // if this is a level with enemies
-  if(currentLevel!='home'&&currentLevel!='start'){
-    // UPDATE ENEMIES:
-
+  if(!isHome()&&!isStart()){
     for(let i=enemies.length-1; i>=0; i--){
+
       // move and display enemy
       enemies[i].update();
-      enemies[i].limitX();
+      enemies[i].limitX(); // prevent from moving off screen
 
-      // if enemy killed:
+      // *********************** if enemy killed *************************
       if(enemies[i].hitPoints<=0){
 
         // if this is a regular level
         if(directorylevels.includes(currentLevel)){
           if(enemies.length==1){
-
             // if level isn't cleared yet, add a new section
             if(levelData.sections<levelData.difficulty){
               levelData.sections++;
               continueLevel(true);
             }
-
             else if(!level1.cleared){
               // if level is "cleared"
               levelData.cleared=true;
@@ -36,11 +32,9 @@ let updateEnemies=()=>{
               level1.addSpawner2();
               updateFavorites();
             }
-
           }
           // if enemy is killed while spawner2 is out and active
-          else if(level1.cleared&&!level1.cleared2)
-          generateLoot(enemies[i]);
+          else if(level1.cleared&&!level1.cleared2) generateLoot(enemies[i]);
         }
         // if this is a boss level
         else{
@@ -50,8 +44,12 @@ let updateEnemies=()=>{
           updateFavorites();
         }
 
+        // make it poof!
         poof(enemies[i].x,enemies[i].y,[enemies[i].model.colors[0]]);
+        // remove enemy
         enemies.splice(i,1);
+
+        // ************************** enemy killed over ***********************
       }
     }
   }
@@ -65,7 +63,7 @@ generateLoot({x:x,y:y},true, colors);
 
 class Enemy extends MovingObject {
 
-  constructor(x,y,p,sIndex,type){
+  constructor(x,y,type){
     let mratio = 1.4;
     let size = 60;
     if(type=="boss"){
@@ -79,8 +77,6 @@ class Enemy extends MovingObject {
 
     this.counter=0;
     this.dashing=false;
-
-    this.currentPlatform=p;
     this.nextAttack=0;
 
     // shooting interval
@@ -88,7 +84,6 @@ class Enemy extends MovingObject {
     if(type=='boss') this.attackInterval=12;
 
     this.facing;
-    this.attackPower = 20;
 
     this.facing='left';
     this.attackTimeout;
@@ -106,17 +101,13 @@ class Enemy extends MovingObject {
 
     // spawner variables
 
-    this.sIndex=sIndex;
     this.spawnInterval=200;
-    this.enemyCount=0;
-
     this.nextSpawn=0;
-
     this.unlockdist=0;
     this.unlocked=false;
-    this.spawner2interval=150;
+    this.spawner2interval=120-levelData.difficulty*30;
     this.spawner2text="";
-
+    this.lastp=false;
     this.animate(0);
   }
 
@@ -133,7 +124,7 @@ class Enemy extends MovingObject {
     if(p!=false){
 
       // enable moving while on screen
-      this.lrMaxSpeed=4;
+      if(this.lastp==false) this.lrMaxSpeed=4;
       // get distance to player
       let d = distance(player.x,player.y,this.x,this.y);
 
@@ -143,8 +134,8 @@ class Enemy extends MovingObject {
         case 'shooter': this.roam(d); this.shooter(d); break;
         case 'boss': this.roam(d); this.fight(d); this.shooter(d); this.dashing=true; break;
         case 'minispawner': if(d.d<20) this.popspawner(); break;
-        case 'spawner2': this.updateSpawner2(); break;
-        //case 'spawner': this.updateSpawner(); break; // regular spawners have no behaviour
+        case 'spawner2': this.updateSpawner2(p); break;
+        //case 'spawner': break; // regular spawners have no behaviour
       }
 
       //display model
@@ -156,6 +147,8 @@ class Enemy extends MovingObject {
     }
     // prevent moving while off screen
     else this.lrMaxSpeed=0;
+
+    this.lastp=p;
   }
 
   // popspawner()
@@ -179,22 +172,22 @@ class Enemy extends MovingObject {
 
     // display lock
     ctx.save();
-    ctx.strokeStyle='black';
+    ctx.strokeStyle='#444';
     ctx.lineWidth='10';
     ctx.translate(p.x,p.y);
-    // top
+    // lock head
     ctx.beginPath();
-    ctx.fillRect(0,0,10,-this.unlockdist);
+    cRect(0,0,10,-this.unlockdist, '#444');
     ctx.arc(30, 0-this.unlockdist, 25, Math.PI,0);
     ctx.stroke();
-    // bottom
-    cRect(0,0,60,40,'blue');
-    cRect(3,12,54,20,'white');
+    // lock body
+    cRect(0,0,60,40,'#88d');
+    cRect(3,12,54,20,'#bbb');
 
     // setup lock text
     for(let i=0; i<revealedLink.length; i++){
       t=revealedLink[i];
-      c='black';
+      c='#444';
       if(t=="_"){
         t = String.fromCharCode( 48+ randInt( 74 ) );
         c='grey'
@@ -205,15 +198,14 @@ class Enemy extends MovingObject {
 
     // display progress indicator
     for(let i=0; i<dataCost; i++){
-      if(i<datastrip%dataCost) cFill("white");
-      else cFill('grey');
-      cRect(i*5,35,4,4);
+      if(i<datastrip%dataCost) cFill("#f26");
+      else cFill('#444');
+      cRect(10+i*7,35,4,4);
     }
     ctx.restore();
 
     // spawn at interval
-    if(!this.doneSpawning
-      &&this.counter%this.spawner2interval==0) this.spawnOne();
+    if(!this.doneSpawning &&this.counter%this.spawner2interval==0) this.spawnOne();
     }
 
 
@@ -248,8 +240,7 @@ class Enemy extends MovingObject {
       if(i==undefined) i=0;
       enemies.push(new Enemy(
         this.x - 50 + randInt(50) + i*50,
-        this.y-80,this.currentPlatform,
-        this.sIndex,
+        this.y-80,
         choice
       ));
     }
@@ -260,7 +251,7 @@ class Enemy extends MovingObject {
     // regenerate health
 
     regen(){
-      if(this.hitPoints<100) this.hitPoints+= 0.1;
+      if(this.hitPoints<100) this.hitPoints+= 0.2;
     }
 
     shooter(d){
@@ -300,7 +291,9 @@ class Enemy extends MovingObject {
     fight(d){
       // check player range
       if(this.canAttack(30,50,d)){
-        damagePlayer(this.attackPower);
+        damagePlayer(attackDamage);
+      //  this.bump(player,15);
+        player.impactForce.x+=Math.min(Math.max(this.x-player.x,-d),d);
         this.attackAndCool();
       }
       this.regen();

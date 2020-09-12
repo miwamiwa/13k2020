@@ -55,17 +55,15 @@ let continueDialog=()=>{
     // trigger action.. so far there is only one.. should this be an if()?
 
 
-    switch(saveData.textProgress){
-      case 0:
+    if(saveData.textProgress==0){
+
       for(let i=0; i<2; i++)
         newLevel(allLinkNames[i]);
+
       updateFavorites();
       p.push('start');
-      break;
+
     }
-
-
-
   }
   else
     cutDialog();

@@ -1,5 +1,5 @@
 let start=()=>{
-
+  
   loadSave();
   fadeIn =0;
   createCanvas();
@@ -25,14 +25,14 @@ let currentLevel='start';
 
 let run=()=>{
 
-  if(currentLevel!='start'){
+  if(!isStart()){
 
     cameraFollow(player.x,player.y);
     level1.displayBackground();
     level1.displayPlatforms();
     level1.display404Background();
 
-    if(currentLevel=='home') 
+    if(isHome())
       runFriendlyNPCs();
 
     updateEnemies();

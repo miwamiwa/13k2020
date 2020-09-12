@@ -51,15 +51,13 @@ let setupLevel=()=>{
 let newLevel=(name)=>{
 
   blingFavorites();
-  // setup level difficulty
-
-  lvlCount++;
+  saveData.lvlCount++;
 
   if(name==undefined) name=currentlevel;
   saveData.levels.push({
     name:name,
     seedData:setupRandomSeed(),
-    difficulty:1+flo(lvlCount/2),
+    difficulty:1+flo(saveData.lvlCount/3),
     cleared:false,
     cleared2:false,
     sections:0
@@ -71,7 +69,7 @@ let newLevel=(name)=>{
 // save current level progression
 
 let saveLevelData=()=>{
-  if(currentLevel!='home'&&currentLevel!='start'){
+  if(!isHome()&&!isStart()){
     let i = isLevel(currentLevel);
     saveData.levels[i].cleared = levelData.cleared;
     saveData.levels[i].cleared2 = levelData.cleared2;
@@ -95,7 +93,7 @@ let goToLink=()=>{
     return
   }
   // if this is start page and user selects new game
-  else if(currentLevel=='start'&&v=="new"){
+  else if(isStart()&&v=="new"){
     newGameSave();
     loadHomeLevel();
     updateFavorites();

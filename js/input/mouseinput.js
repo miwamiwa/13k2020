@@ -17,7 +17,7 @@ let mousePressed=()=>{
   mouseY = event.clientY-canvas.y;
 
   // shoot
-  if(currentLevel!='start'&&!cantShoot&&player.gunPower>=shotcost){
+  if(!isStart()&&!cantShoot&&player.gunPower>=shotcost){
 
     player.gunPower-=shotcost;
     // trigger sfx

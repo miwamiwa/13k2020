@@ -3,7 +3,7 @@ let killLine = 500;
 let sceneW=0;
 let fadeIn =0;
 let enemies = [];
-let lvlCount=0;
+
 let enemyDifficulty=1;
 let lvlDiffIncreaseInterval = 3;
 let maxEnemyDifficulty =4;
@@ -36,19 +36,19 @@ let continueLevel=(spawn)=>{
   // create stair formations
   for(let j=0; j< stairCount; j++){
 
-    let x = -(stairCount/3)*canvas.w  + (j)* sceneW/stairCount + 75;
+    let x = -(stairCount/3)*canvas.w  + (j)* sceneW/stairCount + 155;
     let y = killLine;
-    for(let i=0; i<stairs; i++){
+    for(let i=0; i<stairs-j; i++){
 
-      let w = 50;
+      let w = 80;
       y-= 60;
-      if(i==stairs-1){
-        w = 250;
+      if(i==stairs-j-1){
+        w = 280;
         if(spawn)
-          enemies.push(new Enemy(x,y-80,0,0,'spawner'));
+          enemies.push(new Enemy(x,y-80,'spawner'));
       }
-      plats.push([x,y,w+random()*50])
-      x+= -40+random()*80;
+      plats.push([x,y,w+random()*80])
+      x+= -60+random()*120;
     }
   }
 
@@ -58,11 +58,17 @@ let continueLevel=(spawn)=>{
 
     level1.platforms.push(new Platform(plats[i][0],plats[i][1],plats[i][2],t))
 
-    if(spawn&&Math.random()>0.56)
-      enemies.push(new Enemy(plats[i][0],plats[i][1]-80,0,0,'minispawner'));
+    if(spawn&&Math.random()>0.63)
+      enemies.push(new Enemy(plats[i][0],plats[i][1]-80,'minispawner'));
     //  extracount++;
 
   }
+
+  // spawn extra eggs
+  if(spawn)
+  for(let i=0; i<1+2*levelData.difficulty; i++)
+    enemies.push(new Enemy(-300+randInt(600),plats[0][1]-80,'minispawner'));
+
 
   // update walls
   level1.moreClouds(2);
@@ -89,7 +95,7 @@ let createLevel=()=>{
   dUI.open=false;
 //  console.log(directorylevels,currentLevel)
   // if target page is home page
-  if(currentLevel=='home'){
+  if(isHome()){
     basicLevel();
     createFriendlyNPCs();
   }
@@ -99,7 +105,7 @@ let createLevel=()=>{
     basicLevel(true);
     let p=level1.platforms[0];
     if(!levelData.cleared)
-      enemies.push(new Enemy(p.x,p.y-80,0,0,'boss'));
+      enemies.push(new Enemy(p.x,p.y-80,'boss'));
     else level1.clearLevel();
   }
 
@@ -117,7 +123,7 @@ let createLevel=()=>{
 
       // if there is no progress on this level yet, create first spawner
       if(j==0)
-        enemies.push(new Enemy(p.x,p.y-80,0,0,'spawner'));
+        enemies.push(new Enemy(p.x,p.y-80,'spawner'));
         // if there is progress made on this level, add platforms below
       else for(let k=0; k<j; k++){
 
@@ -206,7 +212,7 @@ class Level{
   addSpawner2(){
     let p = this.platforms[1+randInt(this.platforms.length-1)];
     //console.log("cleared")
-    enemies.push(new Enemy(p.x,p.y-80,0,0,'spawner2'));
+    enemies.push(new Enemy(p.x,p.y-80,'spawner2'));
     textSpawnerGuy = last(enemies);
   }
 
@@ -297,7 +303,7 @@ class Level{
 
     display404Background(){
       let p=this.text404.position();
-      if(!level1.cleared2&&currentLevel!='home'){
+      if(!level1.cleared2&&!isHome()){
         cText("404", p.x, p.y, '#c99', 100);
         cText("return to last page...", p.x, p.y+50, '#c99', 30);
       }

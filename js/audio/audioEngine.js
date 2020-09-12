@@ -1,9 +1,10 @@
 // see: https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
 
+const twoPi=Math.PI*2;
 let aContext;
 let samprate;
 let soundStarted=false;
-const twoPi=Math.PI*2;
+
 // startsound()
 //
 // creates the audio context and starts the bgm

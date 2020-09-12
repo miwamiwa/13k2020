@@ -1,14 +1,16 @@
 let saveData = null;
+
+
+// loadsave()
+//
+//
+
 let loadSave=()=>{
 
-//localStorage.removeItem(saveDataHeader);
   saveData=JSON.parse(localStorage.getItem(saveDataHeader));
-
   // if there is no save data, setup a save data object
-  if(saveData==null){
+  if(saveData==null)
     newGameSave();
-  }
-  else console.log("Loaded Save")
 }
 
 // newgamesave()
@@ -16,13 +18,13 @@ let loadSave=()=>{
 // resets the save game data
 let newGameSave=()=>{
 
-  console.log("new save")
   saveData = {
     levels:[],
     textProgress:0,
     directoryProgress:0,
     bossProgress:0,
-    gameProgress:[]
+    gameProgress:[],
+    lvlCount:0
   }
 }
 

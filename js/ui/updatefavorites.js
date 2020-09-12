@@ -12,14 +12,14 @@ let updateFavorites=()=>{
   let options = el('home');
 
   // setup favorites options
-  if(currentLevel=='start') options+=el('new');
+  if(isStart()) options+=el('new');
   else for(let i=0; i<s.length; i++)
           options+= el(`${s[i].name} difficulty: ${s[i].difficulty}`);
 
   // setup address bar
   eType='span'
   addbar.innerHTML = el( el('<',haClass)+el('>',haClass) )
-  + el(`www.coolsite.com/${currentLevel}`,aClass)
+  + el(`www.js13kgames.com/${currentLevel}`,aClass)
   + el( `${f}:<select id="${f}" style='cursor:pointer;'> ${options} </select>`
   + el( 'go', haClass+" onclick='goToLink()'" ), aClass+" id='favs'");
 

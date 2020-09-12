@@ -4,7 +4,7 @@ let player;
 let createPlayer=()=>{
 
   let pos = level1.platforms[level1.platforms.length-1];
-  if(currentLevel=='home') pos=level1.platforms[0]
+  if(isHome()) pos=level1.platforms[0]
   else pos.x-= 130;
   player=new MovingObject(pos.x,pos.y-100,50,'#2a20');
   player.initJumpForce=40;
@@ -133,12 +133,12 @@ let resetPlayerAnimation=()=>{
 
 let damagePlayer=(damage)=>{
   //console.log("player hit!");
-
+  damage += levelData.difficulty*4;
   if(awarded('r4')) damage*=0.6;
 
   player.hitPoints -= damage;
   playDamageFX();
-
+  
   playerModel.selectAnimation(4);
   setTimeout(function(){
     resetPlayerAnimation();

@@ -21,7 +21,7 @@ class Platform extends DisplayObject { // extends display object class
 
       ctx.strokeRect(p.x,p.y,this.w,20);
       let f = '#a438';
-      if(level1.cleared||currentLevel=='home') f = '#fdc8'
+      if(level1.cleared||isHome()) f = '#fdc8'
       cRect(p.x,p.y,this.w,20,f);
       let pl = this.ptext.length;
       cText(this.ptext.substring(0,pl/2),p.x,p.y+8, this.fill,10);

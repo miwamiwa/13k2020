@@ -3,7 +3,7 @@ let items = [];
 let generateLoot=(target,poofy,colors)=>{
 
   let res = 5+randInt(15);
-  let fill = 'grey';
+  let fill = 'gold';
 
   //console.log("poof!", colors,i)
 
@@ -32,7 +32,7 @@ let updateItems=()=>{
   for(let i=items.length-1; i>=0; i--){
 //    console.log("hey")
     items[i].update();
-    if(items[i].looted||(items[i].poofy && items[i].pfact>30)) items.splice(i,1);
+    if(items[i].looted||(items[i].poofy && items[i].pfact>20)) items.splice(i,1);
 
   }
 }
@@ -55,7 +55,7 @@ class Item extends MovingObject {
       this.pfact++;
     }
     else if(!this.looted){
-      let d = distance(this.x,this.y,enemies[0].x,enemies[0].y);
+      let d = distance(this.x,this.y,player.x,player.y);
 
       // item picked up
       if(d.d<10){ // set pickup range here
@@ -72,8 +72,6 @@ class Item extends MovingObject {
         this.y+=r*d.opp;
         this.fallSpeed=0;
       }
-      //else if(this.v>1) this.v--;
-
     }
     let p=this.display();
     if(p!=false) cRect(p.x,p.y,this.size,this.size,this.fill);

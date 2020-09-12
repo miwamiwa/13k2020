@@ -115,7 +115,7 @@ class MovingObject extends DisplayObject {// extends display object class
         &&p[i].y<nearestPlatform
       ){
         nearestPlatform = p[i].y;
-        this.currentPlatform =i;
+    //  this.currentPlatform =i;
       }
     }
 

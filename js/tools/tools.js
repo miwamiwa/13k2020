@@ -41,6 +41,9 @@ let getBounds=(el)=> {
     }
 }
 
+let isHome=()=>currentLevel=='home';
+let isStart=()=>currentLevel=='start';
+
 
 let div=(box,color)=>{
   let result = document.createElement("div");
