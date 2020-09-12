@@ -31,7 +31,7 @@ let processDataStrips=()=>{
     // if this url is complete, add it to levels list
     if(revealedChars==rl){
       newLevel(nextLink);
-
+      linkCounter++;
       // mark level as cleared
       enemies[0].unlocked=true;
       level1.clearLevel2();
@@ -50,7 +50,7 @@ let processDataStrips=()=>{
 let rSub=(i,j)=> revealedLink.substring(i,j);
 
 
-let linkCounter=1;
+let linkCounter=2;
 
 // picknextlinkaward()
 //
@@ -60,7 +60,9 @@ let pickNextLinkAward=()=>{
 
   // setup new mystery url
   nextLink = allLinkNames[linkCounter]
-  linkCounter++;
+  console.log("NEXT LINKE: "+nextLink)
+  console.log('link counter',linkCounter)
+
   revealedLink = "";
   revealedChars =0;
   for(let i=0; i<nextLink.length; i++){

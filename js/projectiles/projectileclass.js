@@ -103,7 +103,7 @@ class Projectile extends MovingObject{
             damage -= 2*(levelData.difficulty-1)
             // do different things to different enemies:
             if(input[i].type=='spawner') input[i].spawnMore();
-            else if(input[i].type=='minispawner') input[i].popspawner();
+            else if(input[i].type=='minispawner') input[i].hitPoints=0;
             else if(input[i].type=='boss') input[i].hitPoints -= damage/6;
             else if(input[i].type!='spawner2'){
               this.bump(input[i],4);

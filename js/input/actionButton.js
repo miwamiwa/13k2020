@@ -14,10 +14,6 @@ let actionButton=()=>{
         pickDialog();
         dUI.line = texts[saveData.textProgress].split(" ");
 
-        if(!revealedLink.includes('_'))
-          pickNextLinkAward();
-
-
         cutDialog();
       }
       else continueDialog();

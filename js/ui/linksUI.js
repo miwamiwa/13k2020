@@ -37,7 +37,7 @@ let setupLevel=()=>{
   // if level doesn't exist
   else {
     // setup new level data.
-    newLevel(dif);
+    newLevel();
     // point to this level to load it next
     levelData=last(saveData.levels);
   }
@@ -48,13 +48,11 @@ let setupLevel=()=>{
 //
 // adds a new level to the game without starting it
 
-let dif=0;
 let newLevel=(name)=>{
 
   blingFavorites();
   // setup level difficulty
-  if(lvlCount!=0&&lvlCount%lvlDiffIncreaseInterval==0)
-  dif = Math.min(enemyDifficulty+1,maxEnemyDifficulty);
+
   lvlCount++;
 
   if(name==undefined) name=currentlevel;

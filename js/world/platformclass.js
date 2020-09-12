@@ -8,7 +8,7 @@ class Platform extends DisplayObject { // extends display object class
     super(x,y,l,platformHeight);
     this.fill=platformFill;
     this.ptext = t;
-    console.log(t);
+//    console.log(t);
   }
 
   display(){
