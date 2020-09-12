@@ -1,8 +1,9 @@
+// see: https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer
 
 let aContext;
-const twoPI = Math.PI*2;
-
 let samprate;
+let soundStarted=false;
+const twoPi=Math.PI*2;
 // startsound()
 //
 // creates the audio context and starts the bgm
@@ -12,39 +13,44 @@ let startSound=()=>{
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   aContext = new AudioContext();
   samprate = aContext.sampleRate;
-  //startBeatMachine();
+  soundStarted=true;
+  startBeatMachine();
 }
-
-
-
 
 
 // preloadsound()
 //
 // creates a sound buffer array
-// f: frequency, sec: sample length
-// cycles: how many cycles should actually be generated (then copied to fill the buffer)
+// f: frequency,
+// cycles: how many cycles to prebuffer
+// envelope: envelope to apply, func: sound generating function
+// sliding: optional, factor by which to slide the note
 
 let preloadSound=(f,envelope,cycles,func,sliding)=>{
 
   let result = [];
-
-  let length = samprate * ( envelope.a+envelope.d+envelope.r );
-  let freq = samprate / f;
-  let preBuffL = flo(freq)*cycles; // length of prebuffer in samples
-  let dividor = freq / twoPI;
-
-  // preload a cycle
   let prebuffer = [];
+  let length = samprate * ( envelope.a+envelope.d+envelope.r );
+  let period = samprate / f;
+  let preBuffL = flo(period)*cycles; // length of prebuffer in samples
+  let dividor = period / twoPi;
+
+  // if this isn't a sliding sound:
+
   if(sliding==undefined){
+    // prebuffer a given number of cycles
     for(let i=0; i<preBuffL; i++)
       prebuffer.push( func(i,dividor) );
 
-    // load full sound
+    // then repeat those over the full length of the note
     for (let i = 0; i < length; i++)
       result[i] = 0.4* envelope.level(i) * prebuffer[i%preBuffL];
   }
-  else {
+
+  // if this is a sliding sound:
+
+  // buffer the entire note
+  else{
     for (let i = 0; i < length; i++)
       result[i] = 0.4* envelope.level(i) * func(i,dividor+i*sliding);
   }
@@ -75,20 +81,24 @@ let playSound=(arr,vol,filterT,filterF,filterG)=>{
 class Envelope{
 
   constructor(a,d,s,r){
+    // i feel like these 3 are useless but somehow audio breaks if i delete them ..?
     this.a=a;
     this.d=d;
-    this.s=s;
     this.r=r;
 
-    this.aS=a*samprate;
-    this.dS=d*samprate;
-    this.rS=r*samprate;
-
-    this.rT=this.aS+this.dS;
+    this.s=s;
+    this.aS=a*samprate; // attack length in samples
+    this.dS=d*samprate; // decay length in samples
+    this.rS=r*samprate; // release length in samples
+    this.rT=this.aS+this.dS; // release time is attack + decay
   }
+  // return envelope level at given time point
   level(i){
+    // if during attack
     if(i<this.aS) return i/this.aS;
+    // if during decay
     else if(i<this.rT) return 1 - (1-this.s) * (i-this.aS)/this.dS;
+    // if during release
     else return this.s*( 1 - (i-this.rT)/this.rS );
   }
 }

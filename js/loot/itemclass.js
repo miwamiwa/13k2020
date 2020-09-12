@@ -55,7 +55,7 @@ class Item extends MovingObject {
       this.pfact++;
     }
     else if(!this.looted){
-      let d = distance(this.x,this.y,player.x,player.y);
+      let d = distance(this.x,this.y,enemies[0].x,enemies[0].y);
 
       // item picked up
       if(d.d<10){ // set pickup range here

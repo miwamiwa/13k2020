@@ -1,44 +1,50 @@
 let tFormSelected = false;
-
+let haClass = 'class="hov abel"';
+let aClass = "class='abel'";
 // updatefavorites();
 //
 // populate the Select element that contains the favorites list
 let updateFavorites=()=>{
 
-  // setup options text
-  let options = `<option> home </option>`;
-  if(currentLevel=='start') options='<option> home </option><option> new </option>';
-  else
-  for(let i=0; i<saveData.levels.length; i++){
-    let j=saveData.levels[i];
-    options+=`<option>${j.name} difficulty: ${j.difficulty}</option>`
-  }
-  // setup favorites text
-  let fav = `favorites:<select id="favorites" style='cursor:pointer;'> ${options} </select>`
+  eType='option';
+  let s = saveData.levels;
+  let f = 'favorites'
+  let options = el('home');
+
+  // setup favorites options
+  if(currentLevel=='start') options+=el('new');
+  else for(let i=0; i<s.length; i++)
+          options+= el(`${s[i].name} difficulty: ${s[i].difficulty}`);
 
   // setup address bar
-  addbar.innerHTML = `<span> <span class='hov abel'> < </span> <span class='hov abel'> > </span> </span>
-  <span class='abel'> www.coolsite.com/${currentLevel} </span>
-          <span  class='abel' id='favs'> ${fav} <span class='hov abel' onclick='goToLink()'>go</span> </span>`;
+  eType='span'
+  addbar.innerHTML = el( el('<',haClass)+el('>',haClass) )
+  + el(`www.coolsite.com/${currentLevel}`,aClass)
+  + el( `${f}:<select id="${f}" style='cursor:pointer;'> ${options} </select>`
+  + el( 'go', haClass+" onclick='goToLink()'" ), aClass+" id='favs'");
 
-  // pointto() is short for getdocbyid() lol
-  //textform=pointTo("tinput");
-  listform=pointTo("favorites");
+  listform=pointTo(f);
   fav = pointTo("favs");
-  // disable player inputs when typing in text form
-  //textform.onfocus=()=>tFormSelected=true;
-  //textform.onblur=()=>tFormSelected=false;
 
   saveGame();
 }
 
+let eType='option';
 
-let back=()=>console.log("back");
-let forward=()=>console.log("forward");
-let favblinginterval;
+// el()
+//
+// returns the html for an element of type given by var eType.
+
+let el=(input,atts)=>{
+  if(atts==undefined) atts="";
+  return `<${eType} ${atts}>${input}</${eType}>`;
+}
+
+let blingInt;
 let favBling =0;
 let fav;
 let blinging=false;
+
 let blingFavorites=()=>{
   if(!blinging){
 
@@ -46,22 +52,22 @@ let blingFavorites=()=>{
     // trigger sfx
     playCash();
     // trigger visuals
-    favblinginterval=setInterval(function(){
+    blingInt=setInterval(function(){
 
       fav = pointTo("favs");
-      if(favBling%2==0){
-        fav.style.backgroundColor='blue'
-      }
-      else {
-        fav.style.backgroundColor='white'
-      }
+      if(favBling%2==0) favBG('blue');
+      else favBG('white');
+
       favBling++;
     }, 400);
+
+
     setTimeout(function(){
-      fav.style.backgroundColor='white';
-      clearInterval(favblinginterval);
+      favBG('white');
+      clearInterval(blingInt);
       blinging=false;
     }, 5000)
   }
-
 }
+
+let favBG=(c)=> fav.style.backgroundColor=c;

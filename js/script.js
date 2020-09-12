@@ -1,7 +1,6 @@
 let start=()=>{
 
   loadSave();
-  //pickNextLinkAward()
   fadeIn =0;
   createCanvas();
   addressbar();
@@ -9,7 +8,6 @@ let start=()=>{
   // buffer models
   loadModelData();
 
-  startSound();
 
   fetch(bgurl)
   .then(response => response.text())
@@ -25,18 +23,17 @@ let currentLevel='start';
 
 
 
-
 let run=()=>{
 
   if(currentLevel!='start'){
-    let h = currentLevel=='home';
+
     cameraFollow(player.x,player.y);
     level1.displayBackground();
-    if(!h) level1.display404Background();
     level1.displayPlatforms();
-    if(h){
-      runFriendlyNPCs();
-    }
+
+    if(currentLevel!='home') level1.display404Background();
+    else runFriendlyNPCs();
+
     updateEnemies();
     updatePlayer();
     updateProjectiles();

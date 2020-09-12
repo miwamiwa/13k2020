@@ -10,6 +10,7 @@ let cantShoot=false;
 
 let mousePressed=()=>{
 
+  if(!soundStarted) startSound();
   // get mouse data
   mouseIsPressed = true;
   mouseX = event.clientX-canvas.x;

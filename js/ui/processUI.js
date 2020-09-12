@@ -49,11 +49,7 @@ let processDataStrips=()=>{
 
 let rSub=(i,j)=> revealedLink.substring(i,j);
 
-// randomlink()
-//
-// returns a random link from the list of all links heck yeah
 
-let randomlink=()=> allLinkNames[randInt(allLinkNames.length)];
 let linkCounter=1;
 
 // picknextlinkaward()
@@ -61,18 +57,6 @@ let linkCounter=1;
 // setup the next url to research
 
 let pickNextLinkAward=()=>{
-
-
-      /*
-  // or if no more urls are available make up a random word
-  else{
-    let wordL = 4+randInt(4);
-    pick="";
-
-    for(let i=0; i<wordL; i++)
-      pick+= String.fromCharCode(97+randInt(26));
-  }
-  */
 
   // setup new mystery url
   nextLink = allLinkNames[linkCounter]

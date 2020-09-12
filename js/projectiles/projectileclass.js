@@ -28,17 +28,24 @@ class Projectile extends MovingObject{
 
       this.x+=this.speedVect.x;
       this.y+=this.speedVect.y;
-      cFill('#4a8f');
+      cFill('#b66f');
       let p=this.position();
       this.size=10;
       if(p!=false){
 
-
           if(!this.hitsplayer){
             this.checkForCollisions(level1.platforms,false);
             this.checkForCollisions(enemies,25);
-            cFill(this.fill);
-            this.size=4;
+
+            if(saveData.gameProgress.includes('r1')){
+              this.size=10;
+              cFill('#bb1');
+            }
+            else {
+              cFill(this.fill);
+              this.size=4;
+            }
+
           }
 
           else
@@ -52,8 +59,7 @@ class Projectile extends MovingObject{
         this.checkWallCollisions();
         let i = this.lifeTimer%6;
         cRect(p.x-i,p.y-i,this.size+2*i,this.size+2*i);
-        cFill('white');
-        cRect(p.x,p.y,this.size,this.size);
+        cRect(p.x,p.y,this.size,this.size,'white');
 
       }
     }
@@ -81,7 +87,7 @@ class Projectile extends MovingObject{
 
         // if an enemy is hit
         if(damage!=false){
-          // apply damage boost 
+          // apply damage boost
           if(awarded('r1')) damage*=2;
 
           if(input[i].type=='spawner'){

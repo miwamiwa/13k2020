@@ -7,12 +7,12 @@ let texts = [
 
 "wee! you cleared a page, good job. see how it was added to your favorites. now go clean more!",
 
-  "that's 2 pages! nice job dude. here's a boost for your *****",//5
-  "that's 4 pages! nice job dude. here's a boost for your *****",//6
-  "that's 6 pages! nice job dude. here's a boost for your *****",//7
+  "that's 2 pages! nice job dude. here's a boost for your gun damage",//5
+  "that's 4 pages! nice job dude. here's a boost for your jump power",//6
+  "that's 6 pages! nice job dude. here's a boost for your amno",//7
   "almost there guy! go to those boss files and rek whatever creature you might find!", //7
 
-"wow you killed a boss dude heres yourd reward",//9\
+"wow you killed a boss dude heres a boost to your health",//9\
 "wow thats the second and last boss gj dude u done", //10
 "thanks for playing sam thanks you now play more", //11
 

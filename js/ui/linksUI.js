@@ -8,7 +8,6 @@ let addressbar=()=>{
   addbar = div();
   let t = addbar.style;
   t.width=canvas.w+'px';
-  //t.height='50px'
   t.backgroundColor='grey'
   t.display='flex';
   t.flexDirection='row';
@@ -32,13 +31,11 @@ let addressbar=()=>{
 let setupLevel=()=>{
 
   let islevel=isLevel(currentLevel);
-  console.log(islevel,currentLevel)
   // if level already exists, point current level to save data
   if(islevel!=-1) levelData = saveData.levels[islevel];
 
   // if level doesn't exist
   else {
-    console.log("new level data")
     // setup new level data.
     newLevel(dif);
     // point to this level to load it next

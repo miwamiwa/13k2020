@@ -77,10 +77,6 @@ let pickDialog=()=>{
       else
        r = 12+randInt(3);
 
-
-
-
-
     }
   }
 
