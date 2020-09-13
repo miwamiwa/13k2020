@@ -51,7 +51,7 @@ class MovingObject extends DisplayObject {// extends display object class
 
   displayHealthBar(){
     progressBar(
-      this.screenPos.x,this.screenPos.y-35,30,10,
+      this.screenPos.x,this.screenPos.y-20-this.h/2,30,10,
       this.hitPoints,'red','white' );
   }
 

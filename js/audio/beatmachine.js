@@ -58,12 +58,13 @@ if(currentLevel!="home"&&levelData&&!levelData.cleared){
   }
 
   beatinput[4].vals = "   "+mel[melCounter]+" "+mel[melCounter];
-  melCounter++;
-  if(melCounter>=melCount2){
+  melCounter=(melCounter+1)%mel.length;
+  if(melCounter==melCount2){
+    melCount2=(melCount2+1)%mel.length;
     melCounter=0;
-    melCount2++;
   }
-  if(melCount2>=mel.length) melCount2=0;
+
+  //if(melCount2>=mel.length) melCount2=0;
 }
 else{
   beatinput[4].vals=""

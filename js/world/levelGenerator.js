@@ -218,7 +218,7 @@ class Level{
 
   clearLevel(){
     this.cleared=true;
-    this.bgFill="#666"
+    this.bgFill="#966"
   }
 
   clearLevel2(){

@@ -75,7 +75,7 @@ class Enemy extends MovingObject {
 
     this.friction=0.4;
 
-    this.counter=0;
+    this.counter=35;
     this.dashing=false;
     this.nextAttack=0;
 
@@ -105,7 +105,7 @@ class Enemy extends MovingObject {
     this.nextSpawn=0;
     this.unlockdist=0;
     this.unlocked=false;
-    this.spawner2interval=120-levelData.difficulty*30;
+    this.spawner2interval=130-levelData.difficulty*25;
     this.spawner2text="";
     this.lastp=false;
     this.animate(0);

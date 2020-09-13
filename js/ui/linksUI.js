@@ -103,7 +103,7 @@ let goToLink=()=>{
   else if(saveData.levels.length!=0){
     // save current level
     if(levelData!=undefined) saveLevelData();
-    currentLevel  = v.substring(0,v.indexOf(" "));
+    currentLevel  = v.substring(0,v.indexOf("."));
     // setup and start level
     fade(24);
     setupLevel();

@@ -63,6 +63,9 @@ let continueDialog=()=>{
       updateFavorites();
       p.push('start');
 
+      saveData.textProgress = 1;
+      setTimeout(function(){dUI.open=true;dUI.line = texts[1].split(" ");cutDialog();},200);
+
     }
   }
   else

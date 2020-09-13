@@ -37,7 +37,7 @@ class Projectile extends MovingObject{
           // check collisions with walls
           this.checkForCollisions(level1.platforms,false);
           // check collisions with enemies
-          this.checkForCollisions(enemies,32);
+          this.checkForCollisions(enemies,28);
           // set fill & size
           if(saveData.gameProgress.includes('r1')) this.fs('#bb1', 10);
           else this.fs(this.fill,4);
@@ -100,7 +100,7 @@ class Projectile extends MovingObject{
           if(damage!=false){
             // apply damage boost
             if(awarded('r1')) damage*=2;
-            damage -= 2*(levelData.difficulty-1)
+            damage -= 3*(levelData.difficulty-1)
             // do different things to different enemies:
             if(input[i].type=='spawner') input[i].spawnMore();
             else if(input[i].type=='minispawner') input[i].hitPoints=0;

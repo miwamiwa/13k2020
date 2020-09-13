@@ -56,7 +56,7 @@ let pickDialog=()=>{
         r=4;
       }
 
-      else if(d>3&&!awarded('r1')){
+      else if(d>2&&!awarded('r1')){
         p.push('r1')
         r=6;
       }
@@ -67,7 +67,7 @@ let pickDialog=()=>{
       }
       else if(d==7) r = 8;
 
-      else  r = 12+randInt(3);
+      else  r = 12+randInt(4);
 
     }
   }

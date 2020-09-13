@@ -14,7 +14,7 @@ let updateFavorites=()=>{
   // setup favorites options
   if(isStart()) options+=el('new');
   else for(let i=0; i<s.length; i++)
-          options+= el(`${s[i].name} difficulty: ${s[i].difficulty}`);
+          options+= el(`${s[i].name}.html`);
 
   // setup address bar
   eType='span'

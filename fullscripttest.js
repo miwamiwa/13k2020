@@ -287,12 +287,13 @@ let playThunder=()=>
     }
 
     beatinput[4].vals = "   "+mel[melCounter]+" "+mel[melCounter];
-    melCounter++;
-    if(melCounter>=melCount2){
+    melCounter=(melCounter+1)%mel.length;
+    if(melCounter==melCount2){
+      melCount2=(melCount2+1)%mel.length;
       melCounter=0;
-      melCount2++;
     }
-    if(melCount2>=mel.length) melCount2=0;
+
+    //if(melCount2>=mel.length) melCount2=0;
   }
   else{
     beatinput[4].vals=""
@@ -848,7 +849,7 @@ let playThunder=()=>
 
       displayHealthBar(){
         progressBar(
-          this.screenPos.x,this.screenPos.y-35,30,10,
+          this.screenPos.x,this.screenPos.y-20-this.h/2,30,10,
           this.hitPoints,'red','white' );
       }
 
@@ -1230,7 +1231,7 @@ let playThunder=()=>
 
         this.friction=0.4;
 
-        this.counter=0;
+        this.counter=35;
         this.dashing=false;
         this.nextAttack=0;
 
@@ -1260,7 +1261,7 @@ let playThunder=()=>
         this.nextSpawn=0;
         this.unlockdist=0;
         this.unlocked=false;
-        this.spawner2interval=120-levelData.difficulty*30;
+        this.spawner2interval=130-levelData.difficulty*25;
         this.spawner2text="";
         this.lastp=false;
         this.animate(0);
@@ -1747,7 +1748,7 @@ let playThunder=()=>
 
         clearLevel(){
           this.cleared=true;
-          this.bgFill="#666"
+          this.bgFill="#966"
         }
 
         clearLevel2(){
@@ -2063,7 +2064,7 @@ let playThunder=()=>
                 r=4;
               }
 
-              else if(d>3&&!awarded('r1')){
+              else if(d>2&&!awarded('r1')){
                 p.push('r1')
                 r=6;
               }
@@ -2074,7 +2075,7 @@ let playThunder=()=>
               }
               else if(d==7) r = 8;
 
-              else  r = 12+randInt(3);
+              else  r = 12+randInt(4);
 
             }
           }
@@ -2341,6 +2342,9 @@ let playThunder=()=>
               updateFavorites();
               p.push('start');
 
+              saveData.textProgress = 1;
+              setTimeout(function(){dUI.open=true;dUI.line = texts[1].split(" ");cutDialog();},200);
+
             }
           }
           else
@@ -2385,27 +2389,30 @@ let playThunder=()=>
           }
           return {t:result,stop:stop};
         }
+        let instru = "You must visit these URLs and destroy all the baddies you can find. We must also recover the rest of my site and find the source of this madness!";
+        let bgear = "Better gear? Sure. # But not now.";
         let texts = [
 
-          "Hmm? # Oh! You must be from the cleaning service. # Thank goodness you're here. # Our web page is being attacked by a mysterious virus! # Our pages have been replaced by fake 404s full of monsters. # Yuck! It's revolting! Here, let me add our directory to your favorites.",
-          "what's up ",  //1
-          "hey", //2
-          "dope",  //3
+          "Hm? # Oh hi! # This is a disaster! My website is crawling with monsters and all the pages return 404s! Please, help me recover my site!!! I can only access 2 pages, here let me add them to your favorites.",
+          instru,  //1
+          "Halp! 404 no more!", //2
+          bgear,  //3
 
-        "wee! you cleared a page, good job. see how it was added to your favorites. here's a boost for your amno. now go clean more!",
+        "Omg you recovered a lost PAGE! Good job. It's been added to your favorites. Here, let me give you a faster weapon. Now get cleaning!",
 
           "",//5
-          "that's 4 pages! nice job dude. here's a boost for your gun damage",//6
-          "that's 6 pages! nice job dude. here's a boost for your jetfuel",//7
-          "almost there guy! go to those boss files and rek whatever creature you might find!", //8
+          "Here you go, better bullets. Thank god! lol",//6
+          "You know what? # Now you can jump higher.",//7
+          "Almost there buddy! Keep rekking stuff!", //8
 
-        "wow you killed a boss dude heres a boost to your health",//9\
-        "wow thats the second and last boss gj dude u done", //10
-        "thanks for playing sam thanks you", //11
+        "Zomg you killed a boss.. Tada! More defense for you!!",//9\
+        "Dude... # # dude! You finished the game! Thanks for playing. Sam thanks you.", //10
+        "", //11
 
         "haha yaa go champ", //12
-        "you want a tip # ... # no tip", //\13
-        "sup"  //14
+        "you want a tip # ... # ???", //\13
+        instru,  //14
+        bgear
           ];
           let items = [];
 
@@ -2626,7 +2633,7 @@ let playThunder=()=>
             else if(saveData.levels.length!=0){
               // save current level
               if(levelData!=undefined) saveLevelData();
-              currentLevel  = v.substring(0,v.indexOf(" "));
+              currentLevel  = v.substring(0,v.indexOf("."));
               // setup and start level
               fade(24);
               setupLevel();
@@ -2796,7 +2803,7 @@ let playThunder=()=>
             // setup favorites options
             if(isStart()) options+=el('new');
             else for(let i=0; i<s.length; i++)
-                    options+= el(`${s[i].name} difficulty: ${s[i].difficulty}`);
+                    options+= el(`${s[i].name}.html`);
 
             // setup address bar
             eType='span'
@@ -2892,7 +2899,7 @@ let playThunder=()=>
                     // check collisions with walls
                     this.checkForCollisions(level1.platforms,false);
                     // check collisions with enemies
-                    this.checkForCollisions(enemies,32);
+                    this.checkForCollisions(enemies,28);
                     // set fill & size
                     if(saveData.gameProgress.includes('r1')) this.fs('#bb1', 10);
                     else this.fs(this.fill,4);
@@ -2955,7 +2962,7 @@ let playThunder=()=>
                     if(damage!=false){
                       // apply damage boost
                       if(awarded('r1')) damage*=2;
-                      damage -= 2*(levelData.difficulty-1)
+                      damage -= 3*(levelData.difficulty-1)
                       // do different things to different enemies:
                       if(input[i].type=='spawner') input[i].spawnMore();
                       else if(input[i].type=='minispawner') input[i].hitPoints=0;
@@ -2993,53 +3000,4 @@ let playThunder=()=>
                 //  console.log("projectile ded")
                 }
               }
-            }
-            let start=()=>{
-
-              loadSave();
-              fadeIn =0;
-              createCanvas();
-              addressbar();
-
-              // buffer models
-              loadModelData();
-
-
-              fetch(bgurl)
-              .then(response => response.text())
-              .then(text => bgText=text.replace(" ",""));
-
-              // start main loop
-              setInterval( run, 33 );
-            }
-
-            let bgText;
-            window.onload = start;
-            let currentLevel='start';
-
-
-
-            let run=()=>{
-
-              if(!isStart()){
-
-                cameraFollow(player.x,player.y);
-                level1.displayBackground();
-                level1.displayPlatforms();
-                level1.display404Background();
-
-                if(isHome())
-                  runFriendlyNPCs();
-
-                updateEnemies();
-                updatePlayer();
-                updateProjectiles();
-                runDialog();
-                updateItems();
-                runFadeIn();
-                progressBar( 10, canvas.h-40, 100, 30, player.gunPower, "orange","grey" );
-                progressBar( canvas.w-110, canvas.h-40, 100, 30, player.jetFuel, "blue","grey" );
-              }
-              else displayStartUI();
-
             }
